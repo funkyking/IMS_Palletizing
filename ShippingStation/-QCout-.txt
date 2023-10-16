@@ -1,0 +1,6 @@
+-QCout-
+-Get Serial No and Work Order Id From (WorkOrder)
+-Check in WorkOrderStatus whether [PalletScanCompleted] is 1
+-Update QCout,OutDate,OutUser in WorkOrderStatus 
+and Change [PalletScanComepleted] to = 0
+-Then Update WorkOrderMaster [Count] -= 1

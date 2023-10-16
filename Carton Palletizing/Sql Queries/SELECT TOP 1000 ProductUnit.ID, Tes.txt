@@ -1,0 +1,4 @@
+SELECT TOP 1000 ProductUnit.ID, TestResult.StationName
+  FROM (([Cricut_MES].[dbo].[ProductUnit]
+  INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON ProductUnit.ID = TestResult.ProductUnitID))
+  WHERE UnitSerialNumber ='D230823A0424' and TestResult.StationName LIKE '%PRINTING3%'

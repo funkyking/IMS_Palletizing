@@ -1,0 +1,38 @@
+DELETE FROM [CRICUT].[CUPID].[WorkOrderStatus];
+
+INSERT INTO [CRICUT].[CUPID].[WorkOrderStatus] (
+    [Work Order ID],
+    [Work Order],
+    [Sub Group],
+    [Pallet No],
+    [Shift],
+    [PalletScanCompleted],
+    [PalletizingCompleted],
+    [Modified Date],
+    [Delete],
+    [QCout],
+    [OutDate],
+    [OutUser],
+    [QCin],
+    [InDate],
+    [InUser]
+)
+SELECT DISTINCT
+    wom.[Work Order ID],
+    wom.[Work Order],
+    wom.[Sub Group],
+    wo.[Pallet No],
+    wo.[Shift],
+    1 AS [PalletScanCompleted], -- Set to 1 when Completed is true
+    1 AS [PalletizingCompleted], -- Set to 1 when Completed is true
+    wom.[Modified Date],
+    wom.[Delete],
+    wo.[QCout],
+    wo.[OutDate],
+    wo.[OutUser],
+    wo.[QCin],
+    wo.[InDate],
+    wo.[InUser]
+FROM [CRICUT].[CUPID].[WorkOrderMaster] wom
+INNER JOIN [CRICUT].[CUPID].[WorkOrder] wo ON wom.[Work Order ID] = wo.[Work Order ID]
+WHERE wom.[Completed] = 1;

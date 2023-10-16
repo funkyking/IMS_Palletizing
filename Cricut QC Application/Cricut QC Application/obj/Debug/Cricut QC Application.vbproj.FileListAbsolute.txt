@@ -1,0 +1,45 @@
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.AssemblyReference.cache
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.SuggestedBindingRedirects.cache
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.LoginForm.resources
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.Form1.resources
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.GenerateResource.cache
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\bin\Debug\Cricut QC Application.exe.config
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\bin\Debug\Cricut QC Application.exe
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\bin\Debug\Cricut QC Application.pdb
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\bin\Debug\Cricut QC Application.xml
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.Resources.resources
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.CoreCompileInputs.cache
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.exe
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.xml
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.pdb
+C:\Users\Paul\Desktop\New folder\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.QCInvb.resources
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.LoginForm.resources
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.Form1.resources
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.Resources.resources
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.GenerateResource.Cache
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.AssemblyReference.cache
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.SuggestedBindingRedirects.cache
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.LoginForm.resources
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.Form1.resources
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.Resources.resources
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.GenerateResource.cache
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbproj.CoreCompileInputs.cache
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.QCIn.resources
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.QcOutfrm.resources
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.QCIn.resources
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut_QC_Application.QcOutfrm.resources
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\bin\Debug\contai.exe.config
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\bin\Debug\contai.exe
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\bin\Debug\contai.pdb
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\bin\Debug\contai.xml
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\contai.exe
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\contai.xml
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\contai.pdb
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\bin\Debug\contai.exe.config
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\bin\Debug\contai.exe
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\bin\Debug\contai.pdb
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\bin\Debug\contai.xml
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\contai.exe
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\contai.xml
+C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\contai.pdb
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Cricut QC Application\Cricut QC Application\obj\Debug\Cricut QC Application.vbprojResolveAssemblyReference.cache
