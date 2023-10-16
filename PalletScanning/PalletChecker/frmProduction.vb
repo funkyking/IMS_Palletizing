@@ -6158,8 +6158,22 @@ here:
 
             Dim rowCount As Integer = 13 ' Initialize the row count
             Dim currentColumn As String = "B" ' Initialize the column as "B"
+            Dim cellRange = sl
 
             For Each serialNo As String In SerialNoList
+                Dim range1Start = 13
+                Dim range1end = 52
+
+                Dim range2Start = 55
+                Dim range2end = 104
+
+                Dim range3Start = 109
+                Dim range3end = 158
+
+                Dim range4Start = 163
+                Dim range4end = 212
+
+
                 ' Set the cell value in the current column and row
                 sourceWorkSheet.Range($"{currentColumn}{rowCount}").Value = serialNo
 
