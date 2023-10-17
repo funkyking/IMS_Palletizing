@@ -19,6 +19,8 @@ Public Class Form1
     Private _count As Integer
     Private _totalOrderCount As Integer
     Private _completed As String
+    Private _palletScanCompleted As String
+    Private _palletizingCompleted As String
     Private _currentUsedPalletQuantity As String
     Private WorkOrderRowCount = 0
 
@@ -86,7 +88,7 @@ Public Class Form1
                                 WHERE qc.[Work Order] = '" & _workOrder & "' AND qc.[Sub Group] = '" & _subGroup & "' AND qc.[Shift] = '" & _shift & "' AND qc.[Pallet No] = '" & _palletNo & "'
                                 AND qc.[Serial No] = wo.[Serial No]
                             )
-                            ORDER BY [Sub Group]"
+                             ORDER BY [QCout] desc"
 
             Conn.Open()
             Threading.Thread.Sleep(300)
@@ -104,7 +106,7 @@ Public Class Form1
             DataGridView1.DataSource = dt
             DataGridView1.ClearSelection()
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            'MessageBox.Show(ex.Message)
             status_lbl.Text = ex.Message
             Conn?.Close()
         Finally
@@ -140,7 +142,8 @@ Public Class Form1
                 sqlcmd.Connection = conn
                 sqlcmd.CommandText = "SELECT [Work Order], [Sub Group]
                                         FROM [CRICUT].[CUPID].[WorkOrderMaster]
-                                        WHERE [Sub Group] != ''"
+                                        WHERE [Sub Group] != ''
+                                        ORDER BY [Modified Date] Desc"
                 Dim ds = sqlcmd.ExecuteReader()
                 If ds.HasRows Then
                     workOrder_cmbx.Items.Clear()
@@ -302,11 +305,15 @@ Public Class Form1
 
                 Dim SQLcmd As New SqlCommand()
                 SQLcmd.Connection = conn
-                SQLcmd.CommandText = "SELECT [Work Order ID], [Po Number],
-                                      [Work Order],[Quantity],[Count],[Total Order Count],[Completed]
-                                      FROM [CRICUT].[CUPID].[WorkOrderMaster]
-                                      WHERE [Work Order] = '" & _workOrder & "'
-                                      AND [Sub Group] = '" & _subGroup & "'"
+                SQLcmd.CommandText = "SELECT DISTINCT wom.[Work Order ID], wom.[Work Order],
+                    [Po Number], wom.[Sub Group], [Quantity], [Count], [Total Order Count], [Completed],
+                    wos.[PalletScanCompleted], wos.[PalletizingCompleted]
+                    FROM [CRICUT].[CUPID].[WorkOrderMaster] wom
+                    INNER JOIN [CRICUT].[CUPID].[WorkOrderStatus] wos ON wom.[Work Order ID] = wos.[Work Order ID]
+                    INNER JOIN [CRICUT].[CUPID].[WorkOrder] wo ON wom.[Work Order ID] = wo.[Work Order ID]
+                    WHERE wom.[Work Order] = '" & _workOrder & "'
+                    AND wom.[Sub Group] = '" & _subGroup & "'"
+
                 Dim ds = SQLcmd.ExecuteReader()
                 If ds.HasRows Then
                     ds.Read()
@@ -315,11 +322,14 @@ Public Class Form1
                     'Else
                     '    _poNo = "NULL"
                     'End If
-                    WID = ds.GetValue(ds.GetOrdinal("Work Order ID"))
-                    _quantity = ds.GetValue(ds.GetOrdinal("Quantity"))
-                    _count = ds.GetValue(ds.GetOrdinal("Count"))
-                    _totalOrderCount = ds.GetValue(ds.GetOrdinal("Total Order Count"))
-                    _completed = ds.GetValue(ds.GetOrdinal("Completed"))
+
+                    WID = ds.Item("Work Order ID")
+                    _quantity = ds.Item("Quantity")
+                    _count = ds.Item("Count")
+                    _totalOrderCount = ds.Item("Total Order Count")
+                    _completed = ds.Item("Completed")
+                    _palletScanCompleted = ds.Item("PalletScanCompleted")
+                    _palletizingCompleted = ds.Item("PalletizingCompleted")
                     conn?.Close()
                 End If
             End If
@@ -472,7 +482,8 @@ Public Class Form1
                         UpdateListBox($"Total Count: {_count}", False, True)
                         UpdateListBox($"Total Order Count: {_totalOrderCount}", False, True)
                         UpdateListBox($"Completed Status: {_completed}", False, True)
-
+                        UpdateListBox($"Pallet Scan: {_palletScanCompleted}", False, True)
+                        UpdateListBox($"Palletizing: {_palletizingCompleted}", False, True)
                         Return True
                     Else
                         status_lbl.Text = "Pallet Full"
@@ -483,6 +494,8 @@ Public Class Form1
                         UpdateListBox($"Total Count: {_count}", False, True)
                         UpdateListBox($"Total Order Count: {_totalOrderCount}", False, True)
                         UpdateListBox($"Completed Status: {_completed}", False, True)
+                        UpdateListBox($"Pallet Scan: {_palletScanCompleted}", False, True)
+                        UpdateListBox($"Palletizing: {_palletizingCompleted}", False, True)
                         Return False
                     End If
                     Conn?.Close()
@@ -515,9 +528,9 @@ Public Class Form1
             If conn.State = ConnectionState.Open Then
                 ' Select the Count of rows in WorkOrder table
                 Dim query As String = "SELECT COUNT(*) 
-                                   FROM [CRICUT].[CUPID].[WorkOrder]
-                                   WHERE [Work Order ID] = '" & GlobalVariables.WorkOrderID.ToString() & "'
-                                   AND [Shift] = '" & GlobalVariables.Shift & "'"
+                                        FROM [CRICUT].[CUPID].[WorkOrder]
+                                        WHERE [Work Order ID] = '" & GlobalVariables.WorkOrderID.ToString() & "'
+                                        AND [Shift] = '" & GlobalVariables.Shift & "'"
                 Using cmd As New SqlCommand(query, conn)
                     ' Use ExecuteScalar to get the count as an object and convert it to Integer
                     Dim rowCount As Object = cmd.ExecuteScalar()
@@ -529,8 +542,7 @@ Public Class Form1
                 End Using
 
                 If Not WorkOrderRowCount > 0 Then
-                    UpdateListBox("This Pallet Does", True, False)
-                    UpdateListBox("Not Exist ", False, False)
+                    UpdateListBox("This MasterBarcode Does NOT EXIST !!!", True, False)
                     Return False
                 End If
 

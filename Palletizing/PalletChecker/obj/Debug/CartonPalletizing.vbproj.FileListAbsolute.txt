@@ -881,3 +881,8 @@ C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.
 C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.Net\Azizi's Version Of Pallet Scan And Palletizing\Palletizing\PalletChecker\obj\Debug\Palletizing.TrustInfo.xml
 C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.Net\Azizi's Version Of Pallet Scan And Palletizing\Palletizing\PalletChecker\obj\Debug\Palletizing.exe.manifest
 C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.Net\Azizi's Version Of Pallet Scan And Palletizing\Palletizing\PalletChecker\obj\Debug\Palletizing.application
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.Net\Palletizing\PalletChecker\bin\Debug\Palletizing.exe.config
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.Net\Palletizing\PalletChecker\obj\Debug\CartonPalletizing.vbproj.ResolveComReference.cache
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.Net\Palletizing\PalletChecker\obj\Debug\Palletizing.exe
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.Net\Palletizing\PalletChecker\obj\Debug\Palletizing.xml
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\New-Repo\PalletCartellizing_VB.Net\Palletizing\PalletChecker\obj\Debug\Palletizing.pdb

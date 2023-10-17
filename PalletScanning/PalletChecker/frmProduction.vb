@@ -664,24 +664,61 @@ here:
         Dim SQLcmd = New SqlCommand
         If Conn.State = ConnectionState.Open Then
             SQLcmd.Connection = Conn
-            SQLcmd.CommandText = "INSERT INTO [CRICUT].[CUPID].[WorkOrderStatus]
-											   ([Work Order ID],
-												[Work Order]
-											   ,[Sub Group]
-											   ,[Pallet No]
-											   ,[Shift]
-											   ,[PalletScanCompleted]
-											   ,[PalletizingCompleted]
-											   ,[Modified Date])
-											 VALUES
-											   ('" & WID.ToString & "'
-												,'" & cmbWorkOrderBox.SelectedItem.ToString & "'
-												,'" & cmbSubGroup.SelectedItem.ToString & "'
-												,'" & PalletBox.SelectedItem.ToString & "'
-												,'" & Shift.SelectedItem.ToString & "'
-												,'True'
-												,'False'
-												,'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "')"
+            SQLcmd.CommandText = "MERGE INTO [CRICUT].[CUPID].[WorkOrderStatus] AS target
+                                    USING (
+                                        SELECT 
+                                            [Work Order ID] = '" & WID.ToString & "',
+                                            [Work Order] = '" & cmbWorkOrderBox.SelectedItem.ToString & "',
+                                            [Sub Group] = '" & cmbSubGroup.SelectedItem.ToString & "',
+                                            [Pallet No] = '" & PalletBox.SelectedItem.ToString & "',
+                                            [Shift] = '" & Shift.SelectedItem.ToString & "'
+                                    ) AS source
+                                    ON target.[Work Order ID] = source.[Work Order ID]
+                                        AND target.[Work Order] = source.[Work Order]
+                                        AND target.[Sub Group] = source.[Sub Group]
+                                        AND target.[Pallet No] = source.[Pallet No]
+                                        AND target.[Shift] = source.[Shift]
+                                    WHEN MATCHED THEN
+                                        UPDATE SET 
+                                            target.[PalletScanCompleted] = 'True',
+                                            target.[Modified Date] = GETDATE()
+                                    WHEN NOT MATCHED THEN
+                                        INSERT (
+                                            [Work Order ID], 
+                                            [Work Order], 
+                                            [Sub Group], 
+                                            [Pallet No], 
+                                            [Shift], 
+                                            [PalletScanCompleted], 
+                                            [Modified Date]
+                                        )
+                                        VALUES (
+                                            '" & WID.ToString & "', 
+                                            '" & cmbWorkOrderBox.SelectedItem.ToString & "', 
+                                            '" & cmbSubGroup.SelectedItem.ToString & "', 
+                                            '" & PalletBox.SelectedItem.ToString & "', 
+                                            '" & Shift.SelectedItem.ToString & "', 
+                                            'True', 
+                                            GETDATE()
+                                        );"
+            'SQLcmd.CommandText = "INSERT INTO [CRICUT].[CUPID].[WorkOrderStatus]
+            '  ([Work Order ID],
+            '[Work Order]
+            '  ,[Sub Group]
+            '  ,[Pallet No]
+            '  ,[Shift]
+            '  ,[PalletScanCompleted]
+            '  ,[PalletizingCompleted]
+            '  ,[Modified Date])
+            'VALUES
+            '  ('" & WID.ToString & "'
+            ','" & cmbWorkOrderBox.SelectedItem.ToString & "'
+            ','" & cmbSubGroup.SelectedItem.ToString & "'
+            ','" & PalletBox.SelectedItem.ToString & "'
+            ','" & Shift.SelectedItem.ToString & "'
+            ','True'
+            ','False'
+            ','" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "')"
             Dim cmd = New SqlCommand(SQLcmd.CommandText, Conn)
             cmd.ExecuteNonQuery()
 
@@ -3014,22 +3051,35 @@ here:
     ' Check Pallet Status
     Private Function checkPalleteStatus(ByVal serialnumber As String)
         Try
-            '[Cricut_MES].[dbo].[ProductUnit] database
             Dim Conn = New SqlConnection(connstr)
-            Conn.Open() 'Open the Connection
+            Conn.Open() ' Open the Connection
+
             If Conn.State = ConnectionState.Open Then
                 Dim SQLcmd = New SqlCommand
-
                 SQLcmd.Connection = Conn
-                SQLcmd.CommandText = "SELECT TOP 1000 SubSerialNumber.ProductUnitID, TestResult.StationName
-										  FROM (([Cricut_MES].[dbo].[SubSerialNumber]
-										  INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON SubSerialNumber.ProductUnitID = TestResult.ProductUnitID))
-										  WHERE SubSerialNumber ='" & serialnumber & "' and TestResult.StationName LIKE '%PRINTING3%'"
-                'Dim ds = SQLcmd.ExecuteNonQuery()
+
+                SQLcmd.CommandText = "SELECT TOP 1000 ProductUnit.ID, TestResult.StationName
+                                        FROM (([Cricut_MES].[dbo].[ProductUnit]
+                                        INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON ProductUnit.ID = TestResult.ProductUnitID))
+                                        WHERE UnitSerialNumber ='" & serialnumber & "' AND TestResult.[StationName] LIKE '%PRINTING3%'"
+
                 Dim rowsreturned As Integer
                 rowsreturned = SQLcmd.ExecuteScalar()
+
                 If rowsreturned = 0 Then
-                    Return False
+                    ' Execute the second query
+                    SQLcmd.CommandText = "SELECT TOP 1000 SubSerialNumber.ProductUnitID, TestResult.StationName
+                                    FROM [Cricut_MES].[dbo].[SubSerialNumber]
+                                    INNER JOIN [Cricut_MES].[dbo].[TestResult] ON SubSerialNumber.ProductUnitID = TestResult.ProductUnitID
+                                    WHERE SubSerialNumber = '" & serialnumber & "' and TestResult.StationName LIKE '%PRINTING3%'"
+
+                    rowsreturned = SQLcmd.ExecuteScalar()
+
+                    If rowsreturned = 0 Then
+                        Return False
+                    Else
+                        Return True
+                    End If
                 Else
                     Return True
                 End If
@@ -3038,6 +3088,7 @@ here:
             Return False
         End Try
     End Function
+
     Private Function checkPalletScanning(ByVal serialnumber As String)
         Try
             '[Cricut_MES].[dbo].[ProductUnit] database

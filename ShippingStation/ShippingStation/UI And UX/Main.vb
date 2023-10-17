@@ -110,18 +110,16 @@ Public Class Main
             ' Check in Db to See if is Completed
             If splitMasterBarcodeInput(serialNumber) Then
                 If CheckOrderMasterStatusComplete() Then
+                    'If UpdateCompleteStatus() Then
+                    'End If
                     If Not CheckDuplicateMasterBarcodeItem() Then
                         ProceedStatus = True
                     Else
                         ProceedStatus = False
-                        ListBox1.Items.Clear()
-                        ListBox1.Items.Add("MasterBarcode Already in the system")
-                        'MessageBox.Show("MasterBarcode Already in the system")
                     End If
                 Else
                     ListBox1.Items.Clear()
                     ListBox1.Items.Add("MasterBarcode Is Incomplete")
-                    'MessageBox.Show("MasterBarcode Is Incomplete")
                 End If
             Else
                 ProceedStatus = False
@@ -172,11 +170,12 @@ Public Class Main
                 GlobalVariables.MasterBarcodeItemList.Add(MBI)
 
                 'Add Pallet Counter by 1 once adding the item
-                GlobalVariables.palletcounter += 1
+                If FlowLayoutPanel1.Controls.Count > GlobalVariables.palletcounter Then
+                    GlobalVariables.palletcounter += 1
+                End If
                 ItemCounter_lbl.Text = $"Items: {GlobalVariables.palletcounter}"
+
             End If
-
-
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -242,7 +241,7 @@ Public Class Main
                 End If
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            'MessageBox.Show(ex.Message)
             Conn.Close()
             Return False
         End Try
@@ -295,13 +294,40 @@ Public Class Main
     'Check If there is a duplicate Existence
     Private Function CheckDuplicateMasterBarcodeItem()
         Try
+
             For Each item In GlobalVariables.MasterBarcodeItemList
                 If item.WorkOrderID = WorkOrderID And item.WorkOrder = WorkOrder And
                     item.SubGroup = SubGroup And item.PalletNo = PalletNo And
                     item.Shift = Shift Then
+                    ListBox1.Items.Clear()
+                    ListBox1.Items.Add("MasterBarcode Already in this Container")
                     Return True
                 End If
             Next
+
+            Dim conn As New SqlConnection(connstr)
+            conn.Open()
+            Try
+                If conn.State = ConnectionState.Open Then
+                    Dim query = "SELECT [Word Order ID],[Work Order],
+	                              [Sub Group],[Pallet No],[Shift]
+                                  FROM [CRICUT].[CUPID].[ContainerShipping]
+                                  WHERE [Word Order ID] = '" & WorkOrderID.ToString() & "' AND [Work Order] = '" & WorkOrder & "'
+                                  AND [Sub Group] = '" & SubGroup & "' AND [Pallet No] = '" & PalletNo & "' AND [Shift] = '" & Shift & "'"
+                    Using sqlcmd As New SqlCommand(query, conn)
+                        If sqlcmd.ExecuteScalar() IsNot Nothing Then
+                            ListBox1.Items.Clear()
+                            ListBox1.Items.Add("Master Barcode Already Used in a Container")
+                            Return True
+                        End If
+
+                    End Using
+                End If
+            Catch ex As Exception
+                conn?.Close()
+            Finally
+                conn?.Close()
+            End Try
             Return False
         Catch ex As Exception
             Return True
@@ -404,7 +430,8 @@ Public Class Main
 
                 If CompleteStatus Then
                     Dim CompleteQuery As String = "UPDATE [CRICUT].[CUPID].[ContainerMaster]
-                                        SET [Completed] = 1
+                                        SET [Completed] = 1,
+                                            [Date] = GETDATE()
                                         WHERE [Master Container ID] = '" & GlobalVariables.MasterContainerID.ToString() & "'
                                         AND [Master Container Name] = '" & GlobalVariables.ContainerName & "';
 
@@ -829,6 +856,7 @@ Public Class Main
                     GlobalVariables.palletcounter += 1
                     ItemCounter_lbl.Text = $"Items: {GlobalVariables.palletcounter - 1}"
                 End While
+                GlobalVariables.AllowContainerEdit = False
 
                 reader.Close()
             End If
@@ -941,6 +969,8 @@ Public Class Main
             GlobalVariables.MasterList.Clear()
             DataGridView1.Rows.Clear()
             DataGridView1.Refresh()
+            container_lbl.Text = "No Container Defined"
+            containerStatus_lbl.Text = ""
 
             For i As Integer = FlowLayoutPanel1.Controls.Count - 1 To 0 Step -1
                 Dim control As Control = FlowLayoutPanel1.Controls(i)
@@ -1164,6 +1194,122 @@ Public Class Main
         Catch ex As Exception
         End Try
     End Sub
+
+
+    Private Function UpdateCompleteStatus()
+        Dim PalletRowCount = 0
+        Dim WorkOrderRowCount = 0
+        Dim conn As New SqlConnection(connstr)
+        Try
+            conn.Open()
+            If conn.State = ConnectionState.Open Then
+
+                ' Gets the Total WorkOrder Rows that are related to the WorkOrderID
+                ' This query is checking all not filtered to Pallet No
+                Dim query As String = "SELECT COUNT(*) 
+                                        FROM [CRICUT].[CUPID].[WorkOrder] wo
+                                        INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] wom ON wo.[Work Order ID] = wom.[Work Order ID]
+                                        WHERE wo.[Work Order ID] = '" & WorkOrderID.ToString() & "'
+                                        AND wo.[Shift] = '" & Shift & "' AND wom.[Sub Group] = '" & SubGroup & "'"
+                Using cmd As New SqlCommand(query, conn)
+                    ' Use ExecuteScalar to get the count as an object and convert it to Integer
+                    Dim rowCount As Object = cmd.ExecuteScalar()
+                    If rowCount IsNot Nothing AndAlso IsNumeric(rowCount) Then
+                        WorkOrderRowCount = CInt(rowCount)
+                    Else
+                        Return False
+                    End If
+                End Using
+
+                'If Row Count is 0 Dont proceed to update anything
+                If Not WorkOrderRowCount > 0 Then
+                    Return False
+                End If
+
+                ' Update The Row Count Value to the latest Value [WorkOrderRowCount]
+                Try
+                    ' Update [Count] value in [WorkOrderMaster] table
+                    Dim updateQuery As String = "UPDATE [CRICUT].[CUPID].[WorkOrderMaster] 
+                                                 SET [Count] = " & WorkOrderRowCount & ",
+                                                     [Modified Date] = GETDATE()
+                                                 WHERE [Work Order ID] = '" & WorkOrderID.ToString() & "'"
+                    Using updateCmd As New SqlCommand(updateQuery, conn)
+                        updateCmd.ExecuteNonQuery()
+                    End Using
+                Catch ex As Exception
+                    Return False
+                End Try
+
+
+                ' This Count Query gets the Pallet No Row Counts to that particulat Work Order ID
+                Try
+                    ' Select the Count of Pallet rows in WorkOrder table
+                    Dim CountQuery As String = "SELECT COUNT(*) 
+                                                FROM [CRICUT].[CUPID].[WorkOrder] wo
+                                                INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] wom ON wo.[Work Order ID] = wom.[Work Order ID]
+                                                WHERE wo.[Work Order ID] = '" & WorkOrderID.ToString() & "' AND wo.[Pallet No] = '" & PalletNo & "'
+                                                AND wo.[Shift] = '" & Shift & "' AND wom.[Sub Group] = '" & SubGroup & "'"
+                    Using cmd As New SqlCommand(CountQuery, conn)
+                        ' Use ExecuteScalar to get the count as an object and convert it to Integer
+                        Dim rowCount As Object = cmd.ExecuteScalar()
+                        If rowCount IsNot Nothing AndAlso IsNumeric(rowCount) Then
+                            PalletRowCount = CInt(rowCount)
+                        Else
+                            Return False
+                        End If
+                    End Using
+                Catch ex As Exception
+                    Return False
+                End Try
+
+
+                ' If the [Pallet No] row count is More than the [Quantity] Return PalletResult = 1(indicating true)
+                Dim Palletresult = 0
+                Try
+                    ' Check if [Count] is more or same [Total Order Count]
+                    Dim checkQuery As String = "SELECT CASE WHEN [Quantity] <= '" & PalletRowCount & "' THEN 1 ELSE 0 END AS Result 
+                                                FROM [CRICUT].[CUPID].[WorkOrderMaster] 
+                                                WHERE [Work Order ID] = '" & WorkOrderID.ToString() & "'"
+                    Using QueryCountstatus As New SqlCommand(checkQuery, conn)
+                        Palletresult = CInt(QueryCountstatus.ExecuteScalar())
+                    End Using
+                Catch ex As Exception
+                    Return False
+                End Try
+
+
+                ' Updates the Row Count
+                Try
+                    If Palletresult = 1 Then
+                        ' If [Quantity] <= PalletRowCount, update [Completed] to 1
+                        Dim updateCountStatus As String = "UPDATE ws
+                                                                SET ws.[PalletScanCompleted] = 1,
+                                                                    ws.[PalletizingCompleted] = 1,
+                                                                    ws.[Modified Date] = GETDATE()
+                                                                FROM [CRICUT].[CUPID].[WorkOrderStatus] ws
+                                                                INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] wm ON ws.[Work Order ID] = wm.[Work Order ID]
+                                                                WHERE ws.[Work Order ID] = '" & WorkOrderID.ToString() & "'
+                                                                AND ws.[Work Order] = '" & WorkOrder & "'
+                                                                AND ws.[Sub Group] = '" & SubGroup & "'
+                                                                AND ws.[Pallet No] ='" & PalletNo & "'
+                                                                AND ws.[Shift] = '" & Shift & "'"
+
+                        Using updateCmd As New SqlCommand(updateCountStatus, conn)
+                            updateCmd.ExecuteNonQuery()
+                        End Using
+                    End If
+                Catch ex As Exception
+                    Return False
+                End Try
+                Return True
+            End If
+        Catch ex As Exception
+            conn?.Close()
+            Return False
+        Finally
+            conn?.Close()
+        End Try
+    End Function
 
 
 End Class

@@ -134,7 +134,7 @@ Partial Class Form1
         '
         'poNumber_txtbx
         '
-        Me.poNumber_txtbx.BackColor = System.Drawing.SystemColors.ButtonHighlight
+        Me.poNumber_txtbx.BackColor = System.Drawing.SystemColors.Control
         Me.poNumber_txtbx.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.poNumber_txtbx.Location = New System.Drawing.Point(136, 152)
         Me.poNumber_txtbx.Name = "poNumber_txtbx"
@@ -186,6 +186,7 @@ Partial Class Form1
         Me.subGroup_cmbx.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.subGroup_cmbx.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.subGroup_cmbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.subGroup_cmbx.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.subGroup_cmbx.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.subGroup_cmbx.FormattingEnabled = True
         Me.subGroup_cmbx.Location = New System.Drawing.Point(136, 182)
@@ -226,7 +227,7 @@ Partial Class Form1
         '
         Me.workOrder_cmbx.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.workOrder_cmbx.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.workOrder_cmbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.workOrder_cmbx.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.workOrder_cmbx.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.workOrder_cmbx.FormattingEnabled = True
         Me.workOrder_cmbx.Location = New System.Drawing.Point(136, 118)
@@ -260,6 +261,7 @@ Partial Class Form1
         'shift_cmbx
         '
         Me.shift_cmbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.shift_cmbx.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.shift_cmbx.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.shift_cmbx.FormattingEnabled = True
         Me.shift_cmbx.Items.AddRange(New Object() {"DAY", "NIGHT"})
@@ -283,6 +285,7 @@ Partial Class Form1
         'pallet_cmbx
         '
         Me.pallet_cmbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.pallet_cmbx.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.pallet_cmbx.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.pallet_cmbx.FormattingEnabled = True
         Me.pallet_cmbx.Location = New System.Drawing.Point(136, 214)

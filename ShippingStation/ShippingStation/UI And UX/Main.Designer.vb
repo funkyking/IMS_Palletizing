@@ -145,9 +145,9 @@ Partial Class Main
         Me.edit_btn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.edit_btn.Image = Global.ShippingStation.My.Resources.Resources.icons8_edit_32
         Me.edit_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.edit_btn.Location = New System.Drawing.Point(913, 19)
+        Me.edit_btn.Location = New System.Drawing.Point(890, 19)
         Me.edit_btn.Name = "edit_btn"
-        Me.edit_btn.Size = New System.Drawing.Size(84, 40)
+        Me.edit_btn.Size = New System.Drawing.Size(94, 40)
         Me.edit_btn.TabIndex = 10
         Me.edit_btn.Text = "Edit"
         Me.edit_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -159,9 +159,9 @@ Partial Class Main
         Me.execute_btn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.execute_btn.Image = Global.ShippingStation.My.Resources.Resources.Shipping_32
         Me.execute_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.execute_btn.Location = New System.Drawing.Point(1003, 19)
+        Me.execute_btn.Location = New System.Drawing.Point(990, 19)
         Me.execute_btn.Name = "execute_btn"
-        Me.execute_btn.Size = New System.Drawing.Size(113, 40)
+        Me.execute_btn.Size = New System.Drawing.Size(126, 40)
         Me.execute_btn.TabIndex = 9
         Me.execute_btn.Text = "Complete"
         Me.execute_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -388,9 +388,9 @@ Partial Class Main
         'top_pnl
         '
         Me.top_pnl.BackColor = System.Drawing.Color.Transparent
+        Me.top_pnl.Controls.Add(Me.container_lbl)
         Me.top_pnl.Controls.Add(Me.containerStatus_lbl)
         Me.top_pnl.Controls.Add(Me.Label7)
-        Me.top_pnl.Controls.Add(Me.container_lbl)
         Me.top_pnl.Controls.Add(Me.Label4)
         Me.top_pnl.Dock = System.Windows.Forms.DockStyle.Top
         Me.top_pnl.Location = New System.Drawing.Point(0, 0)
@@ -400,11 +400,10 @@ Partial Class Main
         '
         'containerStatus_lbl
         '
-        Me.containerStatus_lbl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.containerStatus_lbl.AutoEllipsis = True
         Me.containerStatus_lbl.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.containerStatus_lbl.ForeColor = System.Drawing.Color.DodgerBlue
-        Me.containerStatus_lbl.Location = New System.Drawing.Point(478, 13)
+        Me.containerStatus_lbl.Location = New System.Drawing.Point(655, 13)
         Me.containerStatus_lbl.Name = "containerStatus_lbl"
         Me.containerStatus_lbl.Size = New System.Drawing.Size(233, 33)
         Me.containerStatus_lbl.TabIndex = 3
@@ -413,10 +412,9 @@ Partial Class Main
         '
         'Label7
         '
-        Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(414, 15)
+        Me.Label7.Location = New System.Drawing.Point(580, 15)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(73, 29)
         Me.Label7.TabIndex = 4
@@ -428,9 +426,9 @@ Partial Class Main
         Me.container_lbl.AutoEllipsis = True
         Me.container_lbl.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.container_lbl.ForeColor = System.Drawing.Color.DodgerBlue
-        Me.container_lbl.Location = New System.Drawing.Point(95, 13)
+        Me.container_lbl.Location = New System.Drawing.Point(116, 13)
         Me.container_lbl.Name = "container_lbl"
-        Me.container_lbl.Size = New System.Drawing.Size(318, 33)
+        Me.container_lbl.Size = New System.Drawing.Size(274, 33)
         Me.container_lbl.TabIndex = 1
         Me.container_lbl.Text = "No Container Defined"
         Me.container_lbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -441,9 +439,9 @@ Partial Class Main
         Me.Label4.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.Location = New System.Drawing.Point(7, 15)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(97, 29)
+        Me.Label4.Size = New System.Drawing.Size(92, 29)
         Me.Label4.TabIndex = 2
-        Me.Label4.Text = "Container: "
+        Me.Label4.Text = "Container:"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'right_pnl
@@ -562,8 +560,7 @@ Partial Class Main
         '
         'Main
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 23.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(1229, 629)
         Me.Controls.Add(Me.mid_pnl)
