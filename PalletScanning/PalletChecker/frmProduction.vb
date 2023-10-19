@@ -822,11 +822,14 @@ here:
         frm1.ShowDialog()
     End Sub
 
+    Dim PreventCountTextChangedEvent = False
     Private Sub PrintReportBtn_Click(sender As Object, e As EventArgs) Handles PrintReportBtn.Click
+        PreventCountTextChangedEvent = True
         reprint()
         ' Reset the PalletCount and index to 0
         totalpalletcount = 0
         pli = 0
+        PreventCountTextChangedEvent = False
     End Sub
 
 
@@ -994,7 +997,6 @@ here:
 
     Private Function CheckPalletMax()
         Label13.Text = "Pallet " & PalletBox.SelectedItem & " ...(" & count.Text & "/" & qty.Text & ")"
-
     End Function
 
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
@@ -1068,7 +1070,7 @@ here:
             Else
                 sourceWorkSheet.Range("B10").Value = r1.Line
             End If
-            sourceWorkSheet.Range("B11").Value = DataGridView1.RowCount
+            sourceWorkSheet.Range("B11").Value = r1.qty
 
             Dim c1 As Range = sourceWorkSheet.Range("B13:C52")
             Dim c2 As Range = sourceWorkSheet.Range("E13:F52")
@@ -3049,39 +3051,39 @@ here:
     ' Check Pallet Status
     Private Function checkPalleteStatus(ByVal serialnumber As String)
         Try
-            'Dim Conn = New SqlConnection(connstr)
-            'Conn.Open() ' Open the Connection
+            Dim Conn = New SqlConnection(connstr)
+            Conn.Open() ' Open the Connection
 
-            'If Conn.State = ConnectionState.Open Then
-            '    Dim SQLcmd = New SqlCommand
-            '    SQLcmd.Connection = Conn
+            If Conn.State = ConnectionState.Open Then
+                Dim SQLcmd = New SqlCommand
+                SQLcmd.Connection = Conn
 
-            '    SQLcmd.CommandText = "SELECT TOP 1000 ProductUnit.ID, TestResult.StationName
-            '                            FROM (([Cricut_MES].[dbo].[ProductUnit]
-            '                            INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON ProductUnit.ID = TestResult.ProductUnitID))
-            '                            WHERE UnitSerialNumber ='" & serialnumber & "' AND TestResult.[StationName] LIKE '%PRINTING3%'"
+                SQLcmd.CommandText = "SELECT TOP 1000 ProductUnit.ID, TestResult.StationName
+                                        FROM (([Cricut_MES].[dbo].[ProductUnit]
+                                        INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON ProductUnit.ID = TestResult.ProductUnitID))
+                                        WHERE UnitSerialNumber ='" & serialnumber & "' AND TestResult.[StationName] LIKE '%PRINTING3%'"
 
-            '    Dim rowsreturned As Integer
-            '    rowsreturned = SQLcmd.ExecuteScalar()
+                Dim rowsreturned As Integer
+                rowsreturned = SQLcmd.ExecuteScalar()
 
-            '    If rowsreturned = 0 Then
-            '        ' Execute the second query
-            '        SQLcmd.CommandText = "SELECT TOP 1000 SubSerialNumber.ProductUnitID, TestResult.StationName
-            '                        FROM [Cricut_MES].[dbo].[SubSerialNumber]
-            '                        INNER JOIN [Cricut_MES].[dbo].[TestResult] ON SubSerialNumber.ProductUnitID = TestResult.ProductUnitID
-            '                        WHERE SubSerialNumber = '" & serialnumber & "' and TestResult.StationName LIKE '%PRINTING3%'"
+                If rowsreturned = 0 Then
+                    ' Execute the second query
+                    SQLcmd.CommandText = "SELECT TOP 1000 SubSerialNumber.ProductUnitID, TestResult.StationName
+                                    FROM [Cricut_MES].[dbo].[SubSerialNumber]
+                                    INNER JOIN [Cricut_MES].[dbo].[TestResult] ON SubSerialNumber.ProductUnitID = TestResult.ProductUnitID
+                                    WHERE SubSerialNumber = '" & serialnumber & "' and TestResult.StationName LIKE '%PRINTING3%'"
 
-            '        rowsreturned = SQLcmd.ExecuteScalar()
+                    rowsreturned = SQLcmd.ExecuteScalar()
 
-            '        If rowsreturned = 0 Then
-            '            Return False
-            '        Else
-            '            Return True
-            '        End If
-            '    Else
-            '        Return True
-            '    End If
-            'End If
+                    If rowsreturned = 0 Then
+                        Return False
+                    Else
+                        Return True
+                    End If
+                Else
+                    Return True
+                End If
+            End If
             Return True
         Catch ex As Exception
             Return False
@@ -3119,6 +3121,10 @@ here:
 
     Private Sub Serial_TextChanged(sender As Object, e As EventArgs) Handles txtS1.TextChanged
         lblError.Text = ""
+        If debug_chckbx.CheckState = CheckState.Checked Then
+            statuslbl.Text = ""
+            Exit Sub
+        End If
 
         '' Checking the TestResult Database to determine if the Pallete is Complete
         'If checkPalleteStatus(txtS1.Text) = False Then
@@ -3130,7 +3136,7 @@ here:
         'End If
 
         If CheckDuplicateSerial(txtS1.Text) = False Then
-            statuslbl.Text = "Duplicated Serial No"
+            'statuslbl.Text = "Duplicated Serial No"
         Else
             statuslbl.Text = ""
             lblError.Text = ""
@@ -3156,24 +3162,31 @@ here:
         If Timer1.Enabled Then
             If e.KeyChar = ChrW(Keys.Enter) Then
 
-                ' Checking the TestResult Database to determine if the Pallete is Complete
-                If checkPalleteStatus(txtS1.Text) = False Then
-                    serialStatusLbl.ForeColor = Color.Red
-                    statuslbl.Text = "Incomplete" & vbCr & "Skip Printing Station 3"
-                    'serialStatusLbl.Text = "✖-Incomplete"
-                    Exit Sub
+                'Update Paul (19/10/2023)
+                If Not debug_chckbx.CheckState = CheckState.Checked Then
+                    ' Checking the TestResult Database to determine if the Pallete is Complete
+                    If checkPalleteStatus(txtS1.Text) = False Then
+                        serialStatusLbl.ForeColor = Color.Red
+                        statuslbl.Text = "Incomplete" & vbCr & "Skip Printing Station 3"
+                        'serialStatusLbl.Text = "✖-Incomplete"
+                        Exit Sub
+                    Else
+                        serialStatusLbl.ForeColor = Color.Black
+                        'serialStatusLbl.Text = "✓-Complete"
+                    End If
+
+                    If txtS1.Text = "" Then
+                        statuslbl.Text = "Missing serial"
+                    Else
+                        If (txtS1.Text).Substring(0, 1) <> Suffix Or (txtS1.Text).Length > BarcodeLength Then
+                            statuslbl.Text = "Barcode Error"
+                        End If
+                    End If
                 Else
-                    serialStatusLbl.ForeColor = Color.Black
-                    'serialStatusLbl.Text = "✓-Complete"
+                    statuslbl.Text = ""
                 End If
 
-                If txtS1.Text = "" Then
-                    statuslbl.Text = "Missing serial"
-                Else
-                    If (txtS1.Text).Substring(0, 1) <> Suffix Or (txtS1.Text).Length > BarcodeLength Then
-                        statuslbl.Text = "Barcode Error"
-                    End If
-                End If
+
 
 
                 If statuslbl.Text <> "" Then
@@ -4832,34 +4845,39 @@ here:
 
 
     Private Async Sub count_TextChanged(sender As Object, e As EventArgs) Handles count.TextChanged
+        If PreventCountTextChangedEvent = True Then
+            Exit Sub
+        End If
         Await Task.Delay(500)
         UpdateScanOption()
         If ScanBtn.Visible = False Then
             If Integer.Parse(count.Text) >= Integer.Parse(qty.Text) Then
-                If Integer.Parse(totalordercount.Text) < Integer.Parse(Order.Text) Then
-                    InsertStatusSQL()
-                    'PrintReportAndStoreExcel()
-                    Dim res = MessageBox.Show("Do you want to print report for [Pallet : " & PalletBox.SelectedItem & "] ?", "Print Report", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
-                    If res = DialogResult.Yes Then
-                        PrintReportSingularPallet()
-                        OpenReprintExcelCreation()
-                    End If
-                    NextPallet()
+                ' Disable by Paul (19/10/2023)
+                'If Integer.Parse(totalordercount.Text) < Integer.Parse(Order.Text) Then
+                'End If
+                InsertStatusSQL()
+                'PrintReportAndStoreExcel()
+                Dim res = MessageBox.Show("Do you want to print report for [Pallet : " & PalletBox.SelectedItem & "] ?", "Print Report", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+                If res = DialogResult.Yes Then
+                    PrintReportSingularPallet()
+                    OpenReprintExcelCreation()
                 End If
+                NextPallet()
             End If
             If Integer.Parse(totalordercount.Text) >= Integer.Parse(Order.Text) Then
                 'PrintReportAndStoreExcel()
-                reprint()
+                'reprint()
                 Await Task.Delay(500)
                 UpdateCompleteSQL()
-                Dim res = MessageBox.Show("Do you want to print order for this [Pallet: " & PalletBox.SelectedItem & "] under this [Work Order: " & cmbWorkOrderBox.SelectedItem.ToString() & "] ?", "Print Order", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
-                If res = DialogResult.Yes Then
-                    Label13.Visible = False
-                    scanstatuslbl.Text = "Populating Data and Printing Report.."
-                    CancelBtn.Visible = False
-                    PrintOrder()
-                    'PrintReport()
-                End If
+                'Disable by Paul (19/10/2023)
+                'Dim res = MessageBox.Show("Do you want to print order for this [Pallet: " & PalletBox.SelectedItem & "] under this [Work Order: " & cmbWorkOrderBox.SelectedItem.ToString() & "] ?", "Print Order", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+                'If res = DialogResult.Yes Then
+                '    Label13.Visible = False
+                '    scanstatuslbl.Text = "Populating Data and Printing Report.."
+                '    CancelBtn.Visible = False
+                '    PrintOrder()
+                '    'PrintReport()
+                'End If
                 MessageBox.Show("Work Order Complete", "Complete Operation", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 scanstatuslbl.Visible = False
                 ScanBtn.Visible = True
@@ -5022,7 +5040,7 @@ here:
         sourceWorkSheet.Range("B10").Value = r1.startserial
         sourceWorkSheet.Range("B11").Value = r1.startcarton
         sourceWorkSheet.Range("E10").Value = r1.endserial
-        sourceWorkSheet.Range("E11").Value = r1.endcarton
+        'sourceWorkSheet.Range("E11").Value = r1.endcarton
         sourceWorkSheet.Range("H4").Value = r1.Description
         Dim c1 As Range = sourceWorkSheet.Range("B13:C52")
         Dim c2 As Range = sourceWorkSheet.Range("E13:F52")
@@ -5216,13 +5234,39 @@ here:
 
     End Function
 
+
+    Private Function getPalletCount(ByRef _wid As String, ByRef _palletNo As String) As Integer
+        Try
+            Dim query As String = "SELECT COUNT(*) FROM [CRICUT].[CUPID].[WorkOrder] " &
+                "WHERE [Work Order ID] = '" & _wid & "' " &
+                "AND [Pallet No] = '" & _palletNo & "'"
+
+            Dim count As Integer = 0
+
+            Using connection As New SqlConnection(connstr)
+                Using cmd As New SqlCommand(query, connection)
+                    connection.Open()
+                    count = Convert.ToInt32(cmd.ExecuteScalar())
+                End Using
+            End Using
+
+            Return count
+        Catch ex As Exception
+        End Try
+    End Function
+
     Private Function reprint()
         LoadInfo()
         Dim i As Integer
-        Dim xlp() As Process = Process.GetProcessesByName("EXCEL")
-        For Each Process As Process In xlp
-            Process.Kill()
-        Next
+
+        Try
+            Dim xlp() As Process = Process.GetProcessesByName("Excel")
+            For Each Process As Process In xlp
+                Process.Kill()
+            Next
+        Catch ex As Exception
+        End Try
+
         Dim datestart As Date = Date.Now
         For i = 1 To PalletBox.Text
 
@@ -5235,6 +5279,15 @@ here:
             xlApp = New Excel.Application
             sourceWorkBook = xlApp.Workbooks.Open(localdir & "\" & "CartonPalletizingReport.xlsm")
             sourceWorkSheet = sourceWorkBook.Worksheets(1)
+
+            If r1.PONumber = "" Or r1.PONumber Is Nothing Then
+                r1.PONumber = "NULL"
+            End If
+
+
+            ' Get Serial Numbers for each pallet
+            Dim serial_Count = getPalletCount(r1.WID.ToString(), i)
+
 
             ' Create a QR Code with QrCoder
             Dim qrStrdata = $"{r1.WorkOrder},{r1.PONumber},{r1.SubGroup},{r1.PalletNo},{r1.Shift}"
@@ -5274,7 +5327,7 @@ here:
             Else
                 sourceWorkSheet.Range("B10").Value = r1.Line
             End If
-            sourceWorkSheet.Range("B11").Value = r1.qty
+            sourceWorkSheet.Range("B11").Value = serial_Count.ToString()
 
 
 
@@ -5968,7 +6021,7 @@ here:
                 If ds.HasRows Then
                     While ds.Read
 
-                        sourceWorkSheet.Range("B11").Value = Integer.Parse(ds.Item("Carton"))
+                        'sourceWorkSheet.Range("B11").Value = Integer.Parse(ds.Item("Carton"))
 
                     End While
                 End If
@@ -5986,7 +6039,7 @@ here:
                 ds = SQLcmd.ExecuteReader
                 If ds.HasRows Then
                     While ds.Read
-                        sourceWorkSheet.Range("E11").Value = Integer.Parse(ds.Item("Carton"))
+                        'sourceWorkSheet.Range("E11").Value = Integer.Parse(ds.Item("Carton"))
                     End While
                 End If
                 ds.Close()
@@ -6084,6 +6137,8 @@ here:
         Dim dateEnd As Date = Date.Now
         End_Excel_App(datestart, dateEnd)
         scanstatuslbl.Text = "Report Created Successfully"
+        scanstatuslbl.Visible = False
+        ScanBtn.Visible = True
     End Function
 
 
@@ -6153,7 +6208,12 @@ here:
             sourceWorkBook = xlApp.Workbooks.Open(localdir & "\" & "CartonPalletizingReport.xlsm")
             sourceWorkSheet = sourceWorkBook.Worksheets(1)
 
+            If r1.PONumber = "" Or r1.PONumber Is Nothing Then
+                r1.PONumber = "NULL"
+            End If
 
+
+            Dim serial_Count = getPalletCount(r1.WID.ToString(), PalletBox.SelectedItem.ToString())
 
             ' Create a QR Code with QrCoder
             Dim qrStrdata = $"{r1.WorkOrder},{r1.PONumber},{r1.SubGroup},{r1.PalletNo},{r1.Shift}"
@@ -6193,7 +6253,7 @@ here:
             Else
                 sourceWorkSheet.Range("B10").Value = r1.Line
             End If
-            sourceWorkSheet.Range("B11").Value = DataGridView1.RowCount
+            sourceWorkSheet.Range("B11").Value = serial_Count
             'sourceWorkSheet.Range("B11").Value = r1.startserial
             'sourceWorkSheet.Range("E11").Value = r1.endserial
 
@@ -6517,8 +6577,10 @@ here:
 
     Private Sub LoosePallet_btn_Click(sender As Object, e As EventArgs) Handles LoosePallet_btn.Click
         Try
+            PreventCountTextChangedEvent = True
             PrintReportSingularPallet()
             OpenReprintExcelCreation()
+            PreventCountTextChangedEvent = False
         Catch ex As Exception
         End Try
     End Sub
@@ -6528,6 +6590,10 @@ here:
     End Sub
 
     Private Sub ScanBtn_TextChanged(sender As Object, e As EventArgs) Handles ScanBtn.TextChanged
+
+    End Sub
+
+    Private Sub debug_radio_CheckedChanged(sender As Object, e As EventArgs)
 
     End Sub
 End Class

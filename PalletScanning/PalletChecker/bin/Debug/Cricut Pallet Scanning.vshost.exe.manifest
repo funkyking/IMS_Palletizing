@@ -58,14 +58,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Cricut Pallet Scanning.exe" size="2557952">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Cricut Pallet Scanning.exe" size="2572288">
       <assemblyIdentity name="Cricut Pallet Scanning" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>O8WgC/zRYKzN4y154GdVeINEXTGxrZnjzd83Xh/WIG4=</dsig:DigestValue>
+        <dsig:DigestValue>4kQ6i6EMN6pfRMKL7hpC0NAcAAz/Fae47yyktDezdtw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -261,13 +261,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="Cricut Pallet Scanning.exe.config" size="524">
+  <file name="Cricut Pallet Scanning.exe.config" size="536">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>YwLc3ggbE2E8n0ubQwlGBZ4K/HzPnwvKNY3tKK2aKBE=</dsig:DigestValue>
+      <dsig:DigestValue>huvprzRxoTGjA5PTYe7wxi66v+GY8H3aDL73YcaWOnE=</dsig:DigestValue>
     </hash>
   </file>
   <file name="cricutlogo.ico" size="110335">

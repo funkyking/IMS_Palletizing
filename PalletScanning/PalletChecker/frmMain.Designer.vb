@@ -145,7 +145,7 @@ Partial Class frmMain
         '
         'SettingBtn
         '
-        Me.SettingBtn.Image = Global.CartonPalletizing.My.Resources.setting
+        Me.SettingBtn.Image = Global.CartonPalletizing.My.Resources.Resources.setting
         Me.SettingBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.SettingBtn.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.SettingBtn.Name = "SettingBtn"
@@ -199,9 +199,9 @@ Partial Class frmMain
         Me.Controls.Add(Me.ToolStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.IsMdiContainer = True
-        Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "frmMain"
-        Me.Text = "Cricut Pallet Scanning"
+        Me.Text = "Cricut Pallet Scanning (V2.22)"
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.ToolStrip2.ResumeLayout(False)

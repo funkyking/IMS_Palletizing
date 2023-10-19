@@ -822,3 +822,8 @@ C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Carton Palletizing\Ca
 C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Carton Palletizing\CartonPalletizing\PalletChecker\obj\Debug\CartonPalletizing.xml
 C:\Users\Paul\Desktop\New folder\PalletCartellizing_VB.Net\Carton Palletizing\CartonPalletizing\PalletChecker\obj\Debug\CartonPalletizing.pdb
 C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\PalletCartellizing_VB.Net\Carton Palletizing\CartonPalletizing\PalletChecker\obj\Debug\CartonPalletizing.vbprojResolveAssemblyReference.cache
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\IMS_Palletizing\Carton Palletizing\CartonPalletizing\PalletChecker\bin\Debug\CartonPalletizing.exe.config
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\IMS_Palletizing\Carton Palletizing\CartonPalletizing\PalletChecker\obj\Debug\CartonPalletizing.vbproj.ResolveComReference.cache
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\IMS_Palletizing\Carton Palletizing\CartonPalletizing\PalletChecker\obj\Debug\CartonPalletizing.exe
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\IMS_Palletizing\Carton Palletizing\CartonPalletizing\PalletChecker\obj\Debug\CartonPalletizing.xml
+C:\Users\INFINITE TECHNOLOGY\Desktop\Paul\Cricut\IMS_Palletizing\Carton Palletizing\CartonPalletizing\PalletChecker\obj\Debug\CartonPalletizing.pdb

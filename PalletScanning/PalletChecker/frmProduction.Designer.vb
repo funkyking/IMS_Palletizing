@@ -98,6 +98,7 @@ Partial Class frmProduction
         Me.lblError = New System.Windows.Forms.Label()
         Me.CancelBtn = New System.Windows.Forms.Button()
         Me.ScanBtn = New System.Windows.Forms.Button()
+        Me.debug_chckbx = New System.Windows.Forms.CheckBox()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -819,6 +820,7 @@ Partial Class frmProduction
         '
         'GroupBox4
         '
+        Me.GroupBox4.Controls.Add(Me.debug_chckbx)
         Me.GroupBox4.Controls.Add(Me.Button1)
         Me.GroupBox4.Controls.Add(Me.Button2)
         Me.GroupBox4.Controls.Add(Me.btnQCout)
@@ -916,6 +918,16 @@ Partial Class frmProduction
         Me.ScanBtn.Text = "Start Scanning"
         Me.ScanBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.ScanBtn.UseVisualStyleBackColor = True
+        '
+        'debug_chckbx
+        '
+        Me.debug_chckbx.AutoSize = True
+        Me.debug_chckbx.Location = New System.Drawing.Point(62, 183)
+        Me.debug_chckbx.Name = "debug_chckbx"
+        Me.debug_chckbx.Size = New System.Drawing.Size(78, 17)
+        Me.debug_chckbx.TabIndex = 71
+        Me.debug_chckbx.Text = "Debugging"
+        Me.debug_chckbx.UseVisualStyleBackColor = True
         '
         'frmProduction
         '
@@ -1031,4 +1043,5 @@ Partial Class frmProduction
     Friend WithEvents CopyToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents debug_btn As ToolStripButton
     Friend WithEvents LoosePallet_btn As Button
+    Friend WithEvents debug_chckbx As CheckBox
 End Class
