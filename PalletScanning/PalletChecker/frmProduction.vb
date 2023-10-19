@@ -127,7 +127,7 @@ Public Class frmProduction
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT DISTINCT [Work Order]
-							  FROM [CRICUT].[CUPID].[WorkOrderMaster] WHERE [Delete]='False'"
+                              FROM [CRICUT].[CUPID].[WorkOrderMaster] WHERE [Delete]='False'"
 
             Dim ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
@@ -230,9 +230,9 @@ Public Class frmProduction
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT [PO number]
-	
-							  FROM [CRICUT].[CUPID].[WorkOrderMaster] 
-								WHERE [Work Order]='" & cmbWorkOrderBox.SelectedItem & "'"
+    
+                              FROM [CRICUT].[CUPID].[WorkOrderMaster] 
+                                WHERE [Work Order]='" & cmbWorkOrderBox.SelectedItem & "'"
             Dim ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
                 While ds.Read
@@ -257,25 +257,25 @@ Public Class frmProduction
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "Select w.[Work Order ID] ,
-										 m.[Model],
-										 m.[Suffix],
-										 m.[BarcodeLength],
-										 w.[Quantity],
-										 w.[Count],
-										 w.[Total Order Count],
-										 p.[Part Name],
-										 l.[Line],
-										 w.[ScanOption],
-										 w.[Description],
-										 w.[Work Order]
-							  FROM [CRICUT].[CUPID].[WorkOrderMaster] w
-							  INNER JOIN [CRICUT].[CUPID].[ModelMaster] m
-								ON m.[Model ID]=w.[Model ID]
-							  INNER JOIN [CRICUT].[CUPID].[PartMaster] p
-								ON p.[Part ID]=w.[Part ID]
-							  INNER JOIN [CRICUT].[CUPID].[LineMaster] l
-								ON l.[LineID] = w.[LineID]
-								 WHERE [Sub Group]='" & cmbSubGroup.SelectedItem & "' AND w.[Work Order]='" & cmbWorkOrderBox.Text & "'" 'AND [Pallet No]='" & PalletBox.SelectedItem & "' 'AND [Work Order]='" & cmbWorkOrderBox.SelectedItem & "'"
+                                         m.[Model],
+                                         m.[Suffix],
+                                         m.[BarcodeLength],
+                                         w.[Quantity],
+                                         w.[Count],
+                                         w.[Total Order Count],
+                                         p.[Part Name],
+                                         l.[Line],
+                                         w.[ScanOption],
+                                         w.[Description],
+                                         w.[Work Order]
+                              FROM [CRICUT].[CUPID].[WorkOrderMaster] w
+                              INNER JOIN [CRICUT].[CUPID].[ModelMaster] m
+                                ON m.[Model ID]=w.[Model ID]
+                              INNER JOIN [CRICUT].[CUPID].[PartMaster] p
+                                ON p.[Part ID]=w.[Part ID]
+                              INNER JOIN [CRICUT].[CUPID].[LineMaster] l
+                                ON l.[LineID] = w.[LineID]
+                                 WHERE [Sub Group]='" & cmbSubGroup.SelectedItem & "' AND w.[Work Order]='" & cmbWorkOrderBox.Text & "'" 'AND [Pallet No]='" & PalletBox.SelectedItem & "' 'AND [Work Order]='" & cmbWorkOrderBox.SelectedItem & "'"
 
             Dim ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
@@ -289,7 +289,7 @@ Public Class frmProduction
                     End If
 
                     If ds.IsDBNull(ds.GetOrdinal("BarcodeLength")) Then
-                        BarcodeLength = "NULL"
+                        BarcodeLength = 0
                     Else
                         BarcodeLength = ds.Item("BarcodeLength")
                     End If
@@ -306,10 +306,10 @@ Public Class frmProduction
             End If
             ds.Close()
             SQLcmd.CommandText = "SELECT [Pallet No]
-							  FROM [CRICUT].[CUPID].[WorkOrder] p
-							  INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] w
-							  ON p.[Work Order ID]=w.[Work Order ID]
-							  WHERE [Sub Group] = '" & cmbSubGroup.Text & "' AND w.[Work Order]='" & cmbWorkOrderBox.Text & "'"
+                              FROM [CRICUT].[CUPID].[WorkOrder] p
+                              INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] w
+                              ON p.[Work Order ID]=w.[Work Order ID]
+                              WHERE [Sub Group] = '" & cmbSubGroup.Text & "' AND w.[Work Order]='" & cmbWorkOrderBox.Text & "'"
 
 
             '"Select [Pallet No]
@@ -363,6 +363,7 @@ skippallet:
     Private Sub ScanBtn_Click(sender As Object, e As EventArgs) Handles ScanBtn.Click
         CheckComplete()
 
+
         If Integer.Parse(totalordercount.Text) >= Integer.Parse(Order.Text) Then
             MessageBox.Show("Order Already Completed!", "Order Complete", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Exit Sub
@@ -382,7 +383,7 @@ skippallet:
             Exit Sub
         End If
 here:
-        PalletBox.SelectedItem = 1
+        'PalletBox.SelectedItem = 1
         Timer1.Start()
         'added here
         PalletBox.SelectedItem = maxpalletno
@@ -472,10 +473,13 @@ here:
                 Dim SQLcmd = New SqlCommand
                 SQLcmd.Connection = Conn
                 SQLcmd.CommandText = "SELECT COUNT (w.[Serial No]) As [cnt]
-									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
-									  ON wm.[Work Order ID]=w.[Work Order ID]
-										WHERE wm.[Work Order]='" & cmbWorkOrderBox.SelectedItem & "' AND wm.[Sub Group]='" & cmbSubGroup.SelectedItem & "' AND w.[Pallet No]='" & PalletBox.Text & "' AND wm.[Delete]='False'"
+                                      FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                                      INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
+                                      ON wm.[Work Order ID]=w.[Work Order ID]
+                                        WHERE wm.[Work Order]='" & cmbWorkOrderBox.SelectedItem & "' 
+                                        AND wm.[Sub Group]='" & cmbSubGroup.SelectedItem & "' 
+                                        AND w.[Pallet No]='" & PalletBox.Text & "' 
+                                        AND wm.[Delete]='False'"
                 Dim ds = SQLcmd.ExecuteReader
                 If ds.HasRows Then
                     While ds.Read
@@ -489,10 +493,8 @@ here:
                 PalletBox.Items.Add(maxpalletno)
                 PalletBox.SelectedItem = maxpalletno
                 count.Text = 0
-
-
+                ScanBtn_Click(Nothing, Nothing)
             End If
-
         End If
 
     End Function
@@ -553,11 +555,11 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT w.[Work Order ID]
-	
-							  FROM [CRICUT].[CUPID].[WorkOrderMaster] w
-							  INNER JOIN [CRICUT].[CUPID].[PartMaster] p
-								ON w.[Part ID]= p.[Part ID]
-								WHERE w.[Work Order]='" & cmbWorkOrderBox.SelectedItem & "' AND  w.[Sub Group]='" & cmbSubGroup.SelectedItem & "' AND p.[Part Name]='" & part.Text & "' AND p.[Delete]='False' AND w.[Delete]='False'"
+    
+                              FROM [CRICUT].[CUPID].[WorkOrderMaster] w
+                              INNER JOIN [CRICUT].[CUPID].[PartMaster] p
+                                ON w.[Part ID]= p.[Part ID]
+                                WHERE w.[Work Order]='" & cmbWorkOrderBox.SelectedItem & "' AND  w.[Sub Group]='" & cmbSubGroup.SelectedItem & "' AND p.[Part Name]='" & part.Text & "' AND p.[Delete]='False' AND w.[Delete]='False'"
             Dim ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
                 While ds.Read
@@ -581,11 +583,11 @@ here:
             'SQLcmd.CommandText = "SELECT *
             'From [CRICUT].[CUPID].[WorkOrder] WHERE [Work Order ID]='" & WID.ToString & "'AND  [Serial No]='" & SerialNo & "' "
             SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
-									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
-									  ON wm.[Work Order ID]=w.[Work Order ID]
-									  WHERE w.[Serial No] = '" & SerialNo & "'"
+                        
+                                      FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                                      INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
+                                      ON wm.[Work Order ID]=w.[Work Order ID]
+                                      WHERE w.[Serial No] = '" & SerialNo & "'"
 
             'remove wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And
             Dim ds = SQLcmd.ExecuteReader
@@ -614,7 +616,7 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "Select [Serial No]
-							  FROM [CRICUT].[CUPID].[WorkOrder] WHERE [Work Order ID]='" & WID.ToString & "' AND [Carton]='" & carton & "' "
+                              FROM [CRICUT].[CUPID].[WorkOrder] WHERE [Work Order ID]='" & WID.ToString & "' AND [Carton]='" & carton & "' "
             Dim ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
                 res = False
@@ -633,25 +635,25 @@ here:
         If Conn.State = ConnectionState.Open Then
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "INSERT INTO [CRICUT].[CUPID].[WorkOrder]
-											   ([Work Order ID],
-												[Line]
-											   ,[Serial No]
-											   ,[Carton]
-											   ,[Pallet No]
-											   ,[Production Date]
-											   ,[Shift]
-											   ,[QCout]
-											   ,[QCin])
-											 VALUES
-											   ('" & WID.ToString & "'
-												,'" & lblLine.Text & "'
-												,'" & serial & "'
-												,'" & carton & "'
-												,'" & PalletBox.SelectedItem & "'
-												,'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
-												,'" & Shift.SelectedItem & "'
-												,'False'
-												,'False')"
+                                               ([Work Order ID],
+                                                [Line]
+                                               ,[Serial No]
+                                               ,[Carton]
+                                               ,[Pallet No]
+                                               ,[Production Date]
+                                               ,[Shift]
+                                               ,[QCout]
+                                               ,[QCin])
+                                             VALUES
+                                               ('" & WID.ToString & "'
+                                                ,'" & lblLine.Text & "'
+                                                ,'" & serial & "'
+                                                ,'" & carton & "'
+                                                ,'" & PalletBox.SelectedItem & "'
+                                                ,'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
+                                                ,'" & Shift.SelectedItem & "'
+                                                ,'False'
+                                                ,'False')"
             Dim cmd = New SqlCommand(SQLcmd.CommandText, Conn)
             cmd.ExecuteNonQuery()
 
@@ -733,9 +735,9 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "UPDATE  [CRICUT].[CUPID].[WorkOrderMaster] 
-											 SET [Count]='" & Integer.Parse(totalordercount.Text) & "'
-									 
-									 WHERE [Work Order ID] = '" & WID.ToString & "' "
+                                             SET [Count]='" & Integer.Parse(totalordercount.Text) & "'
+                                     
+                                     WHERE [Work Order ID] = '" & WID.ToString & "' "
             SQLcmd.ExecuteNonQuery()
             Conn.Close()
         End If
@@ -749,9 +751,9 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "UPDATE  [CRICUT].[CUPID].[WorkOrderMaster] 
-											 SET [Completed]='True'
-									 
-									 WHERE [Work Order ID] = '" & WID.ToString & "' "
+                                             SET [Completed]='True'
+                                     
+                                     WHERE [Work Order ID] = '" & WID.ToString & "' "
             SQLcmd.ExecuteNonQuery()
             Conn.Close()
         End If
@@ -766,9 +768,9 @@ here:
                 Dim SQLcmd = New SqlCommand
                 SQLcmd.Connection = Conn
                 SQLcmd.CommandText = "UPDATE  [CRICUT].[CUPID].[WorkOrderMaster] 
-											 SET [Completed]='False'
-									 
-									 WHERE [Work Order ID] = '" & WID.ToString & "' "
+                                             SET [Completed]='False'
+                                     
+                                     WHERE [Work Order ID] = '" & WID.ToString & "' "
                 SQLcmd.ExecuteNonQuery()
                 Conn.Close()
             End If
@@ -786,18 +788,18 @@ here:
             strsql = "Select [Carton] As [Carton],
                              [Serial No] As [Serial No],
                              [Production Date]   
-					  FROM [CRICUT].[CUPID].[WorkOrder]  
-					  WHERE ([Work Order ID]='" & WID.ToString & "' AND [Pallet No]= '" & PalletBox.SelectedItem & "' 
+                      FROM [CRICUT].[CUPID].[WorkOrder]  
+                      WHERE ([Work Order ID]='" & WID.ToString & "' AND [Pallet No]= '" & PalletBox.SelectedItem & "' 
                              AND [Shift] = '" & Shift.SelectedItem.ToString() & "')
-					  ORDER BY [Production Date] DESC"
+                      ORDER BY [Production Date] DESC"
         Else
             strsql = "Select [Carton] As [Carton],
                              [Serial No] As [Serial No],
                              [Production Date]
-					  FROM [CRICUT].[CUPID].[WorkOrder]  
-					  WHERE ([Work Order ID]='" & WID.ToString & "' AND [Pallet No]= '" & PalletBox.SelectedItem & "'
+                      FROM [CRICUT].[CUPID].[WorkOrder]  
+                      WHERE ([Work Order ID]='" & WID.ToString & "' AND [Pallet No]= '" & PalletBox.SelectedItem & "'
                              AND [Shift] = '" & Shift.SelectedItem.ToString() & "')
-					  ORDER BY [Production Date] DESC"
+                      ORDER BY [Production Date] DESC"
         End If
 
 
@@ -855,13 +857,13 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "Select 
-								P.[Part No],
-								w.[Quantity],
-								w.[Total Order Count]
-					  FROM [CRICUT].[CUPID].[WorkOrderMaster]  W
-					  INNER JOIN [CRICUT].[CUPID].[PartMaster] P
-					  ON W.[Part ID] = P.[Part ID]
-					  WHERE (W.[Work Order ID]='" & WID.ToString & "' AND P.[Part Name]='" & part.Text & "' AND W.[Delete]='False' )"
+                                P.[Part No],
+                                w.[Quantity],
+                                w.[Total Order Count]
+                      FROM [CRICUT].[CUPID].[WorkOrderMaster]  W
+                      INNER JOIN [CRICUT].[CUPID].[PartMaster] P
+                      ON W.[Part ID] = P.[Part ID]
+                      WHERE (W.[Work Order ID]='" & WID.ToString & "' AND P.[Part Name]='" & part.Text & "' AND W.[Delete]='False' )"
 
             Dim ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
@@ -874,11 +876,11 @@ here:
             ds.Close()
             SQLcmd.CommandText =
                                 "SELECT [Serial No],
-										[Carton],
-										[Pallet NO] 
-							FROM [CUPID].[WorkOrder] 
-							WHERE [Index]= (Select Min([Index]) From [CRICUT].[CUPID].[WorkOrder] 
-							WHERE [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & PalletBox.Text & "')"
+                                        [Carton],
+                                        [Pallet NO] 
+                            FROM [CUPID].[WorkOrder] 
+                            WHERE [Index]= (Select Min([Index]) From [CRICUT].[CUPID].[WorkOrder] 
+                            WHERE [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & PalletBox.Text & "')"
 
             '"SELECT P.[Serial No],
             '                        P.[Carton] 
@@ -902,10 +904,10 @@ here:
             ds.Close()
             SQLcmd.CommandText =
                                        "SELECT [Serial No],
-											   [Carton] 
-								  FROM [CUPID].[WorkOrder] 
-								  WHERE [Index]= (Select MAX([Index]) From [CRICUT].[CUPID].[WorkOrder]
-								  WHERE [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & PalletBox.Text & "')"
+                                               [Carton] 
+                                  FROM [CUPID].[WorkOrder] 
+                                  WHERE [Index]= (Select MAX([Index]) From [CRICUT].[CUPID].[WorkOrder]
+                                  WHERE [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & PalletBox.Text & "')"
 
             '"SELECT P.[Serial No],
             '                        P.[Carton] 
@@ -927,8 +929,8 @@ here:
             ds.Close()
 
             SQLcmd.CommandText = "SELECT [Description]
-							FROM [CUPID].[ModelMaster] 
-							  WHERE [Model]= '" & Model.Text & "'"
+                            FROM [CUPID].[ModelMaster] 
+                              WHERE [Model]= '" & Model.Text & "'"
             ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
                 While ds.Read
@@ -970,7 +972,7 @@ here:
                 Dim SQLcmd = New SqlCommand
                 SQLcmd.Connection = Conn
                 SQLcmd.CommandText = "DELETE FROM [CUPID].[WorkOrder]
-								        WHERE [Serial No]='" & DataGridView1.CurrentCell.ToString() & "'
+                                        WHERE [Serial No]='" & DataGridView1.CurrentCell.ToString() & "'
                                         AND [Work Order ID] = '" & WID.ToString() & "'"
                 SQLcmd.ExecuteNonQuery()
                 Conn.Close()
@@ -1053,8 +1055,7 @@ here:
             qrImageShape.Left = leftPosition + 20.0
             qrImageShape.Top = topPosition
 
-            'sourceWorkSheet.Name = ("Pallet " & i)
-            'sourceWorkSheet.Range("B2").Value = i
+            sourceWorkSheet.Range("B2").Value = PalletBox.SelectedItem.ToString()
             sourceWorkSheet.Range("B3").Value = r1.PartNo
             sourceWorkSheet.Range("B4").Value = r1.WorkOrder
             sourceWorkSheet.Range("B5").Value = r1.PONumber
@@ -1067,11 +1068,8 @@ here:
             Else
                 sourceWorkSheet.Range("B10").Value = r1.Line
             End If
-            sourceWorkSheet.Range("B11").Value = r1.startserial
-            'sourceWorkSheet.Range("B11").Value = r1.startcarton
-            sourceWorkSheet.Range("E11").Value = r1.endserial
-            'sourceWorkSheet.Range("E11").Value = r1.endcarton
-            'sourceWorkSheet.Range("H4").Value = r1.Description
+            sourceWorkSheet.Range("B11").Value = DataGridView1.RowCount
+
             Dim c1 As Range = sourceWorkSheet.Range("B13:C52")
             Dim c2 As Range = sourceWorkSheet.Range("E13:F52")
             Dim c3 As Range = sourceWorkSheet.Range("H13:I52")
@@ -1083,9 +1081,9 @@ here:
                 Dim SQLcmd = New SqlCommand
                 SQLcmd.Connection = Conn
                 SQLcmd.CommandText = "SELECT [Serial No],
-										  [Carton] 
-							FROM [CUPID].[WorkOrder] 
-							 WHERE [Work Order ID]='" & WID.ToString & "'  AND [Pallet No]='" & PalletBox.Text & "' ORDER BY [Index] ASC"
+                                          [Carton] 
+                            FROM [CUPID].[WorkOrder] 
+                             WHERE [Work Order ID]='" & WID.ToString & "'  AND [Pallet No]='" & PalletBox.Text & "' ORDER BY [Index] ASC"
 
                 Dim ds = SQLcmd.ExecuteReader
                 Dim i1 = 1
@@ -1181,9 +1179,9 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT [Serial No],
-										  [Carton] 
-							FROM [CUPID].[WorkOrder] 
-							 WHERE [Work Order ID]='" & WID.ToString & "'  AND [Pallet No]='" & PalletBox.Text & "' ORDER BY [Index] ASC"
+                                          [Carton] 
+                            FROM [CUPID].[WorkOrder] 
+                             WHERE [Work Order ID]='" & WID.ToString & "'  AND [Pallet No]='" & PalletBox.Text & "' ORDER BY [Index] ASC"
 
             Dim ds = SQLcmd.ExecuteReader
             Dim i1 = 1
@@ -1293,9 +1291,9 @@ here:
         Else
             sourceWorkSheet.Range("B10").Value = r1.Line
         End If
-        sourceWorkSheet.Range("B11").Value = r1.startserial
+        sourceWorkSheet.Range("B11").Value = r1.qty
         'sourceWorkSheet.Range("B11").Value = r1.startcarton
-        sourceWorkSheet.Range("E11").Value = r1.endserial
+        'sourceWorkSheet.Range("E11").Value = r1.endserial
         'sourceWorkSheet.Range("E11").Value = r1.endcarton
         'sourceWorkSheet.Range("H4").Value = r1.Description
         Dim c1 As Range = sourceWorkSheet.Range("B13:C52")
@@ -1497,9 +1495,9 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT [Serial No],
-										 [Carton]
-								  From [CUPID].[WorkOrder]                         
-							 Where [Work Order ID]='" & WID.ToString & "'  AND [Pallet No]='" & PalletBox.Text & "' ORDER BY [Index] ASC"
+                                         [Carton]
+                                  From [CUPID].[WorkOrder]                         
+                             Where [Work Order ID]='" & WID.ToString & "'  AND [Pallet No]='" & PalletBox.Text & "' ORDER BY [Index] ASC"
 
 
             Dim ds = SQLcmd.ExecuteReader
@@ -2785,8 +2783,8 @@ here:
             End If
             ds.Close()
             SQLcmd.CommandText = "SELECT [Sub Group]
-								 FROM [CUPID].[WorkOrderMaster] 
-								 Where [Work Order ID]='" & WID.ToString & "'"
+                                 FROM [CUPID].[WorkOrderMaster] 
+                                 Where [Work Order ID]='" & WID.ToString & "'"
             ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
                 While ds.Read
@@ -3051,39 +3049,40 @@ here:
     ' Check Pallet Status
     Private Function checkPalleteStatus(ByVal serialnumber As String)
         Try
-            Dim Conn = New SqlConnection(connstr)
-            Conn.Open() ' Open the Connection
+            'Dim Conn = New SqlConnection(connstr)
+            'Conn.Open() ' Open the Connection
 
-            If Conn.State = ConnectionState.Open Then
-                Dim SQLcmd = New SqlCommand
-                SQLcmd.Connection = Conn
+            'If Conn.State = ConnectionState.Open Then
+            '    Dim SQLcmd = New SqlCommand
+            '    SQLcmd.Connection = Conn
 
-                SQLcmd.CommandText = "SELECT TOP 1000 ProductUnit.ID, TestResult.StationName
-                                        FROM (([Cricut_MES].[dbo].[ProductUnit]
-                                        INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON ProductUnit.ID = TestResult.ProductUnitID))
-                                        WHERE UnitSerialNumber ='" & serialnumber & "' AND TestResult.[StationName] LIKE '%PRINTING3%'"
+            '    SQLcmd.CommandText = "SELECT TOP 1000 ProductUnit.ID, TestResult.StationName
+            '                            FROM (([Cricut_MES].[dbo].[ProductUnit]
+            '                            INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON ProductUnit.ID = TestResult.ProductUnitID))
+            '                            WHERE UnitSerialNumber ='" & serialnumber & "' AND TestResult.[StationName] LIKE '%PRINTING3%'"
 
-                Dim rowsreturned As Integer
-                rowsreturned = SQLcmd.ExecuteScalar()
+            '    Dim rowsreturned As Integer
+            '    rowsreturned = SQLcmd.ExecuteScalar()
 
-                If rowsreturned = 0 Then
-                    ' Execute the second query
-                    SQLcmd.CommandText = "SELECT TOP 1000 SubSerialNumber.ProductUnitID, TestResult.StationName
-                                    FROM [Cricut_MES].[dbo].[SubSerialNumber]
-                                    INNER JOIN [Cricut_MES].[dbo].[TestResult] ON SubSerialNumber.ProductUnitID = TestResult.ProductUnitID
-                                    WHERE SubSerialNumber = '" & serialnumber & "' and TestResult.StationName LIKE '%PRINTING3%'"
+            '    If rowsreturned = 0 Then
+            '        ' Execute the second query
+            '        SQLcmd.CommandText = "SELECT TOP 1000 SubSerialNumber.ProductUnitID, TestResult.StationName
+            '                        FROM [Cricut_MES].[dbo].[SubSerialNumber]
+            '                        INNER JOIN [Cricut_MES].[dbo].[TestResult] ON SubSerialNumber.ProductUnitID = TestResult.ProductUnitID
+            '                        WHERE SubSerialNumber = '" & serialnumber & "' and TestResult.StationName LIKE '%PRINTING3%'"
 
-                    rowsreturned = SQLcmd.ExecuteScalar()
+            '        rowsreturned = SQLcmd.ExecuteScalar()
 
-                    If rowsreturned = 0 Then
-                        Return False
-                    Else
-                        Return True
-                    End If
-                Else
-                    Return True
-                End If
-            End If
+            '        If rowsreturned = 0 Then
+            '            Return False
+            '        Else
+            '            Return True
+            '        End If
+            '    Else
+            '        Return True
+            '    End If
+            'End If
+            Return True
         Catch ex As Exception
             Return False
         End Try
@@ -3099,11 +3098,11 @@ here:
 
                 SQLcmd.Connection = Conn
                 SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
-									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
-									  ON wm.[Work Order ID]=w.[Work Order ID]
-									  WHERE w.[Serial No] = '" & serialnumber & "'"
+                        
+                                      FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                                      INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
+                                      ON wm.[Work Order ID]=w.[Work Order ID]
+                                      WHERE w.[Serial No] = '" & serialnumber & "'"
                 'Dim ds = SQLcmd.ExecuteNonQuery()
                 Dim rowsreturned As Integer
                 rowsreturned = SQLcmd.ExecuteScalar()
@@ -3131,7 +3130,7 @@ here:
         'End If
 
         If CheckDuplicateSerial(txtS1.Text) = False Then
-            'statuslbl.Text = "Duplicated Serial No"
+            statuslbl.Text = "Duplicated Serial No"
         Else
             statuslbl.Text = ""
             lblError.Text = ""
@@ -3451,7 +3450,7 @@ here:
 
         If SkipCarton = 1 Then
             If CheckDuplicateSerial(txtS2.Text) = False Then
-                statuslbl.Text = "Duplicated Serial No"
+                'statuslbl.Text = "Duplicated Serial No"
             Else
                 statuslbl.Text = ""
                 lblError.Text = ""
@@ -3463,15 +3462,15 @@ here:
         ' Checking the TestResult Database to determine if the Pallete is Complete
         If checkPalleteStatus(txtS2.Text) = False Then
             serialStatusLbl.ForeColor = Color.Red
-            serialStatusLbl.Text = "✖-Incomplete"
+            'serialStatusLbl.Text = "✖-Incomplete"
         Else
             serialStatusLbl.ForeColor = Color.Black
-            serialStatusLbl.Text = "✓-Complete"
+            'serialStatusLbl.Text = "✓-Complete"
         End If
 
         lblError.Text = ""
         If CheckDuplicateSerial(txtS2.Text) = False Or txtS2.Text = txtS1.Text Then
-            If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+            'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
         Else
             statuslbl.Text = ""
             lblError.Text = ""
@@ -3588,10 +3587,10 @@ here:
 
         If SkipCarton = 1 Then
             If CheckDuplicateSerial(txtS3.Text) = False Then
-                statuslbl.Text = "Duplicated Serial No"
+                'statuslbl.Text = "Duplicated Serial No"
             Else
-                statuslbl.Text = ""
-                lblError.Text = ""
+                'statuslbl.Text = ""
+                'lblError.Text = ""
             End If
             Exit Sub
         End If
@@ -3600,19 +3599,19 @@ here:
 
         ' Checking the TestResult Database to determine if the Pallete is Complete
         If checkPalleteStatus(txtS3.Text) = False Then
-            serialStatusLbl.ForeColor = Color.Red
-            serialStatusLbl.Text = "✖-Incomplete"
+            'serialStatusLbl.ForeColor = Color.Red
+            'serialStatusLbl.Text = "✖-Incomplete"
         Else
-            serialStatusLbl.ForeColor = Color.Black
-            serialStatusLbl.Text = "✓-Complete"
+            'serialStatusLbl.ForeColor = Color.Black
+            'serialStatusLbl.Text = "✓-Complete"
         End If
 
         lblError.Text = ""
         If CheckDuplicateSerial(txtS3.Text) = False Or txtS3.Text = txtS2.Text Or txtS3.Text = txtS1.Text Then
-            If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+            'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
         Else
-            statuslbl.Text = ""
-            lblError.Text = ""
+            'statuslbl.Text = ""
+            'lblError.Text = ""
         End If
     End Sub
 
@@ -3789,10 +3788,10 @@ here:
 
         If SkipCarton = 1 Then
             If CheckDuplicateSerial(txtS4.Text) = False Then
-                statuslbl.Text = "Duplicated Serial No"
+                'statuslbl.Text = "Duplicated Serial No"
             Else
-                statuslbl.Text = ""
-                lblError.Text = ""
+                'statuslbl.Text = ""
+                ' lblError.Text = ""
             End If
             Exit Sub
         End If
@@ -3800,19 +3799,19 @@ here:
 
         ' Checking the TestResult Database to determine if the Pallete is Complete
         If checkPalleteStatus(txtS4.Text) = False Then
-            serialStatusLbl.ForeColor = Color.Red
-            serialStatusLbl.Text = "✖-Incomplete"
+            'serialStatusLbl.ForeColor = Color.Red
+            'serialStatusLbl.Text = "✖-Incomplete"
         Else
-            serialStatusLbl.ForeColor = Color.Black
-            serialStatusLbl.Text = "✓-Complete"
+            'serialStatusLbl.ForeColor = Color.Black
+            'serialStatusLbl.Text = "✓-Complete"
         End If
 
         lblError.Text = ""
         If CheckDuplicateSerial(txtS4.Text) = False Or txtS4.Text = txtS3.Text Or txtS4.Text = txtS2.Text Or txtS4.Text = txtS1.Text Then
-            If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+            'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
         Else
-            statuslbl.Text = ""
-            lblError.Text = ""
+            'statuslbl.Text = ""
+            'lblError.Text = ""
         End If
     End Sub
 
@@ -4003,10 +4002,10 @@ here:
 
         If SkipCarton = 1 Then
             If CheckDuplicateSerial(txtS5.Text) = False Then
-                statuslbl.Text = "Duplicated Serial No"
+                'statuslbl.Text = "Duplicated Serial No"
             Else
-                statuslbl.Text = ""
-                lblError.Text = ""
+                'statuslbl.Text = ""
+                'lblError.Text = ""
             End If
             Exit Sub
         End If
@@ -4014,19 +4013,19 @@ here:
 
         ' Checking the TestResult Database to determine if the Pallete is Complete
         If checkPalleteStatus(txtS5.Text) = False Then
-            serialStatusLbl.ForeColor = Color.Red
-            serialStatusLbl.Text = "✖-Incomplete"
+            'serialStatusLbl.ForeColor = Color.Red
+            'serialStatusLbl.Text = "✖-Incomplete"
         Else
-            serialStatusLbl.ForeColor = Color.Black
-            serialStatusLbl.Text = "✓-Complete"
+            'serialStatusLbl.ForeColor = Color.Black
+            'serialStatusLbl.Text = "✓-Complete"
         End If
 
         lblError.Text = ""
         If CheckDuplicateSerial(txtS5.Text) = False Or txtS5.Text = txtS4.Text Or txtS5.Text = txtS3.Text Or txtS5.Text = txtS2.Text Or txtS5.Text = txtS1.Text Then
-            If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+            'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
         Else
-            statuslbl.Text = ""
-            lblError.Text = ""
+            'statuslbl.Text = ""
+            'lblError.Text = ""
         End If
     End Sub
 
@@ -4246,11 +4245,11 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
-									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
-									  ON wm.[Work Order ID]=w.[Work Order ID]
-									  WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & Carton.Text & "'"
+                        
+                                      FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                                      INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
+                                      ON wm.[Work Order ID]=w.[Work Order ID]
+                                      WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & Carton.Text & "'"
             'And wm.[Sub Group] = '" & cmbSubGroup.Text & "'"
             Dim ds = SQLcmd.ExecuteReader
             If ds.Read Then
@@ -4409,17 +4408,17 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
-									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
-									  ON wm.[Work Order ID]=w.[Work Order ID]
-									  WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & txtC2.Text & "'"
+                        
+                                      FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                                      INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
+                                      ON wm.[Work Order ID]=w.[Work Order ID]
+                                      WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & txtC2.Text & "'"
             'And wm.[Sub Group] = '" & cmbSubGroup.Text & "'"
             Dim ds = SQLcmd.ExecuteReader
             If ds.Read Then
                 'statuslbl.Text = (" Carton: " & (ds.GetValue("2").ToString))
                 'statuslbl.Text = "Duplicate Carton Found..." & vbCr & "PO No : " & ds.Item("Work Order") & vbCr & "Sub Group:" & ds.Item("Sub Group") & vbCr & "Pallet No:" & ds.Item("Pallet No") & vbCr & "Serial No:" & ds.Item("Serial No")
-                statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
+                'statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
             Else
                 statuslbl.Text = ""
                 lblError.Text = ""
@@ -4428,10 +4427,10 @@ here:
         Conn.Close()
 
         If txtC2.Text.Length < 1 OrElse txtC2.Text.Length > 4 And txtC2.Text <> "" Then
-            statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+            'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
         Else
             If txtC2.Text = Carton.Text And Not txtC2.Text = "" Then
-                statuslbl.Text = "Duplicate Carton Scanned..."
+                'statuslbl.Text = "Duplicate Carton Scanned..."
             End If
         End If
 
@@ -4522,17 +4521,17 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
-									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
-									  ON wm.[Work Order ID]=w.[Work Order ID]
-									  WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & txtC3.Text & "'"
+                        
+                                      FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                                      INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
+                                      ON wm.[Work Order ID]=w.[Work Order ID]
+                                      WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & txtC3.Text & "'"
             'And wm.[Sub Group] = '" & cmbSubGroup.Text & "'"
             Dim ds = SQLcmd.ExecuteReader
             If ds.Read Then
                 'statuslbl.Text = (" Carton: " & (ds.GetValue("2").ToString))
                 'statuslbl.Text = "Duplicate Carton:" & vbCr & "Work Order:" & ds.Item("Work Order") & vbCr & "Sub Group:" & ds.Item("Sub Group") & vbCr & "Pallet No:" & ds.Item("Pallet No") & vbCr & "Serial No:" & ds.Item("Serial No")
-                statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
+                'statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
             Else
                 statuslbl.Text = ""
                 lblError.Text = ""
@@ -4541,10 +4540,10 @@ here:
         Conn.Close()
 
         If txtC3.Text.Length < 1 OrElse txtC3.Text.Length > 4 And txtC3.Text <> "" Then
-            statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+            'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
         Else
             If (txtC3.Text = Carton.Text Or txtC3.Text = txtC2.Text) And Not txtC3.Text = "" Then
-                statuslbl.Text = "Duplicate Carton Scanned..."
+                'statuslbl.Text = "Duplicate Carton Scanned..."
             End If
 
         End If
@@ -4574,17 +4573,17 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
-									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
-									  ON wm.[Work Order ID]=w.[Work Order ID]
-									  WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & txtC4.Text & "'"
+                        
+                                      FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                                      INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
+                                      ON wm.[Work Order ID]=w.[Work Order ID]
+                                      WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & txtC4.Text & "'"
             'And wm.[Sub Group] = '" & cmbSubGroup.Text & "'"
             Dim ds = SQLcmd.ExecuteReader
             If ds.Read Then
                 'statuslbl.Text = (" Carton: " & (ds.GetValue("2").ToString))
                 'statuslbl.Text = "Duplicate Carton:" & vbCr & "Work Order:" & ds.Item("Work Order") & vbCr & "Sub Group:" & ds.Item("Sub Group") & vbCr & "Pallet No:" & ds.Item("Pallet No") & vbCr & "Serial No:" & ds.Item("Serial No")
-                statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
+                'statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
             Else
                 statuslbl.Text = ""
                 lblError.Text = ""
@@ -4593,10 +4592,10 @@ here:
         Conn.Close()
 
         If txtC4.Text.Length < 1 OrElse txtC4.Text.Length > 4 And txtC4.Text <> "" Then
-            statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+            'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
         Else
             If (txtC4.Text = Carton.Text Or txtC4.Text = txtC2.Text Or txtC4.Text = txtC3.Text) And Not txtC4.Text = "" Then
-                statuslbl.Text = "Duplicate Carton Scanned..."
+                'statuslbl.Text = "Duplicate Carton Scanned..."
             End If
         End If
 
@@ -4625,17 +4624,17 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
-									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
-									  ON wm.[Work Order ID]=w.[Work Order ID]
-									  WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & txtC5.Text & "'"
+                        
+                                      FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                                      INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
+                                      ON wm.[Work Order ID]=w.[Work Order ID]
+                                      WHERE wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And w.[Carton] = '" & txtC5.Text & "'"
             'And wm.[Sub Group] = '" & cmbSubGroup.Text & "'"
             Dim ds = SQLcmd.ExecuteReader
             If ds.Read Then
                 'statuslbl.Text = (" Carton: " & (ds.GetValue("2").ToString))
                 'statuslbl.Text = "Duplicate Carton:" & vbCr & "Work Order:" & ds.Item("Work Order") & vbCr & "Sub Group:" & ds.Item("Sub Group") & vbCr & "Pallet No:" & ds.Item("Pallet No") & vbCr & "Serial No:" & ds.Item("Serial No")
-                statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
+                'statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
             Else
                 statuslbl.Text = ""
                 lblError.Text = ""
@@ -4644,10 +4643,10 @@ here:
         Conn.Close()
 
         If txtC5.Text.Length < 1 OrElse txtC5.Text.Length > 4 And txtC5.Text <> "" Then
-            statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+            'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
         Else
             If (txtC5.Text = Carton.Text Or txtC5.Text = txtC2.Text Or txtC5.Text = txtC3.Text Or txtC5.Text = txtC4.Text) And Not txtC5.Text = "" Then
-                statuslbl.Text = "Duplicate Carton Scanned..."
+                'statuslbl.Text = "Duplicate Carton Scanned..."
             End If
         End If
 
@@ -4833,31 +4832,24 @@ here:
 
 
     Private Async Sub count_TextChanged(sender As Object, e As EventArgs) Handles count.TextChanged
-        'Await Task.Delay(500)
-        If Not temporaryBypass Then
-            Await Task.Delay(500)
-            UpdateScanOption()
-        End If
-        If ScanBtn.Visible = False Or temporaryBypass = True Then
-            If Integer.Parse(count.Text) >= Integer.Parse(qty.Text) Or temporaryBypass = True Then
-                If Integer.Parse(totalordercount.Text) < Integer.Parse(Order.Text) Or temporaryBypass = True Then
+        Await Task.Delay(500)
+        UpdateScanOption()
+        If ScanBtn.Visible = False Then
+            If Integer.Parse(count.Text) >= Integer.Parse(qty.Text) Then
+                If Integer.Parse(totalordercount.Text) < Integer.Parse(Order.Text) Then
                     InsertStatusSQL()
                     'PrintReportAndStoreExcel()
                     Dim res = MessageBox.Show("Do you want to print report for [Pallet : " & PalletBox.SelectedItem & "] ?", "Print Report", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
                     If res = DialogResult.Yes Then
-                        'PrintOrder()
-                        'PrintReport()
-                        'reprint()
-                        'Button1_Click(sender, e)
                         PrintReportSingularPallet()
                         OpenReprintExcelCreation()
                     End If
-
                     NextPallet()
                 End If
             End If
             If Integer.Parse(totalordercount.Text) >= Integer.Parse(Order.Text) Then
-                PrintReportAndStoreExcel()
+                'PrintReportAndStoreExcel()
+                reprint()
                 Await Task.Delay(500)
                 UpdateCompleteSQL()
                 Dim res = MessageBox.Show("Do you want to print order for this [Pallet: " & PalletBox.SelectedItem & "] under this [Work Order: " & cmbWorkOrderBox.SelectedItem.ToString() & "] ?", "Print Order", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
@@ -4866,8 +4858,7 @@ here:
                     scanstatuslbl.Text = "Populating Data and Printing Report.."
                     CancelBtn.Visible = False
                     PrintOrder()
-                    PrintReport()
-
+                    'PrintReport()
                 End If
                 MessageBox.Show("Work Order Complete", "Complete Operation", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 scanstatuslbl.Visible = False
@@ -4884,8 +4875,10 @@ here:
                     item.enabled = False
                 Next
                 Exit Sub
-            Else
+
             End If
+
+
         End If
     End Sub
 
@@ -4955,7 +4948,7 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT [Pallet No]
-							  FROM [CRICUT].[CUPID].[WorkOrder] WHERE [Work Order ID]='" & WID.ToString & "' AND [Serial No]='" & txtSearch.Text & "'"
+                              FROM [CRICUT].[CUPID].[WorkOrder] WHERE [Work Order ID]='" & WID.ToString & "' AND [Serial No]='" & txtSearch.Text & "'"
             Dim ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
                 While ds.Read
@@ -4974,12 +4967,12 @@ here:
         Conn.Open()
         Dim SQLcmd = New SqlCommand
         Dim strsql = "Select [Index] As [No],
-								[Serial No] As [Serial No],
-								[Carton] As [Carton]
-					   
-					  FROM [CRICUT].[CUPID].[WorkOrder]  
-				   
-					  WHERE ([Work Order ID]='" & WID.ToString & "' AND [Pallet No]= " & PalletBox.SelectedItem & " AND [Serial No]='" & txtSearch.Text & "' )"
+                                [Serial No] As [Serial No],
+                                [Carton] As [Carton]
+                       
+                      FROM [CRICUT].[CUPID].[WorkOrder]  
+                   
+                      WHERE ([Work Order ID]='" & WID.ToString & "' AND [Pallet No]= " & PalletBox.SelectedItem & " AND [Serial No]='" & txtSearch.Text & "' )"
 
         Dim dt = New System.Data.DataTable
         dt.Clear()
@@ -5042,10 +5035,10 @@ here:
             Dim SQLcmd = New SqlCommand
             SQLcmd.Connection = Conn
             SQLcmd.CommandText = "SELECT [Serial No],
-										 [Carton]
-								  From [CUPID].[WorkOrder]   
-												
-							 Where [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & PalletBox.Text & "' ORDER BY [Index] ASC"
+                                         [Carton]
+                                  From [CUPID].[WorkOrder]   
+                                                
+                             Where [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & PalletBox.Text & "' ORDER BY [Index] ASC"
 
 
             Dim ds = SQLcmd.ExecuteReader
@@ -5087,8 +5080,8 @@ here:
             End If
             ds.Close()
             SQLcmd.CommandText = "SELECT [Sub Group]
-								 FROM [CUPID].[WorkOrderMaster] 
-								 Where [Work Order ID]='" & WID.ToString & "'"
+                                 FROM [CUPID].[WorkOrderMaster] 
+                                 Where [Work Order ID]='" & WID.ToString & "'"
             ds = SQLcmd.ExecuteReader
             If ds.HasRows Then
                 While ds.Read
@@ -5281,11 +5274,10 @@ here:
             Else
                 sourceWorkSheet.Range("B10").Value = r1.Line
             End If
-            sourceWorkSheet.Range("B11").Value = r1.startserial
-            'sourceWorkSheet.Range("B11").Value = r1.startcarton
-            sourceWorkSheet.Range("E11").Value = r1.endserial
-            'sourceWorkSheet.Range("E11").Value = r1.endcarton
-            'sourceWorkSheet.Range("H4").Value = r1.Description
+            sourceWorkSheet.Range("B11").Value = r1.qty
+
+
+
             Dim c1 As Range = sourceWorkSheet.Range("B13:C52")
             Dim c2 As Range = sourceWorkSheet.Range("E13:F52")
             Dim c3 As Range = sourceWorkSheet.Range("H13:I52")
@@ -5377,11 +5369,11 @@ here:
                 Dim SQLcmd = New SqlCommand
                 SQLcmd.Connection = Conn
                 SQLcmd.CommandText = "SELECT DISTINCT [Serial No],[Sub Group],p.[Work Order ID],p.[Index],
-										 [Carton]
-								  From [CUPID].[WorkOrder] p   
-							   INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] w
-							  ON p.[Work Order ID]=w.[Work Order ID]   
-							 Where p.[Work Order ID]='" & WID.ToString & "'AND [Sub Group]='" & cmbSubGroup.Text & "' AND [Pallet No]='" & i & "' ORDER BY [Index] ASC"
+                                         [Carton]
+                                  From [CUPID].[WorkOrder] p   
+                               INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] w
+                              ON p.[Work Order ID]=w.[Work Order ID]   
+                             Where p.[Work Order ID]='" & WID.ToString & "'AND [Sub Group]='" & cmbSubGroup.Text & "' AND [Pallet No]='" & i & "' ORDER BY [Index] ASC"
 
                 Dim ds = SQLcmd.ExecuteReader
                 Dim i1 = 1
@@ -5965,11 +5957,11 @@ here:
                 ds.Close()
                 SQLcmd.CommandText =
                                 "SELECT [Serial No],
-										[Carton],
-										[Pallet NO] 
-							FROM [CUPID].[WorkOrder] 
-							WHERE [Index]= (Select Min([Index]) From [CRICUT].[CUPID].[WorkOrder] 
-							WHERE [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & i & "')"
+                                        [Carton],
+                                        [Pallet NO] 
+                            FROM [CUPID].[WorkOrder] 
+                            WHERE [Index]= (Select Min([Index]) From [CRICUT].[CUPID].[WorkOrder] 
+                            WHERE [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & i & "')"
 
 
                 ds = SQLcmd.ExecuteReader
@@ -5984,11 +5976,11 @@ here:
 
                 SQLcmd.CommandText =
                                 "SELECT [Serial No],
-										[Carton],
-										[Pallet NO] 
-							FROM [CUPID].[WorkOrder] 
-							WHERE [Index]= (Select Max([Index]) From [CRICUT].[CUPID].[WorkOrder] 
-							WHERE [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & i & "')"
+                                        [Carton],
+                                        [Pallet NO] 
+                            FROM [CUPID].[WorkOrder] 
+                            WHERE [Index]= (Select Max([Index]) From [CRICUT].[CUPID].[WorkOrder] 
+                            WHERE [Work Order ID]='" & WID.ToString & "' AND [Pallet No]='" & i & "')"
 
 
                 ds = SQLcmd.ExecuteReader
@@ -6000,8 +5992,8 @@ here:
                 ds.Close()
 
                 SQLcmd.CommandText = "SELECT [Sub Group]
-								 FROM [CUPID].[WorkOrderMaster] 
-								 Where [Work Order ID]='" & WID.ToString & "'"
+                                 FROM [CUPID].[WorkOrderMaster] 
+                                 Where [Work Order ID]='" & WID.ToString & "'"
                 ds = SQLcmd.ExecuteReader
                 If ds.HasRows Then
                     While ds.Read
@@ -6145,16 +6137,6 @@ here:
 
             kill_Excel()
 
-            Dim SerialNoList As New List(Of String)
-            For Each Row As DataGridViewRow In DataGridView1.Rows
-                SerialNoList.Add(Row.Cells(1).Value.ToString())
-            Next
-
-            If Not SerialNoList.Count > 0 Then
-                Exit Sub
-            End If
-
-
 
             Dim localdir = IO.Directory.GetParent(IO.Directory.GetParent(Directory.GetCurrentDirectory).ToString).ToString
             Dim r1 As ReportData
@@ -6163,30 +6145,39 @@ here:
             Dim palletCount = Integer.Parse(PalletBox.SelectedItem.ToString())
 
 
+
             scanstatuslbl.Visible = True
             scanstatuslbl.Text = "Populating Data and Opening Excel File..."
             ScanBtn.Visible = False
 
             sourceWorkBook = xlApp.Workbooks.Open(localdir & "\" & "CartonPalletizingReport.xlsm")
+            sourceWorkSheet = sourceWorkBook.Worksheets(1)
 
 
-            Dim sl = SerialNoList.Count
 
-            'Determines Which List to User
-            If sl > 0 And sl < 121 Then
-                sourceWorkSheet = sourceWorkBook.Worksheets(1)
-            ElseIf sl > 120 And sl < 271 Then
-                sourceWorkSheet = sourceWorkBook.Worksheets(2)
-            ElseIf sl > 270 And sl < 421 Then
-                sourceWorkSheet = sourceWorkBook.Worksheets(3)
-            ElseIf sl > 420 And sl < 571
-                sourceWorkSheet = sourceWorkBook.Worksheets(3)
-            Else
-                statuslbl.Text = "More than 570 Serial Threshold Count"
-                Exit Sub
-            End If
+            ' Create a QR Code with QrCoder
+            Dim qrStrdata = $"{r1.WorkOrder},{r1.PONumber},{r1.SubGroup},{r1.PalletNo},{r1.Shift}"
+            Dim qrgen As New QRCoder.QRCodeGenerator()
+            Dim qrdata = qrgen.CreateQrCode(qrStrdata, QRCodeGenerator.ECCLevel.Q)
+            Dim qrcode As New QRCode(qrdata)
+            Dim qrImage = qrcode.GetGraphic(2)
+            Dim cellRange As Excel.Range = CType(sourceWorkSheet.Range("I1:I1"), Excel.Range)
 
-
+            ' Paste the QR code image at the top-right of cell "I1" without resizing the column or row
+            Dim leftPosition As Double = cellRange.Left + cellRange.Width - qrImage.Width
+            Dim topPosition As Double = cellRange.Top
+            Try
+                Clipboard.Clear()
+                Clipboard.SetDataObject(qrImage, True)
+                sourceWorkSheet.Paste(sourceWorkSheet.Cells(1, "I"), qrImage)
+            Catch ex As System.Runtime.InteropServices.COMException When ex.ErrorCode = &H800A03EC
+                System.Threading.Thread.Sleep(1000)
+                sourceWorkSheet.Paste(sourceWorkSheet.Cells(1, "I"), qrImage)
+                Clipboard.Clear()
+            End Try
+            Dim qrImageShape = sourceWorkSheet.Shapes.Item(1) ' Assumes the QR code image is the first shape in the worksheet
+            qrImageShape.Left = leftPosition + 20.0
+            qrImageShape.Top = topPosition
 
 
             sourceWorkSheet.Range("B2").Value = PalletBox.SelectedItem.ToString()
@@ -6202,31 +6193,22 @@ here:
             Else
                 sourceWorkSheet.Range("B10").Value = r1.Line
             End If
-            sourceWorkSheet.Range("B11").Value = r1.startserial
-            sourceWorkSheet.Range("E11").Value = r1.endserial
+            sourceWorkSheet.Range("B11").Value = DataGridView1.RowCount
+            'sourceWorkSheet.Range("B11").Value = r1.startserial
+            'sourceWorkSheet.Range("E11").Value = r1.endserial
 
 
 
             Dim rowCount As Integer = 13 ' Initialize the row count
-            Dim currentColumn As String = "B" ' Initialize the column as "B"
-            Dim cellRange = sl
+            Dim SerialColumn As String = "B" ' Initialize the column as "B" then "E" then "H"
+            Dim CartonColumn As String = "C" ' Initialize the column as "C" then "F" then "I"
 
-            For Each serialNo As String In SerialNoList
-                Dim range1Start = 13
-                Dim range1end = 52
 
-                Dim range2Start = 55
-                Dim range2end = 104
-
-                Dim range3Start = 109
-                Dim range3end = 158
-
-                Dim range4Start = 163
-                Dim range4end = 212
-
+            For Each Row As DataGridViewRow In DataGridView1.Rows
 
                 ' Set the cell value in the current column and row
-                sourceWorkSheet.Range($"{currentColumn}{rowCount}").Value = serialNo
+                sourceWorkSheet.Range($"{SerialColumn}{rowCount}").Value = Row.Cells(1).Value.ToString()
+                sourceWorkSheet.Range($"{CartonColumn}{rowCount}").Value = Row.Cells(0).Value.ToString()
 
                 ' Increment the row count
                 rowCount += 1
@@ -6234,103 +6216,142 @@ here:
                 ' If the row count reaches the limit (52), move to the next column and reset the row count
                 If rowCount >= 52 Then
                     rowCount = 0
-                    If currentColumn = "B" Then
-                        currentColumn = "E"
-                    ElseIf currentColumn = "E" Then
-                        currentColumn = "H"
-                    ElseIf currentColumn = "H" Then
+                    If SerialColumn = "B" Then
+                        SerialColumn = "E"
+                        CartonColumn = "F"
+                    ElseIf SerialColumn = "E" Then
+                        SerialColumn = "H"
+                        CartonColumn = "I"
+                    ElseIf SerialColumn = "H" Then
                         Exit For
                     End If
                 End If
             Next
 
+            Dim saveSheetPath = $"{localdir}\bin\Result\{r1.WorkOrder}_{r1.SubGroup}_Pallet {palletCount}.xls"
 
-            Dim SheetName = $"Pallet {PalletBox.Text.ToString()}"
-            Dim WorkOrder_WorkBook As Excel.Workbook
-            Dim WorkOrder_WorkSheet As New Excel.Worksheet
-            Dim WorkOrder_ExcelApp As New Excel.Application
-            Dim WorkOrder_file = $"{localdir}\bin\Result\{r1.WorkOrder}_{r1.SubGroup}.xls"
-
-
-            If IO.File.Exists(WorkOrder_file) Then
-                WorkOrder_WorkBook = WorkOrder_ExcelApp.Workbooks.Open(WorkOrder_file)
-                For Each sheet As Excel.Worksheet In WorkOrder_WorkBook.Sheets
-                    If sheet.Name = SheetName Then
-                        sheet.Delete()
-                    End If
-                Next
-            Else
-                WorkOrder_WorkBook = WorkOrder_ExcelApp.Workbooks.Add()
+            If IO.File.Exists(saveSheetPath) Then
+                IO.File.Delete(saveSheetPath)
             End If
-
-            ' Adjust column widths in WorkOrder_WorkSheet based on used columns in sourceWorkSheet
-            For Each column In sourceWorkSheet.UsedRange.Columns
-                WorkOrder_WorkSheet.Cells(1, column.Column).ColumnWidth = column.ColumnWidth
-            Next
-
-            ' Adjust row heights in WorkOrder_WorkSheet based on used rows in sourceWorkSheet
-            For Each row In sourceWorkSheet.UsedRange.Rows
-                WorkOrder_WorkSheet.Cells(row.Row, 1).RowHeight = row.RowHeight
-            Next
+            sourceWorkSheet.SaveAs(saveSheetPath)
+            'kill_Excel()
 
 
-            WorkOrder_WorkSheet = WorkOrder_WorkBook.Worksheets.Add(After:=WorkOrder_WorkBook.Worksheets(WorkOrder_WorkBook.Worksheets.Count))
-            'WorkOrder_WorkSheet = WorkOrder_WorkBook.Sheets(1)
-            WorkOrder_WorkSheet.Name = SheetName
-
-            ' Copy the content from sourceWorkSheet to WorkOrder_WorkSheet
-            sourceWorkSheet.UsedRange.Copy()
-            WorkOrder_WorkSheet.Range("A1").PasteSpecial(Paste:=Excel.XlPasteType.xlPasteValues)
-            xlApp.CutCopyMode = False
 
 
-            '' Create a QR Code with QrCoder
-            'Dim qrStrdata = $"{r1.WorkOrder},{r1.PONumber},{r1.SubGroup},{PalletBox.SelectedItem.ToString()},{r1.Shift}"
-            'Dim qrgen As New QRCoder.QRCodeGenerator()
-            'Dim qrdata = qrgen.CreateQrCode(qrStrdata, QRCodeGenerator.ECCLevel.Q)
-            'Dim qrcode As New QRCode(qrdata)
-            'Dim qrImage = qrcode.GetGraphic(2)
-            'Dim cellRange As Excel.Range = CType(WorkOrder_WorkSheet.Range("I1:I1"), Excel.Range)
-
-            '' Paste the QR code image at the top-right of cell "I1" without resizing the column or row
-            'Dim leftPosition As Double = cellRange.Left + cellRange.Width - qrImage.Width
-            'Dim topPosition As Double = cellRange.Top
+            'Dim ISnew = False
+            'Dim workSheetName = $"Pallet {palletCount}"
+            'Dim targetWorkbookPath = $"{localdir}\bin\Result\{r1.WorkOrder}_{r1.SubGroup}.xls"
             'Try
-            '    Clipboard.Clear()
-            '    Clipboard.SetDataObject(qrImage, True)
-            '    WorkOrder_WorkSheet.Paste(WorkOrder_WorkSheet.Cells(1, "I"), qrImage)
-            'Catch ex As System.Runtime.InteropServices.COMException When ex.ErrorCode = &H800A03EC
-            '    System.Threading.Thread.Sleep(1000)
-            '    WorkOrder_WorkSheet.Paste(WorkOrder_WorkSheet.Cells(1, "I"), qrImage)
-            '    Clipboard.Clear()
-            'End Try
-            'Dim qrImageShape = WorkOrder_WorkSheet.Shapes.Item(1) ' Assumes the QR code image is the first shape in the worksheet
-            'qrImageShape.Left = leftPosition + 20.0
-            'qrImageShape.Top = topPosition
+            '    Dim xlTargetApp As Excel.Application = New Excel.Application
+            '    Dim targetWorkbook As Excel.Workbook
+            '    Dim targetSheet As New Excel.Worksheet
+
+            '    ' Check if the target workbook exists, create a new one if it doesn't
+            '    If IO.File.Exists(targetWorkbookPath) Then
+            '        targetWorkbook = xlTargetApp.Workbooks.Open(targetWorkbookPath)
+            '    Else
+            '        targetWorkbook = xlTargetApp.Workbooks.Add()
+            '        ISnew = True
+            '    End If
+
+            '    ' Find the target worksheet and its index (if it exists)
+            '    For Each sheet As Excel.Worksheet In targetWorkbook.Worksheets
+            '        If sheet.Name = workSheetName Then
+            '            sheet.Delete()
+
+            '        End If
+            '    Next
+            '    targetWorkbook.Save()
+
+
+            '    ' Create a new worksheet at the same index
+            '    targetSheet = targetWorkbook.Worksheets.Add()
+
+            '    For Each sheet As Excel.Worksheet In targetWorkbook.Worksheets
+            '        If sheet.Name = workSheetName Then
+            '            'targetSheet.Name = workSheetName
+            '            Exit For
+            '        End If
+            '        targetSheet.Name = workSheetName
+            '    Next
 
 
 
-            ' Save and close WorkOrder_WorkBook
-            WorkOrder_WorkBook.Save()
-            WorkOrder_WorkBook.Close()
-
-            ReorderWorksheetsNumerically(WorkOrder_file)
 
 
-            ''sourceWorkSheet.SaveAs(localdir & "\bin\Result\" & r1.WorkOrder & "_" & r1.SubGroup & ".xls")
-            'If IO.File.Exists(localdir & "\bin\Result\" & r1.WorkOrder & "_" & r1.SubGroup & "_Pallet_" & palletCount & ".xls") Then
-            '    File.Delete(localdir & "\bin\Result\" & r1.WorkOrder & "_" & r1.SubGroup & "_Pallet_" & palletCount & ".xls")
-            'End If
-            'sourceWorkSheet.SaveAs(localdir & "\bin\Result\" & r1.WorkOrder & "_" & r1.SubGroup & "_Pallet_" & palletCount & ".xls")
 
+            '    ' Set the column widths and row heights to match the used range of the source worksheet
+            '    For Each col As Excel.Range In sourceWorkSheet.UsedRange.Columns
+            '        targetSheet.Cells(1, col.Column).ColumnWidth = col.ColumnWidth ' 0.6
+            '    Next
+
+            '    For Each row As Excel.Range In sourceWorkSheet.UsedRange.Rows
+            '        targetSheet.Cells(row.Row, 1).RowHeight = row.RowHeight
+            '    Next
+
+            '    ' Copy contents (values and formatting) from the source worksheet to the target worksheet
+            '    sourceWorkSheet.UsedRange.Copy()
+            '    targetSheet.Paste(targetSheet.Cells(1, 1))
+
+
+            '    ' Paste the QR code image at the top-right of cell "I1" without resizing the column or row
+            '    Dim leftPosition As Double = cellRange.Left + cellRange.Width - qrImage.Width
+            '    Dim topPosition As Double = cellRange.Top
+            '    Try
+            '        Clipboard.Clear()
+            '        Clipboard.SetDataObject(qrImage, True)
+            '        targetSheet.Paste(targetSheet.Cells(1, "I"), qrImage)
+            '    Catch ex As Exception
+            '        System.Threading.Thread.Sleep(1000)
+            '        targetSheet.Paste(targetSheet.Cells(1, "I"), qrImage)
+            '        Clipboard.Clear()
+            '    End Try
+            '    Dim qrImageShape = targetSheet.Shapes.Item(1) ' Assumes the QR code image is the first shape in the worksheet
+            '    qrImageShape.Left = leftPosition - 20.0 ' + 20.0
+            '    qrImageShape.Top = topPosition
+
+
+
+
+
+
+            '    ' Save the changes to the target workbook
+            '    If ISnew Then
+            '        targetWorkbook.SaveAs(targetWorkbookPath)
+            '    Else
+            '        targetWorkbook.Save()
+            '    End If
+
+
+            '    targetWorkbook.Close()
+            '    xlTargetApp.Quit()
+            'Catch ex As Exception
+            '        kill_Excel()
+            '        'MessageBox.Show(ex.Message)
+            '    End Try
+
+
+            Marshal.ReleaseComObject(sourceWorkSheet)
+            Marshal.ReleaseComObject(sourceWorkBook)
+            Marshal.ReleaseComObject(xlApp)
+            kill_Excel()
+
+
+            'ReorderWorksheetsNumerically(targetWorkbookPath)
             scanstatuslbl.Text = "Done Populating Data in Excel File !!"
-
         Catch ex As Exception
             kill_Excel()
+            scanstatuslbl.Visible = False
+            ScanBtn.Visible = True
         Finally
             kill_Excel()
+            scanstatuslbl.Visible = False
+            ScanBtn.Visible = True
         End Try
     End Sub
+
+
 
     Sub ReorderWorksheetsNumerically(WorkbookPath As String)
         Try
@@ -6367,9 +6388,9 @@ here:
             xlWorkbook.Close()
 
             ' Release Excel objects
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook)
+            Marshal.ReleaseComObject(xlWorkbook)
             xlApp.Quit()
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp)
+            Marshal.ReleaseComObject(xlApp)
         Catch ex As Exception
             kill_Excel()
         Finally
@@ -6390,35 +6411,26 @@ here:
 
     Public Sub OpenReprintExcelCreation()
         Try
+
+            kill_Excel()
+
             Dim localdir2 = IO.Directory.GetParent(IO.Directory.GetParent(Directory.GetCurrentDirectory).ToString).ToString
             Dim excelApp As New Excel.Application()
-            Dim WorkBookPath = ""
-            'If reprintExcelFilePath = "" Or reprintExcelFilePath = Nothing Then
-            'WorkBookPath = "C:\Users\Azizi Elias\Desktop\ATA\PalletScanning\Carton Palletizing\CartonPalletizing\PalletChecker\bin\Result\300823_123123.xls"
-            'Else
-            'WorkBookPath = reprintExcelFilePath
-            WorkBookPath = (localdir2 & "\bin\Result\" & cmbWorkOrderBox.Text & "_" & cmbSubGroup.Text & ".xls")
-            'End If
-
+            'Dim WorkBookPath = (localdir2 & "\bin\Result\" & cmbWorkOrderBox.Text & "_" & cmbSubGroup.Text & ".xls")
+            Dim WorkBookPath = $"{localdir2}\bin\Result\{cmbWorkOrderBox.SelectedItem.ToString()}_{cmbSubGroup.SelectedItem.ToString()}_Pallet {PalletBox.SelectedItem.ToString()}.xls"
             Dim selectedPallet = $"Pallet {Integer.Parse(PalletBox.SelectedItem.ToString())}"
             Dim workbook As Excel.Workbook = excelApp.Workbooks.Open(WorkBookPath)
             Dim worksheet As Excel.Worksheet = Nothing
 
 
-            For Each xlSheet As Excel.Worksheet In workbook.Sheets
-                If xlSheet.Name = selectedPallet Then
-                    worksheet = xlSheet
-                    Exit For
-                End If
-            Next
+            'For Each xlSheet As Excel.Worksheet In workbook.Sheets
+            '    If xlSheet.Name = selectedPallet Then
+            '        worksheet = xlSheet
+            '        Exit For
+            '    End If
+            'Next
 
-            'If 0 < workbook.Sheets.Count Then
-            '    'Take the Actual Pallet by WorkSheet Count
-            '    worksheet = workbook.Sheets(selectedPallet)
-            'Else
-            '    'Take the First sheet
-            '    worksheet = workbook.Sheets(1)
-            'End If
+            worksheet = workbook.Worksheets(1)
 
 
             Try
@@ -6447,6 +6459,7 @@ here:
                 excelApp.Quit()
                 Marshal.ReleaseComObject(workbook)
                 Marshal.ReleaseComObject(excelApp)
+                kill_Excel()
             End Try
         Catch ex As Exception
 
@@ -6500,5 +6513,21 @@ here:
                 GroupBox4.Visible = False
             End If
         End If
+    End Sub
+
+    Private Sub LoosePallet_btn_Click(sender As Object, e As EventArgs) Handles LoosePallet_btn.Click
+        Try
+            PrintReportSingularPallet()
+            OpenReprintExcelCreation()
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub count_TabStopChanged(sender As Object, e As EventArgs) Handles count.TabStopChanged
+
+    End Sub
+
+    Private Sub ScanBtn_TextChanged(sender As Object, e As EventArgs) Handles ScanBtn.TextChanged
+
     End Sub
 End Class

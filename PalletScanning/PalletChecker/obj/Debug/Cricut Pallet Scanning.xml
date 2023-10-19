@@ -42,6 +42,11 @@ Cricut Pallet Scanning
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:CartonPalletizing.My.Resources.Resources.excel_28">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:CartonPalletizing.My.Resources.Resources.help">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -58,6 +63,11 @@ Cricut Pallet Scanning
 </summary>
 </member>
 <member name="P:CartonPalletizing.My.Resources.Resources.print">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:CartonPalletizing.My.Resources.Resources.print_28">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>

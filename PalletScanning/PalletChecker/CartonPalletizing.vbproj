@@ -408,6 +408,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cricutlogo.ico" />
+    <None Include="Resources\print-28.png" />
+    <None Include="Resources\excel-28.png" />
     <None Include="packages.config" />
     <None Include="Resources\visibility.png" />
     <None Include="Resources\invisible.png" />

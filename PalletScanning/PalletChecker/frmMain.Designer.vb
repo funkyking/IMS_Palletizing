@@ -145,7 +145,7 @@ Partial Class frmMain
         '
         'SettingBtn
         '
-        Me.SettingBtn.Image = Global.CartonPalletizing.My.Resources.Resources.setting
+        Me.SettingBtn.Image = Global.CartonPalletizing.My.Resources.setting
         Me.SettingBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.SettingBtn.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.SettingBtn.Name = "SettingBtn"
