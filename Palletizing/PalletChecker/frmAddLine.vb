@@ -1,6 +1,6 @@
 ﻿Imports System.Data.SqlClient
 
-Public Class frmAddLine
+Friend Class frmAddLine
     Dim connstr = ReadValue("System", "SQLconnstr", IniPath)
     Dim MID As Guid
     Private Sub frmAddLine_Load(sender As Object, e As EventArgs) Handles MyBase.Load

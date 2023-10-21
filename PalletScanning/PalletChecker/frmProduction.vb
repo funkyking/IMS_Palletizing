@@ -493,7 +493,7 @@ here:
                 PalletBox.Items.Add(maxpalletno)
                 PalletBox.SelectedItem = maxpalletno
                 count.Text = 0
-                ScanBtn_Click(Nothing, Nothing)
+                ScanBtn_Click(Nothing, Nothing) 'Enabled by Paul (21/10/2023)
             End If
         End If
 
@@ -829,6 +829,7 @@ here:
         ' Reset the PalletCount and index to 0
         totalpalletcount = 0
         pli = 0
+        CancelBtn_Click(sender, Nothing)
         PreventCountTextChangedEvent = False
     End Sub
 
@@ -975,7 +976,7 @@ here:
                 Dim SQLcmd = New SqlCommand
                 SQLcmd.Connection = Conn
                 SQLcmd.CommandText = "DELETE FROM [CUPID].[WorkOrder]
-                                        WHERE [Serial No]='" & DataGridView1.CurrentCell.ToString() & "'
+                                        WHERE [Serial No]='" & SerialNo & "'
                                         AND [Work Order ID] = '" & WID.ToString() & "'"
                 SQLcmd.ExecuteNonQuery()
                 Conn.Close()
@@ -5258,15 +5259,10 @@ here:
     Private Function reprint()
         LoadInfo()
         Dim i As Integer
-
-        Try
-            Dim xlp() As Process = Process.GetProcessesByName("Excel")
-            For Each Process As Process In xlp
-                Process.Kill()
-            Next
-        Catch ex As Exception
-        End Try
-
+        Dim xlp() As Process = Process.GetProcessesByName("EXCEL")
+        For Each Process As Process In xlp
+            Process.Kill()
+        Next
         Dim datestart As Date = Date.Now
         For i = 1 To PalletBox.Text
 
@@ -6230,7 +6226,7 @@ here:
                 Clipboard.Clear()
                 Clipboard.SetDataObject(qrImage, True)
                 sourceWorkSheet.Paste(sourceWorkSheet.Cells(1, "I"), qrImage)
-            Catch ex As System.Runtime.InteropServices.COMException When ex.ErrorCode = &H800A03EC
+            Catch ex As COMException When ex.ErrorCode = &H800A03EC
                 System.Threading.Thread.Sleep(1000)
                 sourceWorkSheet.Paste(sourceWorkSheet.Cells(1, "I"), qrImage)
                 Clipboard.Clear()

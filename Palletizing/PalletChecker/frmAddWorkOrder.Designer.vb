@@ -36,7 +36,7 @@ Partial Class frmAddWorkOrder
         Me.qty = New System.Windows.Forms.NumericUpDown()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.count = New System.Windows.Forms.Label()
-        Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
+        Me.totalOrderCount_Numeric = New System.Windows.Forms.NumericUpDown()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.WorkOrder = New System.Windows.Forms.TextBox()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
@@ -52,7 +52,7 @@ Partial Class frmAddWorkOrder
         Me.Label6 = New System.Windows.Forms.Label()
         Me.txtDescription = New System.Windows.Forms.TextBox()
         CType(Me.qty, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.totalOrderCount_Numeric, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -195,14 +195,14 @@ Partial Class frmAddWorkOrder
         Me.count.TabIndex = 40
         Me.count.Text = "0"
         '
-        'NumericUpDown1
+        'totalOrderCount_Numeric
         '
-        Me.NumericUpDown1.Location = New System.Drawing.Point(516, 100)
-        Me.NumericUpDown1.Margin = New System.Windows.Forms.Padding(2)
-        Me.NumericUpDown1.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
-        Me.NumericUpDown1.Name = "NumericUpDown1"
-        Me.NumericUpDown1.Size = New System.Drawing.Size(90, 20)
-        Me.NumericUpDown1.TabIndex = 6
+        Me.totalOrderCount_Numeric.Location = New System.Drawing.Point(516, 100)
+        Me.totalOrderCount_Numeric.Margin = New System.Windows.Forms.Padding(2)
+        Me.totalOrderCount_Numeric.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
+        Me.totalOrderCount_Numeric.Name = "totalOrderCount_Numeric"
+        Me.totalOrderCount_Numeric.Size = New System.Drawing.Size(90, 20)
+        Me.totalOrderCount_Numeric.TabIndex = 6
         '
         'Label11
         '
@@ -304,7 +304,7 @@ Partial Class frmAddWorkOrder
         Me.GroupBox1.Controls.Add(Me.SaveBtn)
         Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.UpdateBtn)
-        Me.GroupBox1.Controls.Add(Me.NumericUpDown1)
+        Me.GroupBox1.Controls.Add(Me.totalOrderCount_Numeric)
         Me.GroupBox1.Controls.Add(Me.CancelBtn)
         Me.GroupBox1.Controls.Add(Me.count)
         Me.GroupBox1.Controls.Add(Me.statuslbl)
@@ -379,7 +379,7 @@ Partial Class frmAddWorkOrder
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "frmAddWorkOrder"
         CType(Me.qty, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.totalOrderCount_Numeric, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip2.ResumeLayout(False)
         Me.ToolStrip2.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
@@ -402,7 +402,7 @@ Partial Class frmAddWorkOrder
     Friend WithEvents qty As NumericUpDown
     Friend WithEvents Label2 As Label
     Friend WithEvents count As Label
-    Friend WithEvents NumericUpDown1 As NumericUpDown
+    Friend WithEvents totalOrderCount_Numeric As NumericUpDown
     Friend WithEvents Label11 As Label
     Friend WithEvents WorkOrder As TextBox
     Friend WithEvents ToolStrip2 As ToolStrip

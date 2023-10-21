@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Main
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Main
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -32,6 +32,7 @@ Partial Class Main
         Me.Label1 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.bottom_pnl = New System.Windows.Forms.Panel()
+        Me.Save_Btn = New System.Windows.Forms.Button()
         Me.edit_btn = New System.Windows.Forms.Button()
         Me.execute_btn = New System.Windows.Forms.Button()
         Me.print_btn = New System.Windows.Forms.Button()
@@ -42,6 +43,7 @@ Partial Class Main
         Me.createPDF_btn = New System.Windows.Forms.Button()
         Me.left_pnl = New System.Windows.Forms.Panel()
         Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.clrMasterBarcodeTxtbx_btn = New System.Windows.Forms.Button()
         Me.addMasterBarcode_btn = New System.Windows.Forms.Button()
         Me.clrContainerNoTxtbx_btn = New System.Windows.Forms.Button()
@@ -51,9 +53,10 @@ Partial Class Main
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.top_pnl = New System.Windows.Forms.Panel()
+        Me.conDelete_btn = New System.Windows.Forms.Button()
+        Me.container_lbl = New System.Windows.Forms.Label()
         Me.containerStatus_lbl = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.container_lbl = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.right_pnl = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -77,16 +80,16 @@ Partial Class Main
         '
         'masterBarcode_txtbx
         '
-        Me.masterBarcode_txtbx.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.masterBarcode_txtbx.Location = New System.Drawing.Point(26, 213)
+        Me.masterBarcode_txtbx.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.masterBarcode_txtbx.Location = New System.Drawing.Point(26, 232)
         Me.masterBarcode_txtbx.Name = "masterBarcode_txtbx"
-        Me.masterBarcode_txtbx.Size = New System.Drawing.Size(194, 40)
+        Me.masterBarcode_txtbx.Size = New System.Drawing.Size(384, 42)
         Me.masterBarcode_txtbx.TabIndex = 1
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(17, 187)
+        Me.Label2.Location = New System.Drawing.Point(19, 206)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(172, 23)
         Me.Label2.TabIndex = 7
@@ -94,10 +97,10 @@ Partial Class Main
         '
         'containerNo_txtbx
         '
-        Me.containerNo_txtbx.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.containerNo_txtbx.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.containerNo_txtbx.Location = New System.Drawing.Point(26, 112)
         Me.containerNo_txtbx.Name = "containerNo_txtbx"
-        Me.containerNo_txtbx.Size = New System.Drawing.Size(191, 40)
+        Me.containerNo_txtbx.Size = New System.Drawing.Size(385, 42)
         Me.containerNo_txtbx.TabIndex = 6
         '
         'Label1
@@ -119,13 +122,14 @@ Partial Class Main
         Me.FlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(0, 41)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(533, 467)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(575, 545)
         Me.FlowLayoutPanel1.TabIndex = 6
         Me.FlowLayoutPanel1.WrapContents = False
         '
         'bottom_pnl
         '
         Me.bottom_pnl.BackColor = System.Drawing.Color.Transparent
+        Me.bottom_pnl.Controls.Add(Me.Save_Btn)
         Me.bottom_pnl.Controls.Add(Me.edit_btn)
         Me.bottom_pnl.Controls.Add(Me.execute_btn)
         Me.bottom_pnl.Controls.Add(Me.print_btn)
@@ -135,17 +139,30 @@ Partial Class Main
         Me.bottom_pnl.Controls.Add(Me.generateAllDocs_btn)
         Me.bottom_pnl.Controls.Add(Me.createPDF_btn)
         Me.bottom_pnl.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.bottom_pnl.Location = New System.Drawing.Point(0, 562)
+        Me.bottom_pnl.Location = New System.Drawing.Point(0, 640)
         Me.bottom_pnl.Name = "bottom_pnl"
-        Me.bottom_pnl.Size = New System.Drawing.Size(1229, 67)
+        Me.bottom_pnl.Size = New System.Drawing.Size(1363, 67)
         Me.bottom_pnl.TabIndex = 7
+        '
+        'Save_Btn
+        '
+        Me.Save_Btn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Save_Btn.Image = Global.ShippingStation.My.Resources.Resources.packing_32
+        Me.Save_Btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Save_Btn.Location = New System.Drawing.Point(1007, 19)
+        Me.Save_Btn.Name = "Save_Btn"
+        Me.Save_Btn.Size = New System.Drawing.Size(95, 40)
+        Me.Save_Btn.TabIndex = 11
+        Me.Save_Btn.Text = "Save"
+        Me.Save_Btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Save_Btn.UseVisualStyleBackColor = True
         '
         'edit_btn
         '
         Me.edit_btn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.edit_btn.Image = Global.ShippingStation.My.Resources.Resources.icons8_edit_32
         Me.edit_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.edit_btn.Location = New System.Drawing.Point(890, 19)
+        Me.edit_btn.Location = New System.Drawing.Point(907, 19)
         Me.edit_btn.Name = "edit_btn"
         Me.edit_btn.Size = New System.Drawing.Size(94, 40)
         Me.edit_btn.TabIndex = 10
@@ -159,7 +176,7 @@ Partial Class Main
         Me.execute_btn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.execute_btn.Image = Global.ShippingStation.My.Resources.Resources.Shipping_32
         Me.execute_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.execute_btn.Location = New System.Drawing.Point(990, 19)
+        Me.execute_btn.Location = New System.Drawing.Point(1225, 19)
         Me.execute_btn.Name = "execute_btn"
         Me.execute_btn.Size = New System.Drawing.Size(126, 40)
         Me.execute_btn.TabIndex = 9
@@ -172,11 +189,11 @@ Partial Class Main
         Me.print_btn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.print_btn.Image = Global.ShippingStation.My.Resources.Resources.print_32
         Me.print_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.print_btn.Location = New System.Drawing.Point(1122, 19)
+        Me.print_btn.Location = New System.Drawing.Point(1108, 19)
         Me.print_btn.Name = "print_btn"
-        Me.print_btn.Size = New System.Drawing.Size(95, 40)
+        Me.print_btn.Size = New System.Drawing.Size(111, 40)
         Me.print_btn.TabIndex = 8
-        Me.print_btn.Text = "Print"
+        Me.print_btn.Text = "Manifest"
         Me.print_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.print_btn.UseVisualStyleBackColor = True
         '
@@ -198,7 +215,7 @@ Partial Class Main
         Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Button2.ForeColor = System.Drawing.Color.White
         Me.Button2.Image = Global.ShippingStation.My.Resources.Resources.icons8_word_32
-        Me.Button2.Location = New System.Drawing.Point(502, 15)
+        Me.Button2.Location = New System.Drawing.Point(470, 11)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(43, 44)
         Me.Button2.TabIndex = 2
@@ -213,7 +230,7 @@ Partial Class Main
         Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Button1.ForeColor = System.Drawing.Color.White
         Me.Button1.Image = Global.ShippingStation.My.Resources.Resources.icons8_excel_32
-        Me.Button1.Location = New System.Drawing.Point(551, 15)
+        Me.Button1.Location = New System.Drawing.Point(519, 11)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(43, 44)
         Me.Button1.TabIndex = 1
@@ -230,7 +247,7 @@ Partial Class Main
         Me.generateAllDocs_btn.ForeColor = System.Drawing.Color.White
         Me.generateAllDocs_btn.Image = Global.ShippingStation.My.Resources.Resources.icons8_product_documents_32
         Me.generateAllDocs_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.generateAllDocs_btn.Location = New System.Drawing.Point(649, 15)
+        Me.generateAllDocs_btn.Location = New System.Drawing.Point(617, 11)
         Me.generateAllDocs_btn.Name = "generateAllDocs_btn"
         Me.generateAllDocs_btn.Size = New System.Drawing.Size(120, 44)
         Me.generateAllDocs_btn.TabIndex = 0
@@ -246,7 +263,7 @@ Partial Class Main
         Me.createPDF_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.createPDF_btn.ForeColor = System.Drawing.Color.White
         Me.createPDF_btn.Image = Global.ShippingStation.My.Resources.Resources.icons8_pdf_32
-        Me.createPDF_btn.Location = New System.Drawing.Point(600, 15)
+        Me.createPDF_btn.Location = New System.Drawing.Point(568, 11)
         Me.createPDF_btn.Name = "createPDF_btn"
         Me.createPDF_btn.Size = New System.Drawing.Size(43, 44)
         Me.createPDF_btn.TabIndex = 0
@@ -261,12 +278,13 @@ Partial Class Main
         Me.left_pnl.Dock = System.Windows.Forms.DockStyle.Left
         Me.left_pnl.Location = New System.Drawing.Point(0, 54)
         Me.left_pnl.Name = "left_pnl"
-        Me.left_pnl.Size = New System.Drawing.Size(346, 508)
+        Me.left_pnl.Size = New System.Drawing.Size(429, 586)
         Me.left_pnl.TabIndex = 8
         '
         'Panel4
         '
         Me.Panel4.BackColor = System.Drawing.Color.Gainsboro
+        Me.Panel4.Controls.Add(Me.Label8)
         Me.Panel4.Controls.Add(Me.clrMasterBarcodeTxtbx_btn)
         Me.Panel4.Controls.Add(Me.masterBarcode_txtbx)
         Me.Panel4.Controls.Add(Me.addMasterBarcode_btn)
@@ -281,34 +299,45 @@ Partial Class Main
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(346, 508)
+        Me.Panel4.Size = New System.Drawing.Size(429, 586)
         Me.Panel4.TabIndex = 6
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Bahnschrift SemiBold Condensed", 14.25!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Underline), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(22, 331)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(77, 23)
+        Me.Label8.TabIndex = 16
+        Me.Label8.Text = "Status Log"
         '
         'clrMasterBarcodeTxtbx_btn
         '
         Me.clrMasterBarcodeTxtbx_btn.AutoSize = True
         Me.clrMasterBarcodeTxtbx_btn.BackColor = System.Drawing.Color.DarkGray
         Me.clrMasterBarcodeTxtbx_btn.FlatAppearance.BorderSize = 0
-        Me.clrMasterBarcodeTxtbx_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.clrMasterBarcodeTxtbx_btn.Image = Global.ShippingStation.My.Resources.Resources.ClearWhite_32
-        Me.clrMasterBarcodeTxtbx_btn.Location = New System.Drawing.Point(223, 212)
+        Me.clrMasterBarcodeTxtbx_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.clrMasterBarcodeTxtbx_btn.ForeColor = System.Drawing.Color.Black
+        Me.clrMasterBarcodeTxtbx_btn.Location = New System.Drawing.Point(276, 280)
         Me.clrMasterBarcodeTxtbx_btn.Name = "clrMasterBarcodeTxtbx_btn"
-        Me.clrMasterBarcodeTxtbx_btn.Size = New System.Drawing.Size(51, 41)
+        Me.clrMasterBarcodeTxtbx_btn.Size = New System.Drawing.Size(64, 41)
         Me.clrMasterBarcodeTxtbx_btn.TabIndex = 9
+        Me.clrMasterBarcodeTxtbx_btn.Text = "Clear"
         Me.clrMasterBarcodeTxtbx_btn.UseVisualStyleBackColor = False
         '
         'addMasterBarcode_btn
         '
         Me.addMasterBarcode_btn.AutoSize = True
-        Me.addMasterBarcode_btn.BackColor = System.Drawing.Color.CornflowerBlue
+        Me.addMasterBarcode_btn.BackColor = System.Drawing.Color.LimeGreen
         Me.addMasterBarcode_btn.FlatAppearance.BorderSize = 0
-        Me.addMasterBarcode_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.addMasterBarcode_btn.Image = Global.ShippingStation.My.Resources.Resources.AddWhite_32
-        Me.addMasterBarcode_btn.Location = New System.Drawing.Point(280, 212)
+        Me.addMasterBarcode_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.addMasterBarcode_btn.ForeColor = System.Drawing.Color.Black
+        Me.addMasterBarcode_btn.Location = New System.Drawing.Point(346, 280)
         Me.addMasterBarcode_btn.Name = "addMasterBarcode_btn"
-        Me.addMasterBarcode_btn.Size = New System.Drawing.Size(51, 41)
+        Me.addMasterBarcode_btn.Size = New System.Drawing.Size(64, 41)
         Me.addMasterBarcode_btn.TabIndex = 6
-        Me.addMasterBarcode_btn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.addMasterBarcode_btn.Text = "Add"
         Me.addMasterBarcode_btn.UseVisualStyleBackColor = False
         '
         'clrContainerNoTxtbx_btn
@@ -316,12 +345,13 @@ Partial Class Main
         Me.clrContainerNoTxtbx_btn.AutoSize = True
         Me.clrContainerNoTxtbx_btn.BackColor = System.Drawing.Color.DarkGray
         Me.clrContainerNoTxtbx_btn.FlatAppearance.BorderSize = 0
-        Me.clrContainerNoTxtbx_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.clrContainerNoTxtbx_btn.Image = Global.ShippingStation.My.Resources.Resources.ClearWhite_32
-        Me.clrContainerNoTxtbx_btn.Location = New System.Drawing.Point(223, 112)
+        Me.clrContainerNoTxtbx_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.clrContainerNoTxtbx_btn.ForeColor = System.Drawing.Color.Black
+        Me.clrContainerNoTxtbx_btn.Location = New System.Drawing.Point(276, 160)
         Me.clrContainerNoTxtbx_btn.Name = "clrContainerNoTxtbx_btn"
-        Me.clrContainerNoTxtbx_btn.Size = New System.Drawing.Size(51, 41)
+        Me.clrContainerNoTxtbx_btn.Size = New System.Drawing.Size(64, 41)
         Me.clrContainerNoTxtbx_btn.TabIndex = 11
+        Me.clrContainerNoTxtbx_btn.Text = "Clear"
         Me.clrContainerNoTxtbx_btn.UseVisualStyleBackColor = False
         '
         'addContainerNo_btn
@@ -329,25 +359,27 @@ Partial Class Main
         Me.addContainerNo_btn.AutoSize = True
         Me.addContainerNo_btn.BackColor = System.Drawing.Color.CornflowerBlue
         Me.addContainerNo_btn.FlatAppearance.BorderSize = 0
-        Me.addContainerNo_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.addContainerNo_btn.Image = Global.ShippingStation.My.Resources.Resources.AddWhite_32
-        Me.addContainerNo_btn.Location = New System.Drawing.Point(280, 111)
+        Me.addContainerNo_btn.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.addContainerNo_btn.ForeColor = System.Drawing.Color.Black
+        Me.addContainerNo_btn.Location = New System.Drawing.Point(346, 160)
         Me.addContainerNo_btn.Name = "addContainerNo_btn"
-        Me.addContainerNo_btn.Size = New System.Drawing.Size(51, 41)
+        Me.addContainerNo_btn.Size = New System.Drawing.Size(64, 41)
         Me.addContainerNo_btn.TabIndex = 10
-        Me.addContainerNo_btn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.addContainerNo_btn.Text = "Search"
         Me.addContainerNo_btn.UseVisualStyleBackColor = False
         '
         'ListBox1
         '
+        Me.ListBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ListBox1.BackColor = System.Drawing.Color.Black
         Me.ListBox1.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ListBox1.ForeColor = System.Drawing.Color.Lime
         Me.ListBox1.FormattingEnabled = True
         Me.ListBox1.ItemHeight = 19
-        Me.ListBox1.Location = New System.Drawing.Point(21, 275)
+        Me.ListBox1.Location = New System.Drawing.Point(26, 357)
         Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(293, 194)
+        Me.ListBox1.Size = New System.Drawing.Size(390, 194)
         Me.ListBox1.TabIndex = 14
         '
         'mainReset_btn
@@ -356,7 +388,7 @@ Partial Class Main
         Me.mainReset_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.mainReset_btn.Image = Global.ShippingStation.My.Resources.Resources.reset1_32
         Me.mainReset_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.mainReset_btn.Location = New System.Drawing.Point(255, 44)
+        Me.mainReset_btn.Location = New System.Drawing.Point(327, 47)
         Me.mainReset_btn.Name = "mainReset_btn"
         Me.mainReset_btn.Size = New System.Drawing.Size(86, 41)
         Me.mainReset_btn.TabIndex = 11
@@ -371,7 +403,7 @@ Partial Class Main
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel5.Location = New System.Drawing.Point(0, 0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(346, 41)
+        Me.Panel5.Size = New System.Drawing.Size(429, 41)
         Me.Panel5.TabIndex = 0
         '
         'Label5
@@ -388,6 +420,7 @@ Partial Class Main
         'top_pnl
         '
         Me.top_pnl.BackColor = System.Drawing.Color.Transparent
+        Me.top_pnl.Controls.Add(Me.conDelete_btn)
         Me.top_pnl.Controls.Add(Me.container_lbl)
         Me.top_pnl.Controls.Add(Me.containerStatus_lbl)
         Me.top_pnl.Controls.Add(Me.Label7)
@@ -395,8 +428,30 @@ Partial Class Main
         Me.top_pnl.Dock = System.Windows.Forms.DockStyle.Top
         Me.top_pnl.Location = New System.Drawing.Point(0, 0)
         Me.top_pnl.Name = "top_pnl"
-        Me.top_pnl.Size = New System.Drawing.Size(1229, 54)
+        Me.top_pnl.Size = New System.Drawing.Size(1363, 54)
         Me.top_pnl.TabIndex = 9
+        '
+        'conDelete_btn
+        '
+        Me.conDelete_btn.Location = New System.Drawing.Point(1214, 11)
+        Me.conDelete_btn.Name = "conDelete_btn"
+        Me.conDelete_btn.Size = New System.Drawing.Size(134, 33)
+        Me.conDelete_btn.TabIndex = 5
+        Me.conDelete_btn.Text = "Container Delete"
+        Me.conDelete_btn.UseVisualStyleBackColor = True
+        Me.conDelete_btn.Visible = False
+        '
+        'container_lbl
+        '
+        Me.container_lbl.AutoEllipsis = True
+        Me.container_lbl.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.container_lbl.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.container_lbl.Location = New System.Drawing.Point(116, 13)
+        Me.container_lbl.Name = "container_lbl"
+        Me.container_lbl.Size = New System.Drawing.Size(274, 33)
+        Me.container_lbl.TabIndex = 1
+        Me.container_lbl.Text = "No Container Defined"
+        Me.container_lbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'containerStatus_lbl
         '
@@ -421,18 +476,6 @@ Partial Class Main
         Me.Label7.Text = "Status: "
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'container_lbl
-        '
-        Me.container_lbl.AutoEllipsis = True
-        Me.container_lbl.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.container_lbl.ForeColor = System.Drawing.Color.DodgerBlue
-        Me.container_lbl.Location = New System.Drawing.Point(116, 13)
-        Me.container_lbl.Name = "container_lbl"
-        Me.container_lbl.Size = New System.Drawing.Size(274, 33)
-        Me.container_lbl.TabIndex = 1
-        Me.container_lbl.Text = "No Container Defined"
-        Me.container_lbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -451,9 +494,9 @@ Partial Class Main
         Me.right_pnl.Controls.Add(Me.Panel3)
         Me.right_pnl.Controls.Add(Me.rightSideInner_pnl)
         Me.right_pnl.Dock = System.Windows.Forms.DockStyle.Right
-        Me.right_pnl.Location = New System.Drawing.Point(681, 54)
+        Me.right_pnl.Location = New System.Drawing.Point(773, 54)
         Me.right_pnl.Name = "right_pnl"
-        Me.right_pnl.Size = New System.Drawing.Size(548, 508)
+        Me.right_pnl.Size = New System.Drawing.Size(590, 586)
         Me.right_pnl.TabIndex = 10
         '
         'Panel3
@@ -465,7 +508,7 @@ Partial Class Main
         Me.Panel3.ForeColor = System.Drawing.SystemColors.ActiveCaption
         Me.Panel3.Location = New System.Drawing.Point(0, 0)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(533, 41)
+        Me.Panel3.Size = New System.Drawing.Size(575, 41)
         Me.Panel3.TabIndex = 9
         '
         'ItemCounter_lbl
@@ -473,7 +516,7 @@ Partial Class Main
         Me.ItemCounter_lbl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ItemCounter_lbl.AutoSize = True
         Me.ItemCounter_lbl.ForeColor = System.Drawing.Color.Transparent
-        Me.ItemCounter_lbl.Location = New System.Drawing.Point(459, 8)
+        Me.ItemCounter_lbl.Location = New System.Drawing.Point(501, 8)
         Me.ItemCounter_lbl.Name = "ItemCounter_lbl"
         Me.ItemCounter_lbl.Size = New System.Drawing.Size(18, 23)
         Me.ItemCounter_lbl.TabIndex = 9
@@ -493,9 +536,9 @@ Partial Class Main
         '
         Me.rightSideInner_pnl.BackColor = System.Drawing.Color.White
         Me.rightSideInner_pnl.Dock = System.Windows.Forms.DockStyle.Right
-        Me.rightSideInner_pnl.Location = New System.Drawing.Point(533, 0)
+        Me.rightSideInner_pnl.Location = New System.Drawing.Point(575, 0)
         Me.rightSideInner_pnl.Name = "rightSideInner_pnl"
-        Me.rightSideInner_pnl.Size = New System.Drawing.Size(15, 508)
+        Me.rightSideInner_pnl.Size = New System.Drawing.Size(15, 586)
         Me.rightSideInner_pnl.TabIndex = 3
         '
         'DataGridView1
@@ -504,7 +547,6 @@ Partial Class Main
         Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AllowUserToDeleteRows = False
         Me.DataGridView1.AllowUserToOrderColumns = True
-        Me.DataGridView1.AllowUserToResizeColumns = False
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.Gainsboro
         DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black
         Me.DataGridView1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
@@ -534,7 +576,7 @@ Partial Class Main
         Me.DataGridView1.Location = New System.Drawing.Point(0, 0)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.RowHeadersVisible = False
-        Me.DataGridView1.Size = New System.Drawing.Size(313, 508)
+        Me.DataGridView1.Size = New System.Drawing.Size(332, 586)
         Me.DataGridView1.TabIndex = 7
         '
         'Pallet
@@ -553,16 +595,16 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.mid_pnl.Controls.Add(Me.DataGridView1)
-        Me.mid_pnl.Location = New System.Drawing.Point(352, 54)
+        Me.mid_pnl.Location = New System.Drawing.Point(435, 54)
         Me.mid_pnl.Name = "mid_pnl"
-        Me.mid_pnl.Size = New System.Drawing.Size(313, 508)
+        Me.mid_pnl.Size = New System.Drawing.Size(332, 586)
         Me.mid_pnl.TabIndex = 11
         '
         'Main
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.ClientSize = New System.Drawing.Size(1229, 629)
+        Me.ClientSize = New System.Drawing.Size(1363, 707)
         Me.Controls.Add(Me.mid_pnl)
         Me.Controls.Add(Me.right_pnl)
         Me.Controls.Add(Me.left_pnl)
@@ -630,4 +672,7 @@ Partial Class Main
     Friend WithEvents edit_btn As Button
     Friend WithEvents containerStatus_lbl As Label
     Friend WithEvents Label7 As Label
+    Friend WithEvents Save_Btn As Button
+    Friend WithEvents Label8 As Label
+    Friend WithEvents conDelete_btn As Button
 End Class

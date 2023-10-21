@@ -2,7 +2,7 @@
 Imports Microsoft.Reporting.WinForms
 Imports System.Drawing.Printing
 
-Public Class frmReport
+Friend Class frmReport
     Dim connstr = ReadValue("System", "SQLconnstr", IniPath)
     Public r1 As ReportData
     Private Sub frmReport_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -15,11 +15,11 @@ Public Class frmReport
         Label1.Text = "Order Form"
         Dim param(11) As ReportParameter
         param(0) = New ReportParameter("PalletNo", r1.PalletNo)
-                param(1) = New ReportParameter("PartNo", r1.PartNo)
-                param(2) = New ReportParameter("WorkOrder", r1.WorkOrder)
-                param(3) = New ReportParameter("ProdDate", DateTime.Now.ToString)
-                param(4) = New ReportParameter("Model", r1.Model)
-                param(5) = New ReportParameter("qty", r1.qty)
+        param(1) = New ReportParameter("PartNo", r1.PartNo)
+        param(2) = New ReportParameter("WorkOrder", r1.WorkOrder)
+        param(3) = New ReportParameter("ProdDate", DateTime.Now.ToString)
+        param(4) = New ReportParameter("Model", r1.Model)
+        param(5) = New ReportParameter("qty", r1.qty)
 
         param(6) = New ReportParameter("startcarton", r1.startcarton)
         'param(6) = New ReportParameter("startcarton", "1")
@@ -29,7 +29,7 @@ Public Class frmReport
         param(10) = New ReportParameter("Shift", r1.Shift)
         param(11) = New ReportParameter("Desc", r1.Desc)
         newPageSettings.Landscape = True
-                ReportViewer1.SetPageSettings(newPageSettings)
+        ReportViewer1.SetPageSettings(newPageSettings)
         ReportViewer1.LocalReport.ReportEmbeddedResource = "CartonPalletizing.reportCUPID.rdlc"
         'ReportViewer1.LocalReport.ReportEmbeddedResource = "C:\Users\Cricut\Documents\CartonPalletizingNew\CartonPalletizing\PalletChecker\reportCUPID.rdlc"
         'ReportViewer1.ProcessingMode = Microsoft.Reporting.WinForms.ProcessingMode.Local
@@ -37,7 +37,7 @@ Public Class frmReport
         ReportViewer1.LocalReport.SetParameters(param)
         Me.ReportViewer1.RefreshReport()
 
-                Me.ReportViewer1.ZoomMode = Microsoft.Reporting.WinForms.ZoomMode.PageWidth
+        Me.ReportViewer1.ZoomMode = Microsoft.Reporting.WinForms.ZoomMode.PageWidth
 
         'End If
         'Catch ex As Exception

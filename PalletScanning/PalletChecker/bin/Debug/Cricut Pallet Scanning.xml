@@ -127,6 +127,27 @@ Represents strongly named DataRow class.
 Row event argument class
 </summary>
 </member>
+<member name="T:CartonPalletizing.frmReport">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmReport.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmReport.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmReport.ToolStrip1_TrayLocation">
+<summary>
+  Looks up a localized resource of type System.Drawing.Point similar to {X=17,Y=17}.
+</summary>
+</member>
 <member name="M:CartonPalletizing.param.ReadValue(System.String,System.String,System.String)">
  <summary>
  Read value from INI file

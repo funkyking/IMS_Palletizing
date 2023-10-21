@@ -16,7 +16,7 @@ Public Class frmAddWorkOrder
         PartNo.Text = ""
         qty.Value = 0
         ModelNo.Text = ""
-        NumericUpDown1.Value = 0
+        totalOrderCount_Numeric.Value = 0
         count.Text = "0"
         ComboBox1.Text = "3"
         txtDescription.Text = ""
@@ -77,7 +77,7 @@ Public Class frmAddWorkOrder
                 ModelNo.SelectedItem = ds.Item("Model")
                 qty.Text = ds.Item("Quantity")
                 count.Text = ds.Item("Count")
-                NumericUpDown1.Value = ds.Item("Total Order Count")
+                totalOrderCount_Numeric.Value = ds.Item("Total Order Count")
                 txtDescription.Text = ds.Item("Description")
                 LineBox.Text = ds.Item("Line")
                 ComboBox1.Text = ds.Item("ScanOption")
@@ -88,26 +88,28 @@ Public Class frmAddWorkOrder
     End Function
 
     Private Sub SaveBtn_Click(sender As Object, e As EventArgs) Handles SaveBtn.Click
-        If WorkOrder.Text = "" Or ModelNo.Text = "" Or LineBox.Text = "" Or PartNo.Text = "" Or qty.Value = 0 Or NumericUpDown1.Value = 0 Then
+        If WorkOrder.Text = "" Or ModelNo.Text = "" Or LineBox.Text = "" Or PartNo.Text = "" Or qty.Value = 0 Or totalOrderCount_Numeric.Value = 0 Then
             statuslbl.Text = "Certain fields are missing"
         Else
             statuslbl.Text = ""
-            'If CheckDuplicateItem() = True Then
-            '    Label8.Text = "Work Order Exist"
-            'Else
-            '    Label8.Text = ""
-            '    'Exit Sub
-            'End If
+            If CheckDuplicateItem() = True Then
+                Label8.Text = "Work Order Already Exist"
 
-            If CheckDuplicateSub() Then
-                Label8.Text = "MR No. Exist"
+            ElseIf CheckDuplicateSub() Then
+                Label8.Text = "SKU Already Exist"
+
+                ' Removed by Paul (19/10/2023)
+                'Else
+                '    Label8.Text = ""
+                '    'Exit Sub
             Else
                 Label8.Text = ""
-                'Exit Sub
             End If
         End If
 
-        If statuslbl.Text <> "" Then
+        'Added by Paul (19/10/2023)
+        ' Label8.text also has to be emtpy then can proceed changes.
+        If statuslbl.Text <> "" Or Label8.Text <> "" Then
             Exit Sub
         End If
         GetModelID()
@@ -116,7 +118,7 @@ Public Class frmAddWorkOrder
         CheckDuplicateID()
         GetLineID()
 
-        Dim res = MessageBox.Show("Confirm Update Work Order?" & vbCrLf & "Work Order: " & WorkOrder.Text & vbCrLf & "Part:" & PartNo.Text & vbCrLf & "Quantity: " & qty.Value.ToString & vbCrLf & "Order: " & NumericUpDown1.Value.ToString & vbCrLf & "Scan Option: " & ComboBox1.Text, "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
+        Dim res = MessageBox.Show("Confirm Update Work Order?" & vbCrLf & "Work Order: " & WorkOrder.Text & vbCrLf & "Part:" & PartNo.Text & vbCrLf & "Quantity: " & qty.Value.ToString & vbCrLf & "Order: " & totalOrderCount_Numeric.Value.ToString & vbCrLf & "Scan Option: " & ComboBox1.Text, "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
         If res = DialogResult.Yes Then
             InsertDataSQL()
         Else
@@ -130,27 +132,28 @@ Public Class frmAddWorkOrder
     End Sub
 
     Private Sub UpdateBtn_Click(sender As Object, e As EventArgs) Handles UpdateBtn.Click
-        If WorkOrder.Text = "" Or PartNo.Text = "" Or ModelNo.Text = "" Or qty.Value = 0 Or NumericUpDown1.Value = 0 Then
+        If WorkOrder.Text = "" Or PartNo.Text = "" Or ModelNo.Text = "" Or qty.Value = 0 Or totalOrderCount_Numeric.Value = 0 Then
             statuslbl.Text = "Certain fields are missing"
         Else
             statuslbl.Text = ""
             If CheckDuplicateItem() Then
-                Label8.Text = "PO No Exist"
+                Label8.Text = "Work Order Already Exist"
+            ElseIf CheckDuplicateSub() Then
+                Label8.Text = "SKU Already Exist"
             Else
                 Label8.Text = ""
-                'Exit Sub
             End If
 
-            If CheckDuplicateSub() Then
-                Label8.Text = "MR No. Exist"
-            Else
-                Label8.Text = ""
-                'Exit Sub
+            'Added by Paul (19/10/2023)
+            If totalOrderCount_Numeric.Value < Integer.Parse(count.Text) Then
+                statuslbl.Text = $"Carton total must equal or exceed the current value [{count.Text}]"
             End If
 
         End If
 
-        If statuslbl.Text <> "" Then
+        'Added by Paul (19/10/2023)
+        ' Label8.text also has to be emtpy then can proceed changes.
+        If statuslbl.Text <> "" Or Label8.Text <> "" Then
             Exit Sub
         End If
         GetModelID()
@@ -158,7 +161,7 @@ Public Class frmAddWorkOrder
         CheckEmpty()
         GetLineID()
 
-        Dim res = MessageBox.Show("Confirm Update Work Order?" & vbCrLf & "Work Order: " & WorkOrder.Text & vbCrLf & "Part: " & PartNo.Text & vbCrLf & "Quantity: " & qty.Value.ToString & vbCrLf & "Order: " & NumericUpDown1.Value.ToString & vbCrLf & "Scan Option: " & ComboBox1.Text, "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
+        Dim res = MessageBox.Show("Confirm Update Work Order?" & vbCrLf & "Work Order: " & WorkOrder.Text & vbCrLf & "Part: " & PartNo.Text & vbCrLf & "Quantity: " & qty.Value.ToString & vbCrLf & "Order: " & totalOrderCount_Numeric.Value.ToString & vbCrLf & "Scan Option: " & ComboBox1.Text, "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
         If res = DialogResult.Yes Then
             UpdateDataSQL()
         Else
@@ -202,7 +205,7 @@ Public Class frmAddWorkOrder
                                                , '" & LID.ToString & "'
                                                ,'" & qty.Value & "'
                                                ,'0'
-                                               ,'" & NumericUpDown1.Value & "'
+                                               ,'" & totalOrderCount_Numeric.Value & "'
                                                ,'" & txtDescription.Text & "'
                                                ,'False'
                                                ,' " & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
@@ -230,7 +233,7 @@ Public Class frmAddWorkOrder
                                           ,[Model ID] = '" & MID.ToString & "'
                                           ,[LineID] = '" & LID.ToString & "'
                                           ,[Quantity] = '" & qty.Value & "'
-                                          ,[Total Order Count] = '" & NumericUpDown1.Value & "'
+                                          ,[Total Order Count] = '" & totalOrderCount_Numeric.Value & "'
                                           ,[Description]='" & txtDescription.Text & "'
                                           ,[Modified Date] =  '" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
                                           ,[ScanOption]='" & ComboBox1.Text & "'

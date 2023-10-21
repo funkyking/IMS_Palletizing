@@ -50,6 +50,7 @@ Partial Class frmProduction
         Me.part = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
+        Me.adminDebug_btn = New System.Windows.Forms.ToolStripButton()
         Me.AddBtn = New System.Windows.Forms.Button()
         Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
@@ -73,14 +74,15 @@ Partial Class frmProduction
         Me.btnQCin = New System.Windows.Forms.Button()
         Me.btnQCcheck = New System.Windows.Forms.Button()
         Me.btnQCout = New System.Windows.Forms.Button()
-        Me.CancelBtn = New System.Windows.Forms.Button()
-        Me.ScanBtn = New System.Windows.Forms.Button()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.debug_chckbx = New System.Windows.Forms.CheckBox()
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.btnSearch = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.lblError = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.LoosePallet_btn = New System.Windows.Forms.Button()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.txtPO = New System.Windows.Forms.TextBox()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -95,6 +97,8 @@ Partial Class frmProduction
         Me.PalletBox = New System.Windows.Forms.ComboBox()
         Me.PrintReportBtn = New System.Windows.Forms.Button()
         Me.PrintOrderBtn = New System.Windows.Forms.Button()
+        Me.CancelBtn = New System.Windows.Forms.Button()
+        Me.ScanBtn = New System.Windows.Forms.Button()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -141,7 +145,7 @@ Partial Class frmProduction
         '
         Me.scanstatuslbl.AutoSize = True
         Me.scanstatuslbl.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.scanstatuslbl.Location = New System.Drawing.Point(170, 378)
+        Me.scanstatuslbl.Location = New System.Drawing.Point(170, 351)
         Me.scanstatuslbl.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.scanstatuslbl.Name = "scanstatuslbl"
         Me.scanstatuslbl.Size = New System.Drawing.Size(258, 26)
@@ -216,14 +220,14 @@ Partial Class frmProduction
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridView1.Location = New System.Drawing.Point(758, 103)
+        Me.DataGridView1.Location = New System.Drawing.Point(758, 129)
         Me.DataGridView1.Margin = New System.Windows.Forms.Padding(2)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.ReadOnly = True
         Me.DataGridView1.RowHeadersWidth = 51
         Me.DataGridView1.RowTemplate.Height = 24
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridView1.Size = New System.Drawing.Size(437, 525)
+        Me.DataGridView1.Size = New System.Drawing.Size(437, 512)
         Me.DataGridView1.TabIndex = 33
         '
         'ContextMenuStrip1
@@ -231,13 +235,14 @@ Partial Class frmProduction
         Me.ContextMenuStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeleteToolStripMenuItem})
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(108, 26)
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(181, 48)
         '
         'DeleteToolStripMenuItem
         '
         Me.DeleteToolStripMenuItem.Name = "DeleteToolStripMenuItem"
-        Me.DeleteToolStripMenuItem.Size = New System.Drawing.Size(107, 22)
+        Me.DeleteToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DeleteToolStripMenuItem.Text = "Delete"
+        Me.DeleteToolStripMenuItem.Visible = False
         '
         'Label3
         '
@@ -320,7 +325,7 @@ Partial Class frmProduction
         '
         Me.statuslbl.AutoSize = True
         Me.statuslbl.ForeColor = System.Drawing.Color.Red
-        Me.statuslbl.Location = New System.Drawing.Point(492, 362)
+        Me.statuslbl.Location = New System.Drawing.Point(492, 335)
         Me.statuslbl.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.statuslbl.Name = "statuslbl"
         Me.statuslbl.Size = New System.Drawing.Size(145, 13)
@@ -363,7 +368,7 @@ Partial Class frmProduction
         'ToolStrip1
         '
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1, Me.adminDebug_btn})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -380,11 +385,18 @@ Partial Class frmProduction
         Me.ToolStripButton1.Text = "Help"
         Me.ToolStripButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         '
+        'adminDebug_btn
+        '
+        Me.adminDebug_btn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.adminDebug_btn.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.adminDebug_btn.Name = "adminDebug_btn"
+        Me.adminDebug_btn.Size = New System.Drawing.Size(23, 24)
+        '
         'AddBtn
         '
         Me.AddBtn.AutoSize = True
         Me.AddBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.AddBtn.Location = New System.Drawing.Point(662, 427)
+        Me.AddBtn.Location = New System.Drawing.Point(662, 490)
         Me.AddBtn.Margin = New System.Windows.Forms.Padding(2)
         Me.AddBtn.Name = "AddBtn"
         Me.AddBtn.Size = New System.Drawing.Size(48, 30)
@@ -439,9 +451,9 @@ Partial Class frmProduction
         Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.Label10)
         Me.GroupBox1.Controls.Add(Me.totalordercount)
-        Me.GroupBox1.Location = New System.Drawing.Point(398, 76)
+        Me.GroupBox1.Location = New System.Drawing.Point(448, 76)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(340, 273)
+        Me.GroupBox1.Size = New System.Drawing.Size(290, 236)
         Me.GroupBox1.TabIndex = 55
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Lots Info"
@@ -472,7 +484,7 @@ Partial Class frmProduction
         '
         Me.lblOption.AutoSize = True
         Me.lblOption.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblOption.Location = New System.Drawing.Point(615, 357)
+        Me.lblOption.Location = New System.Drawing.Point(615, 330)
         Me.lblOption.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblOption.Name = "lblOption"
         Me.lblOption.Size = New System.Drawing.Size(56, 20)
@@ -566,7 +578,7 @@ Partial Class frmProduction
         Me.GroupBox3.Controls.Add(Me.txtS2)
         Me.GroupBox3.Controls.Add(Me.txtS3)
         Me.GroupBox3.Controls.Add(Me.txtC2)
-        Me.GroupBox3.Location = New System.Drawing.Point(16, 453)
+        Me.GroupBox3.Location = New System.Drawing.Point(16, 426)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(511, 175)
         Me.GroupBox3.TabIndex = 65
@@ -586,9 +598,9 @@ Partial Class frmProduction
         '
         Me.btnQCin.AutoSize = True
         Me.btnQCin.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnQCin.Location = New System.Drawing.Point(25, 65)
+        Me.btnQCin.Location = New System.Drawing.Point(12, 84)
         Me.btnQCin.Name = "btnQCin"
-        Me.btnQCin.Size = New System.Drawing.Size(147, 35)
+        Me.btnQCin.Size = New System.Drawing.Size(73, 35)
         Me.btnQCin.TabIndex = 68
         Me.btnQCin.Text = "QC In"
         Me.btnQCin.UseVisualStyleBackColor = True
@@ -597,63 +609,60 @@ Partial Class frmProduction
         '
         Me.btnQCcheck.AutoSize = True
         Me.btnQCcheck.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnQCcheck.Location = New System.Drawing.Point(25, 113)
+        Me.btnQCcheck.Location = New System.Drawing.Point(96, 43)
         Me.btnQCcheck.Name = "btnQCcheck"
-        Me.btnQCcheck.Size = New System.Drawing.Size(168, 35)
+        Me.btnQCcheck.Size = New System.Drawing.Size(98, 76)
         Me.btnQCcheck.TabIndex = 67
-        Me.btnQCcheck.Text = "View QC Record"
+        Me.btnQCcheck.Text = "QC Record"
         Me.btnQCcheck.UseVisualStyleBackColor = True
         '
         'btnQCout
         '
         Me.btnQCout.AutoSize = True
         Me.btnQCout.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnQCout.Location = New System.Drawing.Point(25, 19)
+        Me.btnQCout.Location = New System.Drawing.Point(13, 43)
         Me.btnQCout.Name = "btnQCout"
-        Me.btnQCout.Size = New System.Drawing.Size(147, 35)
+        Me.btnQCout.Size = New System.Drawing.Size(72, 35)
         Me.btnQCout.TabIndex = 66
         Me.btnQCout.Text = "QC Out"
         Me.btnQCout.UseVisualStyleBackColor = True
         '
-        'CancelBtn
-        '
-        Me.CancelBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CancelBtn.Image = Global.CartonPalletizing.My.Resources.Resources.cancel
-        Me.CancelBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.CancelBtn.Location = New System.Drawing.Point(272, 406)
-        Me.CancelBtn.Margin = New System.Windows.Forms.Padding(2)
-        Me.CancelBtn.Name = "CancelBtn"
-        Me.CancelBtn.Size = New System.Drawing.Size(116, 42)
-        Me.CancelBtn.TabIndex = 7
-        Me.CancelBtn.Text = "Cancel"
-        Me.CancelBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.CancelBtn.UseVisualStyleBackColor = True
-        '
-        'ScanBtn
-        '
-        Me.ScanBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ScanBtn.Image = Global.CartonPalletizing.My.Resources.Resources.scan1
-        Me.ScanBtn.Location = New System.Drawing.Point(237, 366)
-        Me.ScanBtn.Margin = New System.Windows.Forms.Padding(2)
-        Me.ScanBtn.Name = "ScanBtn"
-        Me.ScanBtn.Size = New System.Drawing.Size(184, 50)
-        Me.ScanBtn.TabIndex = 6
-        Me.ScanBtn.Text = "Start Scanning"
-        Me.ScanBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.ScanBtn.UseVisualStyleBackColor = True
-        '
         'GroupBox4
         '
+        Me.GroupBox4.Controls.Add(Me.LoosePallet_btn)
+        Me.GroupBox4.Controls.Add(Me.Button1)
+        Me.GroupBox4.Controls.Add(Me.debug_chckbx)
         Me.GroupBox4.Controls.Add(Me.btnQCout)
         Me.GroupBox4.Controls.Add(Me.btnQCcheck)
         Me.GroupBox4.Controls.Add(Me.btnQCin)
-        Me.GroupBox4.Location = New System.Drawing.Point(538, 453)
+        Me.GroupBox4.Controls.Add(Me.PrintOrderBtn)
+        Me.GroupBox4.Controls.Add(Me.PrintReportBtn)
+        Me.GroupBox4.Location = New System.Drawing.Point(538, 426)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(200, 175)
+        Me.GroupBox4.Size = New System.Drawing.Size(200, 215)
         Me.GroupBox4.TabIndex = 26
         Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "QC Record"
+        Me.GroupBox4.Text = "Admin Debug"
         Me.GroupBox4.Visible = False
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(96, 165)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(98, 34)
+        Me.Button1.TabIndex = 70
+        Me.Button1.Text = "FPC"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'debug_chckbx
+        '
+        Me.debug_chckbx.AutoSize = True
+        Me.debug_chckbx.Location = New System.Drawing.Point(13, 20)
+        Me.debug_chckbx.Name = "debug_chckbx"
+        Me.debug_chckbx.Size = New System.Drawing.Size(78, 17)
+        Me.debug_chckbx.TabIndex = 69
+        Me.debug_chckbx.Text = "Debugging"
+        Me.debug_chckbx.UseVisualStyleBackColor = True
         '
         'txtSearch
         '
@@ -677,7 +686,7 @@ Partial Class frmProduction
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(267, 352)
+        Me.Label13.Location = New System.Drawing.Point(267, 325)
         Me.Label13.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(105, 26)
@@ -687,7 +696,7 @@ Partial Class frmProduction
         'lblError
         '
         Me.lblError.ForeColor = System.Drawing.Color.Red
-        Me.lblError.Location = New System.Drawing.Point(492, 419)
+        Me.lblError.Location = New System.Drawing.Point(492, 392)
         Me.lblError.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblError.Name = "lblError"
         Me.lblError.Size = New System.Drawing.Size(246, 29)
@@ -708,20 +717,34 @@ Partial Class frmProduction
         Me.GroupBox2.Controls.Add(Me.Shift)
         Me.GroupBox2.Controls.Add(Me.Label7)
         Me.GroupBox2.Controls.Add(Me.PalletBox)
-        Me.GroupBox2.Controls.Add(Me.PrintReportBtn)
-        Me.GroupBox2.Controls.Add(Me.PrintOrderBtn)
         Me.GroupBox2.Location = New System.Drawing.Point(16, 75)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(372, 274)
+        Me.GroupBox2.Size = New System.Drawing.Size(405, 237)
         Me.GroupBox2.TabIndex = 69
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Work Order"
+        '
+        'LoosePallet_btn
+        '
+        Me.LoosePallet_btn.AutoSize = True
+        Me.LoosePallet_btn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LoosePallet_btn.Image = Global.CartonPalletizing.My.Resources.Resources.print_28
+        Me.LoosePallet_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LoosePallet_btn.Location = New System.Drawing.Point(13, 163)
+        Me.LoosePallet_btn.Margin = New System.Windows.Forms.Padding(2)
+        Me.LoosePallet_btn.Name = "LoosePallet_btn"
+        Me.LoosePallet_btn.Size = New System.Drawing.Size(69, 36)
+        Me.LoosePallet_btn.TabIndex = 32
+        Me.LoosePallet_btn.Text = "PR"
+        Me.LoosePallet_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.LoosePallet_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.LoosePallet_btn.UseVisualStyleBackColor = True
         '
         'Label18
         '
         Me.Label18.AutoSize = True
         Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.Location = New System.Drawing.Point(49, 91)
+        Me.Label18.Location = New System.Drawing.Point(48, 90)
         Me.Label18.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(59, 20)
@@ -731,17 +754,17 @@ Partial Class frmProduction
         'txtPO
         '
         Me.txtPO.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPO.Location = New System.Drawing.Point(113, 89)
+        Me.txtPO.Location = New System.Drawing.Point(112, 88)
         Me.txtPO.Margin = New System.Windows.Forms.Padding(2)
         Me.txtPO.Name = "txtPO"
-        Me.txtPO.Size = New System.Drawing.Size(233, 26)
+        Me.txtPO.Size = New System.Drawing.Size(267, 26)
         Me.txtPO.TabIndex = 30
         '
         'Label17
         '
         Me.Label17.AutoSize = True
         Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label17.Location = New System.Drawing.Point(10, 27)
+        Me.Label17.Location = New System.Drawing.Point(9, 26)
         Me.Label17.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(103, 20)
@@ -751,10 +774,10 @@ Partial Class frmProduction
         'txtMasterScan
         '
         Me.txtMasterScan.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtMasterScan.Location = New System.Drawing.Point(113, 24)
+        Me.txtMasterScan.Location = New System.Drawing.Point(112, 23)
         Me.txtMasterScan.Margin = New System.Windows.Forms.Padding(2)
         Me.txtMasterScan.Name = "txtMasterScan"
-        Me.txtMasterScan.Size = New System.Drawing.Size(233, 26)
+        Me.txtMasterScan.Size = New System.Drawing.Size(267, 26)
         Me.txtMasterScan.TabIndex = 28
         '
         'cmbSubGroup
@@ -764,17 +787,17 @@ Partial Class frmProduction
         Me.cmbSubGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbSubGroup.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbSubGroup.FormattingEnabled = True
-        Me.cmbSubGroup.Location = New System.Drawing.Point(113, 121)
+        Me.cmbSubGroup.Location = New System.Drawing.Point(112, 120)
         Me.cmbSubGroup.Margin = New System.Windows.Forms.Padding(2)
         Me.cmbSubGroup.Name = "cmbSubGroup"
-        Me.cmbSubGroup.Size = New System.Drawing.Size(233, 28)
+        Me.cmbSubGroup.Size = New System.Drawing.Size(267, 28)
         Me.cmbSubGroup.TabIndex = 26
         '
         'Label14
         '
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(62, 124)
+        Me.Label14.Location = New System.Drawing.Point(61, 123)
         Me.Label14.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(46, 20)
@@ -788,17 +811,17 @@ Partial Class frmProduction
         Me.cmbWorkOrderBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbWorkOrderBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbWorkOrderBox.FormattingEnabled = True
-        Me.cmbWorkOrderBox.Location = New System.Drawing.Point(113, 54)
+        Me.cmbWorkOrderBox.Location = New System.Drawing.Point(112, 53)
         Me.cmbWorkOrderBox.Margin = New System.Windows.Forms.Padding(2)
         Me.cmbWorkOrderBox.Name = "cmbWorkOrderBox"
-        Me.cmbWorkOrderBox.Size = New System.Drawing.Size(233, 28)
+        Me.cmbWorkOrderBox.Size = New System.Drawing.Size(267, 28)
         Me.cmbWorkOrderBox.TabIndex = 1
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(46, 57)
+        Me.Label1.Location = New System.Drawing.Point(45, 56)
         Me.Label1.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(62, 20)
@@ -809,7 +832,7 @@ Partial Class frmProduction
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(67, 191)
+        Me.Label2.Location = New System.Drawing.Point(66, 190)
         Me.Label2.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(46, 20)
@@ -822,17 +845,17 @@ Partial Class frmProduction
         Me.Shift.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Shift.FormattingEnabled = True
         Me.Shift.Items.AddRange(New Object() {"DAY", "NIGHT"})
-        Me.Shift.Location = New System.Drawing.Point(113, 188)
+        Me.Shift.Location = New System.Drawing.Point(112, 187)
         Me.Shift.Margin = New System.Windows.Forms.Padding(2)
         Me.Shift.Name = "Shift"
-        Me.Shift.Size = New System.Drawing.Size(233, 28)
+        Me.Shift.Size = New System.Drawing.Size(267, 28)
         Me.Shift.TabIndex = 3
         '
         'Label7
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(34, 156)
+        Me.Label7.Location = New System.Drawing.Point(33, 155)
         Me.Label7.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(76, 20)
@@ -844,23 +867,24 @@ Partial Class frmProduction
         Me.PalletBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.PalletBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.PalletBox.FormattingEnabled = True
-        Me.PalletBox.Location = New System.Drawing.Point(113, 154)
+        Me.PalletBox.Location = New System.Drawing.Point(112, 153)
         Me.PalletBox.Margin = New System.Windows.Forms.Padding(2)
         Me.PalletBox.Name = "PalletBox"
-        Me.PalletBox.Size = New System.Drawing.Size(233, 28)
+        Me.PalletBox.Size = New System.Drawing.Size(267, 28)
         Me.PalletBox.TabIndex = 2
         '
         'PrintReportBtn
         '
         Me.PrintReportBtn.AutoSize = True
         Me.PrintReportBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PrintReportBtn.Image = Global.CartonPalletizing.My.Resources.Resources.print
-        Me.PrintReportBtn.Location = New System.Drawing.Point(217, 227)
+        Me.PrintReportBtn.Image = Global.CartonPalletizing.My.Resources.Resources.excel_28
+        Me.PrintReportBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.PrintReportBtn.Location = New System.Drawing.Point(96, 124)
         Me.PrintReportBtn.Margin = New System.Windows.Forms.Padding(2)
         Me.PrintReportBtn.Name = "PrintReportBtn"
-        Me.PrintReportBtn.Size = New System.Drawing.Size(153, 36)
+        Me.PrintReportBtn.Size = New System.Drawing.Size(98, 36)
         Me.PrintReportBtn.TabIndex = 5
-        Me.PrintReportBtn.Text = "Print Report"
+        Me.PrintReportBtn.Text = "FR"
         Me.PrintReportBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.PrintReportBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.PrintReportBtn.UseVisualStyleBackColor = True
@@ -869,23 +893,52 @@ Partial Class frmProduction
         '
         Me.PrintOrderBtn.AutoSize = True
         Me.PrintOrderBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PrintOrderBtn.Image = Global.CartonPalletizing.My.Resources.Resources.print
-        Me.PrintOrderBtn.Location = New System.Drawing.Point(70, 227)
+        Me.PrintOrderBtn.Image = Global.CartonPalletizing.My.Resources.Resources.print_28
+        Me.PrintOrderBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.PrintOrderBtn.Location = New System.Drawing.Point(11, 124)
         Me.PrintOrderBtn.Margin = New System.Windows.Forms.Padding(2)
         Me.PrintOrderBtn.Name = "PrintOrderBtn"
-        Me.PrintOrderBtn.Size = New System.Drawing.Size(146, 36)
+        Me.PrintOrderBtn.Size = New System.Drawing.Size(74, 36)
         Me.PrintOrderBtn.TabIndex = 4
-        Me.PrintOrderBtn.Text = "Print Order"
+        Me.PrintOrderBtn.Text = "PO"
         Me.PrintOrderBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.PrintOrderBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.PrintOrderBtn.UseCompatibleTextRendering = True
         Me.PrintOrderBtn.UseVisualStyleBackColor = True
+        '
+        'CancelBtn
+        '
+        Me.CancelBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CancelBtn.Image = Global.CartonPalletizing.My.Resources.Resources.cancel
+        Me.CancelBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.CancelBtn.Location = New System.Drawing.Point(272, 379)
+        Me.CancelBtn.Margin = New System.Windows.Forms.Padding(2)
+        Me.CancelBtn.Name = "CancelBtn"
+        Me.CancelBtn.Size = New System.Drawing.Size(116, 42)
+        Me.CancelBtn.TabIndex = 7
+        Me.CancelBtn.Text = "Cancel"
+        Me.CancelBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.CancelBtn.UseVisualStyleBackColor = True
+        '
+        'ScanBtn
+        '
+        Me.ScanBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ScanBtn.Image = Global.CartonPalletizing.My.Resources.Resources.scan1
+        Me.ScanBtn.Location = New System.Drawing.Point(237, 339)
+        Me.ScanBtn.Margin = New System.Windows.Forms.Padding(2)
+        Me.ScanBtn.Name = "ScanBtn"
+        Me.ScanBtn.Size = New System.Drawing.Size(184, 50)
+        Me.ScanBtn.TabIndex = 6
+        Me.ScanBtn.Text = "Start Scanning"
+        Me.ScanBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.ScanBtn.UseVisualStyleBackColor = True
         '
         'frmProduction
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(1224, 653)
+        Me.ClientSize = New System.Drawing.Size(1224, 660)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.lblError)
         Me.Controls.Add(Me.lblOption)
@@ -991,4 +1044,8 @@ Partial Class frmProduction
     Friend WithEvents Label17 As Label
     Friend WithEvents Label18 As Label
     Friend WithEvents txtPO As TextBox
+    Friend WithEvents LoosePallet_btn As Button
+    Friend WithEvents debug_chckbx As CheckBox
+    Friend WithEvents adminDebug_btn As ToolStripButton
+    Friend WithEvents Button1 As Button
 End Class

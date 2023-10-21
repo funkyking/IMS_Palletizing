@@ -42,6 +42,11 @@ Palletizing
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:CartonPalletizing.My.Resources.Resources.excel_28">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:CartonPalletizing.My.Resources.Resources.help">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -58,6 +63,11 @@ Palletizing
 </summary>
 </member>
 <member name="P:CartonPalletizing.My.Resources.Resources.print">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:CartonPalletizing.My.Resources.Resources.print_28">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
@@ -115,6 +125,69 @@ Represents strongly named DataRow class.
 <member name="T:CartonPalletizing.DataSet1.WorkOrderRowChangeEvent">
 <summary>
 Row event argument class
+</summary>
+</member>
+<member name="T:CartonPalletizing.frmAddLine">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmAddLine.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmAddLine.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmAddLine.ToolStrip2_TrayLocation">
+<summary>
+  Looks up a localized resource of type System.Drawing.Point similar to {X=17,Y=17}.
+</summary>
+</member>
+<member name="T:CartonPalletizing.frmAddUser">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmAddUser.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmAddUser.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmAddUser.ToolStrip2_TrayLocation">
+<summary>
+  Looks up a localized resource of type System.Drawing.Point similar to {X=17,Y=17}.
+</summary>
+</member>
+<member name="T:CartonPalletizing.frmReport">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmReport.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmReport.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:CartonPalletizing.frmReport.ToolStrip1_TrayLocation">
+<summary>
+  Looks up a localized resource of type System.Drawing.Point similar to {X=17,Y=17}.
 </summary>
 </member>
 <member name="M:CartonPalletizing.param.ReadValue(System.String,System.String,System.String)">

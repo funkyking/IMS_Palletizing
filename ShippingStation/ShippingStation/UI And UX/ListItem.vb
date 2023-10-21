@@ -43,7 +43,7 @@
 
     Public Sub EnableEditing()
         Try
-            If GlobalVariables.AllowContainerEdit = True Then
+            If GlobalVariables.AllowContainerEdit = True Or GlobalVariables.MainInstance.containerStatus_lbl.Text.Contains("In") Or GlobalVariables.MainInstance.containerStatus_lbl.Text.Contains("New") Then
                 Button1.Visible = True
             Else
                 Button1.Visible = False

@@ -23,8 +23,8 @@ Partial Class frmProduction
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.PalletBox = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -90,6 +90,7 @@ Partial Class frmProduction
         Me.btnQCcheck = New System.Windows.Forms.Button()
         Me.btnQCout = New System.Windows.Forms.Button()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.debug_chckbx = New System.Windows.Forms.CheckBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.txtSearch = New System.Windows.Forms.TextBox()
@@ -98,7 +99,6 @@ Partial Class frmProduction
         Me.lblError = New System.Windows.Forms.Label()
         Me.CancelBtn = New System.Windows.Forms.Button()
         Me.ScanBtn = New System.Windows.Forms.Button()
-        Me.debug_chckbx = New System.Windows.Forms.CheckBox()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -273,24 +273,24 @@ Partial Class frmProduction
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.ContextMenuStrip = Me.ContextMenuStrip1
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridView1.Location = New System.Drawing.Point(809, 86)
         Me.DataGridView1.Margin = New System.Windows.Forms.Padding(2)
         Me.DataGridView1.Name = "DataGridView1"
@@ -449,15 +449,16 @@ Partial Class frmProduction
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.ToolStrip1.Size = New System.Drawing.Size(1026, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1026, 27)
         Me.ToolStrip1.TabIndex = 52
         Me.ToolStrip1.Text = "ToolStrip1"
         '
         'ToolStripButton1
         '
+        Me.ToolStripButton1.Image = Global.CartonPalletizing.My.Resources.Resources.help
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(36, 22)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(56, 24)
         Me.ToolStripButton1.Text = "Help"
         Me.ToolStripButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         '
@@ -834,6 +835,16 @@ Partial Class frmProduction
         Me.GroupBox4.Text = "Debug Section"
         Me.GroupBox4.Visible = False
         '
+        'debug_chckbx
+        '
+        Me.debug_chckbx.AutoSize = True
+        Me.debug_chckbx.Location = New System.Drawing.Point(62, 183)
+        Me.debug_chckbx.Name = "debug_chckbx"
+        Me.debug_chckbx.Size = New System.Drawing.Size(78, 17)
+        Me.debug_chckbx.TabIndex = 71
+        Me.debug_chckbx.Text = "Debugging"
+        Me.debug_chckbx.UseVisualStyleBackColor = True
+        '
         'Button1
         '
         Me.Button1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -897,6 +908,7 @@ Partial Class frmProduction
         'CancelBtn
         '
         Me.CancelBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CancelBtn.Image = Global.CartonPalletizing.My.Resources.Resources.cancel
         Me.CancelBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.CancelBtn.Location = New System.Drawing.Point(290, 407)
         Me.CancelBtn.Margin = New System.Windows.Forms.Padding(2)
@@ -910,6 +922,7 @@ Partial Class frmProduction
         'ScanBtn
         '
         Me.ScanBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ScanBtn.Image = Global.CartonPalletizing.My.Resources.Resources.scan1
         Me.ScanBtn.Location = New System.Drawing.Point(253, 368)
         Me.ScanBtn.Margin = New System.Windows.Forms.Padding(2)
         Me.ScanBtn.Name = "ScanBtn"
@@ -918,16 +931,6 @@ Partial Class frmProduction
         Me.ScanBtn.Text = "Start Scanning"
         Me.ScanBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.ScanBtn.UseVisualStyleBackColor = True
-        '
-        'debug_chckbx
-        '
-        Me.debug_chckbx.AutoSize = True
-        Me.debug_chckbx.Location = New System.Drawing.Point(62, 183)
-        Me.debug_chckbx.Name = "debug_chckbx"
-        Me.debug_chckbx.Size = New System.Drawing.Size(78, 17)
-        Me.debug_chckbx.TabIndex = 71
-        Me.debug_chckbx.Text = "Debugging"
-        Me.debug_chckbx.UseVisualStyleBackColor = True
         '
         'frmProduction
         '

@@ -36,16 +36,16 @@ Public Class frmUserMaster
 
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 
-        frmAddUser.Text = "Add New User"
-        frmAddUser.ShowDialog()
+        'frmAddUser.Text = "Add New User"
+        'frmAddUser.ShowDialog()
 
         LoadGrid()
     End Sub
 
     Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click, DataGridView1.CellContentDoubleClick
         If DataGridView1.RowCount > 0 Then
-            frmAddUser.Text = "Update User"
-            frmAddUser.ShowDialog()
+            'frmAddUser.Text = "Update User"
+            'frmAddUser.ShowDialog()
         Else
             MsgBox("There are no data available yet. Please try again later", MsgBoxStyle.Exclamation)
         End If
