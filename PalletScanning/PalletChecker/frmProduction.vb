@@ -5286,7 +5286,7 @@ here:
 
 
             ' Create a QR Code with QrCoder
-            Dim qrStrdata = $"{r1.WorkOrder},{r1.PONumber},{r1.SubGroup},{r1.PalletNo},{r1.Shift}"
+            Dim qrStrdata = $"{r1.WorkOrder},{r1.PONumber},{r1.SubGroup},{i},{r1.Shift}"
             Dim qrgen As New QRCoder.QRCodeGenerator()
             Dim qrdata = qrgen.CreateQrCode(qrStrdata, QRCodeGenerator.ECCLevel.Q)
             Dim qrcode As New QRCode(qrdata)
@@ -6212,7 +6212,7 @@ here:
             Dim serial_Count = getPalletCount(r1.WID.ToString(), PalletBox.SelectedItem.ToString())
 
             ' Create a QR Code with QrCoder
-            Dim qrStrdata = $"{r1.WorkOrder},{r1.PONumber},{r1.SubGroup},{r1.PalletNo},{r1.Shift}"
+            Dim qrStrdata = $"{r1.WorkOrder},{r1.PONumber},{r1.SubGroup},{PalletBox.SelectedItem.ToString()},{r1.Shift}"
             Dim qrgen As New QRCoder.QRCodeGenerator()
             Dim qrdata = qrgen.CreateQrCode(qrStrdata, QRCodeGenerator.ECCLevel.Q)
             Dim qrcode As New QRCode(qrdata)

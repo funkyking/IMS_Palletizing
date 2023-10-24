@@ -242,6 +242,7 @@ Public Class frmAddWorkOrder
             'Added by Paul (19/10/2023)
             SQLcmd.CommandText = "UPDATE [CUPID].[WorkOrderMaster]
                                 SET [Work Order] = '" & WorkOrder.Text & "',
+                                    [PO Number] = '" & txtPO.Text & "',
                                     [Sub Group] = '" & SubGroup.Text & "',
                                     [Part ID] = '" & PID.ToString & "',
                                     [Model ID] = '" & MID.ToString & "',
@@ -445,6 +446,15 @@ startingplace:
     End Sub
 
     Private Sub WorkOrder_TextChanged(sender As Object, e As EventArgs) Handles WorkOrder.TextChanged
+
+        If Not CheckPO(WorkOrder.Text) = True Then
+            txtPO.Text = ""
+        Else
+            statuslbl.Text = ""
+            Label8.Text = ""
+        End If
+
+
         If statuslbl.Text = "" Then
             Label8.Text = ""
         Else
@@ -539,6 +549,10 @@ startingplace:
 
             If CheckPO(WorkOrder.Text) = True Then
                 SubGroup.Select()
+                statuslbl.Text = ""
+                Label8.Text = ""
+            Else
+                txtPO.Text = ""
             End If
 
 
