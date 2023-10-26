@@ -119,6 +119,40 @@ Public Class frmWorkOrderMaster
         End Try
     End Function
 
+
+    Private Function deleteWorkOrder()
+        Try
+
+            Dim CompletedShipping = False
+
+            Dim conn = New SqlConnection(connstr)
+            conn.Open()
+            If conn.State = ConnectionState.Open Then
+
+                Dim checkShippingQuery = "SELECT TOP 5 [Word Order ID]
+                                            FROM [CRICUT].[CUPID].[ContainerShipping]
+                                            WHERE [Word Order ID] = 'C52B4D75-F7E2-4FDA-9BEA-EFED4B34D7DF'"
+                Using Sqlcmd1 As New SqlCommand(checkShippingQuery, conn)
+                    Dim ds = Sqlcmd1.ExecuteNonQuery()
+                    If ds > 0 Then
+                        CompletedShipping = True
+                    End If
+                End Using
+
+
+                If CompletedShipping = True Then
+
+
+                    'Dim 
+
+                End If
+
+
+            End If
+        Catch ex As Exception
+        End Try
+    End Function
+
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
         Dim res = MessageBox.Show("Confirm Delete Item?", "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
         If res = DialogResult.Yes Then

@@ -114,7 +114,6 @@ Partial Class frmWorkOrderMaster
         Me.ToolStripButton3.Name = "ToolStripButton3"
         Me.ToolStripButton3.Size = New System.Drawing.Size(64, 24)
         Me.ToolStripButton3.Text = "Delete"
-        Me.ToolStripButton3.Visible = False
         '
         'DataGridView1
         '
