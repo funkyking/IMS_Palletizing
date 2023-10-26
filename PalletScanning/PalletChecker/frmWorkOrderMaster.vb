@@ -131,7 +131,7 @@ Public Class frmWorkOrderMaster
 
                 Dim checkShippingQuery = "SELECT TOP 5 [Word Order ID]
                                             FROM [CRICUT].[CUPID].[ContainerShipping]
-                                            WHERE [Word Order ID] = 'C52B4D75-F7E2-4FDA-9BEA-EFED4B34D7DF'"
+                                            WHERE [Word Order ID] = ''"
                 Using Sqlcmd1 As New SqlCommand(checkShippingQuery, conn)
                     Dim ds = Sqlcmd1.ExecuteNonQuery()
                     If ds > 0 Then
@@ -140,11 +140,7 @@ Public Class frmWorkOrderMaster
                 End Using
 
 
-                If CompletedShipping = True Then
-
-
-                    'Dim 
-
+                If CompletedShipping = False Then
                 End If
 
 

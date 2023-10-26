@@ -3403,6 +3403,26 @@ here:
         Return returnValue
     End Function
 
+
+    Private Function getCartonCount() As String
+        Dim i = 0
+        Try
+            Dim conn As New SqlConnection(connstr)
+            conn.Open()
+            If conn.State = ConnectionState.Open Then
+                Dim query = "SELECT COUNT(*)
+                              FROM [CRICUT].[CUPID].[WorkOrder]
+                              WHERE [Work Order ID] = '" & WID.ToString().Trim() & "'"
+                Using Sqlcmd As New SqlCommand(query, conn)
+                    i = Convert.ToInt16(Sqlcmd.ExecuteScalar()) + 1
+                End Using
+                Return i.ToString("0000")
+            End If
+        Catch ex As Exception
+            Return i.ToString("0000")
+        End Try
+    End Function
+
     Private Function FinishScan1()
         Dim tmp As Integer
         Dim totaltmp As Integer
@@ -3430,7 +3450,7 @@ here:
                     tmp += lblOption.Text
                     count.Text = tmp
                     totalordercount.Text = totaltmp
-                    InsertDataSQL(txtS1.Text, Carton.Text)
+                    InsertDataSQL(txtS1.Text, getCartonCount()) 'Carton.Text(2nd Argument)
                     UpdateCountSQL()
                     LoadGrid()
 

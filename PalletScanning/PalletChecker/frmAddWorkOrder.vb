@@ -474,47 +474,53 @@ startingplace:
 
     Private Function CheckPO(workorder As String)
 
-        Dim res As Boolean
-        Dim Conn = New SqlConnection(connstr)
-        Conn.Open()
-        If Conn.State = ConnectionState.Open Then
-            Dim SQLcmd = New SqlCommand
-            SQLcmd.Connection = Conn
-            'SQLcmd.CommandText = "SELECT *
-            'From [CRICUT].[CUPID].[WorkOrder] WHERE [Work Order ID]='" & WID.ToString & "'AND  [Serial No]='" & SerialNo & "' "
+        Try
+            Dim res As Boolean
+            Dim Conn = New SqlConnection(connstr)
+            Conn.Open()
+            If Conn.State = ConnectionState.Open Then
+                Dim SQLcmd = New SqlCommand
+                SQLcmd.Connection = Conn
+                'SQLcmd.CommandText = "SELECT *
+                'From [CRICUT].[CUPID].[WorkOrder] WHERE [Work Order ID]='" & WID.ToString & "'AND  [Serial No]='" & SerialNo & "' "
 
-            'remove wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And
+                'remove wm.[Work Order] = '" & cmbWorkOrderBox.Text & "'And wm.[Sub Group]='" & cmbSubGroup.Text & "' And
 
 
-            SQLcmd.CommandText = "SELECT [Customer_PO_Number]
+                SQLcmd.CommandText = "SELECT [Customer_PO_Number]
                         
                                       FROM [Cricut_MES].[dbo].[ProductionOrder]
                                       WHERE [Plant_Production_Order_ID] = '" & workorder & "'"
 
-            'SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Serial No],wm.[Work Order],wm.[Sub Group]
+                'SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Serial No],wm.[Work Order],wm.[Sub Group]
 
-            '                          FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
-            '                          INNER JOIN [CRICUT].[CUPID].[WorkOrderPalletizing] w
-            '                          ON wm.[Work Order ID]=w.[Work Order ID]
-            '                          WHERE w.[Serial No] = '" & DataGridView1.Rows(i).Cells("Serial No").Value & "' AND [Pallet No] = '" & PalletBox.Text & "'"
+                '                          FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
+                '                          INNER JOIN [CRICUT].[CUPID].[WorkOrderPalletizing] w
+                '                          ON wm.[Work Order ID]=w.[Work Order ID]
+                '                          WHERE w.[Serial No] = '" & DataGridView1.Rows(i).Cells("Serial No").Value & "' AND [Pallet No] = '" & PalletBox.Text & "'"
 
 
 
-            Dim ds = SQLcmd.ExecuteReader
-            If ds.HasRows Then
-                res = True
-                While ds.Read
-                    txtPO.Text = ds.Item("Customer_PO_Number")
-                End While
-            Else
-                res = False
-                statuslbl.Text = ""
-                statuslbl.Text = "PO No. Not Exist"
+                Dim ds = SQLcmd.ExecuteReader
+                If ds.HasRows Then
+                    res = True
+                    While ds.Read
+                        txtPO.Text = ds.Item("Customer_PO_Number")
+                    End While
+                Else
+                    res = False
+                    statuslbl.Text = ""
+                    statuslbl.Text = "PO No. Not Exist"
+                End If
             End If
-        End If
-        Conn.Close()
+            Conn.Close()
 
-        Return res
+            Return res
+        Catch ex As Exception
+            Return False
+        End Try
+
+
     End Function
 
     Private Function CheckDuplicateSub() As Boolean
