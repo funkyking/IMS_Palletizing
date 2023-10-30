@@ -1,6 +1,0 @@
-Container Shipping Application
-
-- Fix Minor Bugs
-- Allow User To Delete Container
-- Fix Duplicate container Name in db
-- Display List of Containers in listbox
