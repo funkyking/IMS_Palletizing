@@ -90,4 +90,5 @@ Public Class ReportData
     Public Desc As String
     Public Description As String
     Public SubGroup As String
+    Public Count As String
 End Class

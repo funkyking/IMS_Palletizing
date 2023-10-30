@@ -34,7 +34,9 @@ Public Class frmAddWorkOrder
             GroupBox1.Text = "Update Work Order"
             UpdateBtn.Visible = True
             UpdateBtn.Location = SaveBtn.Location
-            WorkOrder.ReadOnly = True
+            If workOrderShipping_State() Then
+                WorkOrder.ReadOnly = True
+            End If
             SaveBtn.Visible = False
             LoadSQL()
         Else
@@ -116,9 +118,10 @@ Public Class frmAddWorkOrder
             End If
         End If
 
+
         'Added by Paul (19/10/2023)
         ' Label8.text also has to be emtpy then can proceed changes.
-        If statuslbl.Text <> "" Or Label8.Text <> "" Then
+        If (statuslbl.Text <> "" Or Not statuslbl.Text.Contains("PO No.")) And Label8.Text <> "" Then
             Exit Sub
         End If
         GetModelID()
@@ -162,7 +165,7 @@ Public Class frmAddWorkOrder
 
         'Added by Paul (19/10/2023)
         ' Label8.text also has to be emtpy then can proceed changes.
-        If statuslbl.Text <> "" Or Label8.Text <> "" Then
+        If (statuslbl.Text <> "" Or Not statuslbl.Text.Contains("PO No.")) And Label8.Text <> "" Then
             Exit Sub
         End If
         GetModelID()
@@ -187,27 +190,20 @@ Public Class frmAddWorkOrder
 
     Private Function InsertDataSQL()
         Dim Conn = New SqlConnection(connstr)
-        Conn.Open()
-        If Conn.State = ConnectionState.Open Then
-            Dim SQLcmd = New SqlCommand
-            SQLcmd.Connection = Conn
-            SQLcmd.CommandText = "INSERT INTO [CUPID].[WorkOrderMaster]
-                                              ([Work Order ID]
-                                               ,[Work Order]
-                                               ,[Part ID]
-                                               ,[Model ID]
-                                               , [LineID]
-                                               ,[Quantity]
-                                               ,[Count]
-                                               ,[Total Order Count]
-                                               ,[Description]
-                                               ,[Completed]
-                                               ,[Modified Date]
-                                               ,[ScanOption]
-                                               ,[Delete]
-                                               ,[Sub Group]
-                                               ,[CountPalletizing]
-                                               ,[PO Number])
+        Try
+            Conn.Open()
+
+            'Make sure Po Number is NULL if there is no value
+            If txtPO.Text = "" Or txtPO.Text = Nothing Then
+                txtPO.Text = "NULL"
+            End If
+
+            If Conn.State = ConnectionState.Open Then
+                Dim SQLcmd = New SqlCommand
+                SQLcmd.Connection = Conn
+                SQLcmd.CommandText = "INSERT INTO [CUPID].[WorkOrderMaster]
+                                              ([Work Order ID],[Work Order],[Part ID],[Model ID],[LineID],[Quantity],[Count],[Total Order Count]
+                                               ,[Description],[Completed],[Modified Date],[ScanOption],[Delete],[Sub Group],[CountPalletizing],[PO Number])
                                          VALUES
                                                ('" & WID.ToString & "'
                                                ,'" & WorkOrder.Text & "'
@@ -226,57 +222,80 @@ Public Class frmAddWorkOrder
                                                ,'0'
                                                ,'" & txtPO.Text & "')"
 
-
-            SQLcmd.ExecuteNonQuery()
-            Conn.Close()
-        End If
-        Me.Close()
+                SQLcmd.ExecuteNonQuery()
+                Conn?.Close()
+            End If
+            Me.Close()
+        Catch ex As Exception
+            Conn?.Close()
+        End Try
     End Function
 
     Private Function UpdateDataSQL()
         Dim Conn = New SqlConnection(connstr)
-        Conn.Open()
-        If Conn.State = ConnectionState.Open Then
-            Dim SQLcmd = New SqlCommand
-            SQLcmd.Connection = Conn
-            'Added by Paul (19/10/2023)
-            SQLcmd.CommandText = "UPDATE [CUPID].[WorkOrderMaster]
-                                SET [Work Order] = '" & WorkOrder.Text & "',
-                                    [PO Number] = '" & txtPO.Text & "',
-                                    [Sub Group] = '" & SubGroup.Text & "',
-                                    [Part ID] = '" & PID.ToString & "',
-                                    [Model ID] = '" & MID.ToString & "',
-                                    [LineID] = '" & LID.ToString & "',
-                                    [Quantity] = '" & qty.Value & "',
-                                    [Total Order Count] = '" & totalOrderCount_Numeric.Value & "',
-                                    [Description] = '" & txtDescription.Text & "',
-                                    [Modified Date] = '" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "',
-                                    [ScanOption] = '" & ComboBox1.Text & "',
-                                    [Delete] = 'False',
-                                    [Completed] = CASE
-                                        WHEN [Count] >= " & totalOrderCount_Numeric.Value & " THEN 1
-                                        ELSE 0
-                                    END
-                                WHERE [Index] = '" & frmWorkOrderMaster.DataGridView1.CurrentRow.Cells("No").Value.ToString & "'"
+        Try
+            Conn.Open()
 
-            'SQLcmd.CommandText = "UPDATE [CUPID].[WorkOrderMaster]
-            '                         SET [Work Order] = '" & WorkOrder.Text & "'
-            '                              ,[Sub Group] = '" & SubGroup.Text & "'
-            '                              ,[Part ID] = '" & PID.ToString & "'
-            '                              ,[Model ID] = '" & MID.ToString & "'
-            '                              ,[LineID] = '" & LID.ToString & "'
-            '                              ,[Quantity] = '" & qty.Value & "'
-            '                              ,[Total Order Count] = '" & totalOrderCount_Numeric.Value & "'
-            '                              ,[Description]='" & txtDescription.Text & "'
-            '                              ,[Modified Date] =  '" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
-            '                              ,[ScanOption]='" & ComboBox1.Text & "'
-            '                              ,[Delete] = 'False'
+            'Make sure Po Number is NULL if there is no value
+            If txtPO.Text = "" Or txtPO.Text = Nothing Then
+                txtPO.Text = "NULL"
+            End If
 
-            '                     WHERE [Index]='" & frmWorkOrderMaster.DataGridView1.CurrentRow.Cells("No").Value.ToString & "'"
-            SQLcmd.ExecuteNonQuery()
-            Conn.Close()
-        End If
-        Me.Close()
+
+            Dim workID = getWorkOrderID()
+
+
+            If Conn.State = ConnectionState.Open Then
+
+
+                'Update Work Order Master
+                Dim WOM_Query = "UPDATE [CRICUT].[CUPID].[WorkOrderMaster]
+                                    SET [Work Order] = '" & WorkOrder.Text & "',
+                                        [PO Number] = '" & txtPO.Text & "',
+                                        [Sub Group] = '" & SubGroup.Text & "',
+                                        [Part ID] = '" & PID.ToString & "',
+                                        [Model ID] = '" & MID.ToString & "',
+                                        [LineID] = '" & LID.ToString & "',
+                                        [Quantity] = '" & qty.Value & "',
+                                        [Total Order Count] = '" & totalOrderCount_Numeric.Value & "',
+                                        [Description] = '" & txtDescription.Text & "',
+                                        [Modified Date] = '" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "',
+                                        [ScanOption] = '" & ComboBox1.Text & "',
+                                        [Delete] = 'False',
+                                        [Completed] = CASE
+                                            WHEN [Count] >= " & totalOrderCount_Numeric.Value & " THEN 1
+                                            ELSE 0
+                                        END
+                                    WHERE [Index] = '" & frmWorkOrderMaster.DataGridView1.CurrentRow.Cells("No").Value.ToString & "'"
+
+                Using WOM_cmd As New SqlCommand(WOM_Query, Conn)
+                    WOM_cmd.ExecuteNonQuery()
+                End Using
+
+
+
+                'Update Work Order Status
+                Dim WOS_Query = "UPDATE [CRICUT].[CUPID].[WorkOrderStatus]
+                                   SET [Work Order] = '" & WorkOrder.Text & "'
+                                      ,[Sub Group] = '" & SubGroup.Text & "'
+                                      ,[Modified Date] = GETDATE()
+                                 WHERE [Work Order ID] = '" & workID & "'"
+
+                Using WOS_cmd As New SqlCommand(WOS_Query, Conn)
+                    WOS_cmd.ExecuteNonQuery()
+                End Using
+
+
+
+
+                Conn?.Close()
+            End If
+            Me.Close()
+        Catch ex As Exception
+            Conn?.Close()
+        End Try
+
+
     End Function
 
     Private Function CheckDuplicateItem() As Boolean
@@ -564,6 +583,72 @@ startingplace:
 
         End If
     End Sub
+
+
+
+    Private Function getWorkOrderID() As String
+        Dim conn As New SqlConnection(connstr)
+        Dim id As New Guid
+        Try
+            conn.Open()
+            If conn.State = ConnectionState.Open Then
+                Dim i = frmWorkOrderMaster.DataGridView1.CurrentRow.Cells("No").Value.ToString
+                Dim wo = frmWorkOrderMaster.DataGridView1.CurrentRow.Cells("Work Order").Value.ToString
+
+                Dim query = "SELECT [Index],[Work Order ID]
+                            FROM [CRICUT].[CUPID].[WorkOrderMaster]
+                            WHERE [Index] = '" & i & "' or [Work Order] = '" & wo & "'"
+
+                Using sqlcmd As New SqlCommand(query, conn)
+                    Dim ds = sqlcmd.ExecuteReader()
+                    If ds.HasRows Then
+                        While ds.Read
+                            id = ds.GetValue(ds.GetOrdinal("Work Order ID"))
+                        End While
+                    End If
+                End Using
+                conn.Close()
+                Return id.ToString()
+            End If
+        Catch ex As Exception
+            conn?.Close()
+            Return ""
+        End Try
+    End Function
+
+    Private Function workOrderShipping_State() As Boolean
+        Dim conn As New SqlConnection(connstr)
+        Try
+            conn.Open()
+
+
+            Dim i = frmWorkOrderMaster.DataGridView1.CurrentRow.Cells("No").Value.ToString
+            Dim wo = frmWorkOrderMaster.DataGridView1.CurrentRow.Cells("Work Order").Value.ToString
+
+            If conn.State = ConnectionState.Open Then
+                Dim GetID_Query = "SELECT WOM.[Index],WOM.[Work Order ID],WOM.[Work Order],WOM.[Sub Group]
+                                    FROM [CRICUT].[CUPID].[WorkOrderMaster] WOM
+                                    INNER JOIN [CRICUT].[CUPID].[ContainerShipping] CS ON WOM.[Work Order ID] = CS.[Word Order ID]
+                                    WHERE WOM.[Index] = '" & i & "'
+                                    OR WOM.[Work Order] = '" & wo & "'"
+
+                Using GetID_cmd As New SqlCommand(GetID_Query, conn)
+                    Dim ds = GetID_cmd.ExecuteReader()
+                    If ds.HasRows Then
+                        Return True
+                    End If
+                End Using
+                conn.Close()
+                Return False
+            End If
+        Catch ex As Exception
+            conn?.Close()
+            Return True
+        Finally
+            conn?.Close()
+        End Try
+    End Function
+
 
 
 End Class

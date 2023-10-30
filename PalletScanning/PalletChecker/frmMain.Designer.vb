@@ -201,7 +201,7 @@ Partial Class frmMain
         Me.IsMdiContainer = True
         Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "frmMain"
-        Me.Text = "Cricut Pallet Scanning (V2.22)"
+        Me.Text = "Cricut Pallet Scanning (V2.23)"
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.ToolStrip2.ResumeLayout(False)
