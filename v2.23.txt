@@ -1,0 +1,15 @@
+V2.23
+
+[frmcheck]
+fix - The maximum count is retrieving from datagrid not database which will cause 
+issue when user reopens application because the value is not the total value of the pallet
+but the datagrid it loaded with, so if item was removed it will give issue.
+
+[frmProduction]
+fix - auto Insert Pallets to [WorkOrderStatus] if they are completed or total ordercount reached Max
+update - allow more smooth operation loading [Work Order] by option to filter display completed [Work Order] 
+
+
+Remeber to Change SHIPPING DATABASE [Word Order ID] to [Work Order ID]
+-Allow user to input two pallets as long as its a different container
+-New Container has to handle split container
