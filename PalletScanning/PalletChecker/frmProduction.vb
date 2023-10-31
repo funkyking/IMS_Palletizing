@@ -4968,8 +4968,12 @@ here:
 				NextPallet()
 			End If
 			If Integer.Parse(totalordercount.Text) >= Integer.Parse(Order.Text) Then
-				'PrintReportAndStoreExcel()
-				'reprint()
+				InsertStatusSQL()
+				Dim res = MessageBox.Show($"Order Completed !!{vbCrLf} Do you want to print report for [Pallet : " & PalletBox.SelectedItem & "] ?", "Print Report", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+				If res = DialogResult.Yes Then
+					PrintReportSingularPallet()
+					OpenReprintExcelCreation()
+				End If
 				Await Task.Delay(500)
 				UpdateCompleteSQL()
 				'Disable by Paul (19/10/2023)
@@ -4996,10 +5000,7 @@ here:
 					item.enabled = False
 				Next
 				Exit Sub
-
 			End If
-
-
 		End If
 	End Sub
 
@@ -5421,7 +5422,7 @@ here:
 				Clipboard.Clear()
 			End Try
 			Dim qrImageShape = sourceWorkSheet.Shapes.Item(1) ' Assumes the QR code image is the first shape in the worksheet
-			qrImageShape.Left = leftPosition + 16.5 '20.0
+			qrImageShape.Left = leftPosition + 18.0 '20.0
 			qrImageShape.Top = topPosition - 2.5 'no -
 
 			' Get Serial Numbers for each pallet
@@ -5763,7 +5764,7 @@ here:
 				Clipboard.Clear()
 			End Try
 			Dim qrImageShape = sourceWorkSheet.Shapes.Item(1) ' Assumes the QR code image is the first shape in the worksheet
-			qrImageShape.Left = leftPosition + 16.5 '20.0
+			qrImageShape.Left = leftPosition + 18.0 '20.0
 			qrImageShape.Top = topPosition - 2.5
 
 
@@ -6126,15 +6127,17 @@ here:
 
 				'Flags
 				Dim WOS_PS_Flag = False
-				Dim WO_Flag = False 'Work Order
 				Dim WO_Rows = 0
+				Dim WO_Flag = False
+				Dim Palletzing_Rows = 0
+				Dim Wo_Palletzing_Flag = False
+				Dim Update = True
 
 
 
 				Dim palletNo = 0
 				If PalletBox.Items.Count > 0 Then
 					showLabels_EPWS(True)
-					scanstatuslbl.Text = "lalala"
 					For Each item In PalletBox.Items
 						WO_Rows = 0
 						WOS_PS_Flag = False
@@ -6156,32 +6159,48 @@ here:
 						Using WOS_cmd As New SqlCommand(WOS_Query, conn)
 							Dim ds = WOS_cmd.ExecuteReader()
 							If ds.HasRows Then
-								Exit For
+								Update = False
+							Else
+								Update = True
 							End If
 							ds.Close()
 						End Using
 
-
-						'if dont exist continue to get row count for the pallet work order
-						Dim WO_Query = "SELECT COUNT (DISTINCT [Serial No])
+						If Update = True Then
+							'if dont exist continue to get row count for the pallet work order
+							Dim WO_Query = "SELECT COUNT (DISTINCT [Serial No])
 											FROM [CRICUT].[CUPID].[WorkOrder]
 											WHERE [Work Order ID] = '" & r1.WID.ToString().Trim() & "'
 											AND [Pallet No] = '" & palletNo.ToString().Trim() & "'"
-						Using WO_cmd As New SqlCommand(WO_Query, conn)
-							WO_Rows = Convert.ToInt16(WO_cmd.ExecuteScalar())
-							If WO_Rows > 0 Then
-								WO_Flag = True
-							End If
-						End Using
+							Using WO_cmd As New SqlCommand(WO_Query, conn)
+								WO_Rows = Convert.ToInt16(WO_cmd.ExecuteScalar())
+								If WO_Rows > 0 Then
+									WO_Flag = True
+									If WO_Rows >= r1.qty Or r1.Count >= r1.totalcarton Then
+										WOS_PS_Flag = True
+									End If
+								End If
+							End Using
 
 
-						' if pallet is full or the total count has reach the total carton count then continue
-						If WO_Rows >= r1.qty Or r1.Count >= r1.totalcarton Then
-							WOS_PS_Flag = True
-						End If
+
+							'if dont exist continue to get row count for the pallet work order
+							Dim Palletizing_query = "SELECT COUNT (DISTINCT [Serial No])
+											FROM [CRICUT].[CUPID].[WorkOrder]
+											WHERE [Work Order ID] = '" & r1.WID.ToString().Trim() & "'
+											AND [Pallet No] = '" & palletNo.ToString().Trim() & "'"
+							Using Palletzing_cmd As New SqlCommand(Palletizing_query, conn)
+								Palletzing_Rows = Convert.ToInt16(Palletzing_cmd.ExecuteScalar())
+								If Palletzing_Rows > 0 Then
+									If Palletzing_Rows >= r1.qty Or r1.Count >= r1.totalcarton Then
+										Wo_Palletzing_Flag = True
+									End If
+								End If
+							End Using
 
 
-						Dim WOS_Merge = "MERGE INTO [CRICUT].[CUPID].[WorkOrderStatus] AS Target
+							If WO_Flag = True Then
+								Dim WOS_Merge = "MERGE INTO [CRICUT].[CUPID].[WorkOrderStatus] AS Target
 											USING (
 												VALUES (
 													'" & r1.WID.ToString().Trim() & "',
@@ -6190,10 +6209,11 @@ here:
 													'" & palletNo.ToString().Trim() & "',
 													'" & r1.Shift.Trim() & "',
 													'" & WOS_PS_Flag & "',
+													'" & Wo_Palletzing_Flag & "',
 													GETDATE(),
 													'0'
 												)
-											) AS Source ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [Modified Date], [Delete])
+											) AS Source ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [PalletizingCompleted], [Modified Date], [Delete])
 											ON Target.[Work Order ID] = Source.[Work Order ID] AND Target.[Pallet No] = Source.[Pallet No]
 											WHEN MATCHED THEN
 												UPDATE SET
@@ -6202,16 +6222,19 @@ here:
 													Target.[Shift] = Source.[Shift],
 													Target.[Modified Date] = Source.[Modified Date],
 													Target.[PalletScanCompleted] = Source.[PalletScanCompleted],
+													Target.[PalletizingCompleted] = Source.[PalletizingCompleted],
 													Target.[Delete] = Source.[Delete]
 											WHEN NOT MATCHED THEN
-												INSERT ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [Modified Date], [Delete])
+												INSERT ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [PalletizingCompleted] ,[Modified Date], [Delete])
 												VALUES (
 													Source.[Work Order ID], Source.[Work Order], Source.[Sub Group], Source.[Pallet No],
-													Source.[Shift], Source.[PalletScanCompleted], Source.[Modified Date], Source.[Delete]
+													Source.[Shift], Source.[PalletScanCompleted], source.[PalletizingCompleted], Source.[Modified Date], Source.[Delete]
 												);"
-						Using WOScmd As New SqlCommand(WOS_Merge, conn)
-							WOScmd.ExecuteNonQuery()
-						End Using
+								Using WOScmd As New SqlCommand(WOS_Merge, conn)
+									WOScmd.ExecuteNonQuery()
+								End Using
+							End If
+						End If
 					Next
 				End If
 			End If

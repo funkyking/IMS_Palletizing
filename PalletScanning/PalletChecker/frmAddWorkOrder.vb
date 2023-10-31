@@ -130,7 +130,7 @@ Public Class frmAddWorkOrder
         CheckDuplicateID()
         GetLineID()
 
-        Dim res = MessageBox.Show("Confirm Update Work Order?" & vbCrLf & "Work Order: " & WorkOrder.Text & vbCrLf & "Part:" & PartNo.Text & vbCrLf & "Quantity: " & qty.Value.ToString & vbCrLf & "Order: " & totalOrderCount_Numeric.Value.ToString & vbCrLf & "Scan Option: " & ComboBox1.Text, "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
+        Dim res = MessageBox.Show("Confirm Save Work Order?" & vbCrLf & "Work Order: " & WorkOrder.Text & vbCrLf & "Part:" & PartNo.Text & vbCrLf & "Quantity: " & qty.Value.ToString & vbCrLf & "Order: " & totalOrderCount_Numeric.Value.ToString & vbCrLf & "Scan Option: " & ComboBox1.Text, "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
         If res = DialogResult.Yes Then
             InsertDataSQL()
         Else

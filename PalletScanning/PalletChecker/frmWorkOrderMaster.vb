@@ -40,8 +40,7 @@ Public Class frmWorkOrderMaster
             Dim Conn = New SqlConnection(connstr)
             Conn.Open()
             Dim SQLcmd = New SqlCommand
-            Dim strsql = "Select DISTINCT 
-                                w.[Index] As [No],
+            Dim strsql = "Select w.[Index] As [No],
                                 w.[Work Order] As [Work Order],
                                 w.[PO Number] As [PO Number],
                                 w.[Sub Group] As [Sub Group],
@@ -151,32 +150,54 @@ Public Class frmWorkOrderMaster
         End Try
     End Function
 
-    Private Function DeleteWorkOrder(ByVal _WorkID As String) As Boolean
+    Private Function DeleteWorkOrder() As Boolean
+
+        Dim WID = getWorkOrderID()
+        Dim WO = DataGridView1.CurrentRow.Cells("Work Order").Value.ToString
+        Dim PoNo = DataGridView1.CurrentRow.Cells("PO Number").Value.ToString
+        Dim SKU = DataGridView1.CurrentRow.Cells("Sub Group").Value.ToString
+        Dim PartName = DataGridView1.CurrentRow.Cells("Part Name").Value.ToString
+        Dim Model = DataGridView1.CurrentRow.Cells("Model").Value.ToString
+        Dim Line = DataGridView1.CurrentRow.Cells("Line").Value.ToString
+        Dim Quantity = DataGridView1.CurrentRow.Cells("Limit").Value.ToString
+        Dim Count = DataGridView1.CurrentRow.Cells("Count").Value.ToString
+        Dim TotalOrderCount = DataGridView1.CurrentRow.Cells("Total Order Count").Value.ToString
+        Dim Description = DataGridView1.CurrentRow.Cells("Description").Value.ToString
+        Dim Completed = DataGridView1.CurrentRow.Cells("Completed").Value.ToString
+        Dim ModifiedDate = DataGridView1.CurrentRow.Cells("Modified Date").Value.ToString
+
         Dim Conn = New SqlConnection(connstr)
         Conn.Open()
         Try
             If Conn.State = ConnectionState.Open Then
-                Dim query = "DELETE FROM [CRICUT].[CUPID].[WorkOrderMaster]
-                            WHERE [Work Order ID] = '" & _WorkID.Trim() & "';
-
-                            DELETE FROM [CRICUT].[CUPID].[WorkOrder]
-                            WHERE [Work Order ID] = '" & _WorkID.Trim() & "';
-
-                            DELETE FROM [CRICUT].[CUPID].[WorkOrderPalletizing]
-                            WHERE [Work Order ID] = '" & _WorkID.Trim() & "';
-
-                            DELETE FROM [CRICUT].[CUPID].[WorkOrderStatus]
-                            WHERE [Work Order ID] = '" & _WorkID.Trim() & "';
-
-                            DELETE FROM [CRICUT].[CUPID].[QCLog]
-                            WHERE [Work Order ID] = '" & _WorkID.Trim() & "';"
+                Dim query = "DELETE FROM [CRICUT].[CUPID].[WorkOrderMaster] WHERE [Work Order ID] = '" & WID.ToString().Trim() & "';
+                            DELETE FROM [CRICUT].[CUPID].[WorkOrder] WHERE [Work Order ID] = '" & WID.ToString().Trim() & "';
+                            DELETE FROM [CRICUT].[CUPID].[WorkOrderPalletizing] WHERE [Work Order ID] = '" & WID.ToString().Trim() & "';
+                            DELETE FROM [CRICUT].[CUPID].[WorkOrderStatus] WHERE [Work Order ID] = '" & WID.ToString().Trim() & "';
+                            DELETE FROM [CRICUT].[CUPID].[QCLog] WHERE [Work Order ID] = '" & WID.ToString().Trim() & "';
+                            INSERT INTO [CRICUT].[CUPID].[DeletedWorkOrderMaster]
+                                        ([Work Order ID],[Work Order],[Po Number],[Sub Group],[Part Name],[Model]
+		                                ,[Line],[Quantity],[Count],[Total Order Count],[Description],[Completed],[Modified Date])
+                                    VALUES
+                                        ('" & WID.ToString().Trim() & "'
+                                        ,'" & WO.Trim() & "'
+                                        ,'" & PoNo.Trim() & "'
+                                        ,'" & SKU.Trim() & "'
+                                        ,'" & PartName.Trim() & "'
+                                        ,'" & Model.Trim() & "'
+                                        ,'" & Line.Trim() & "'
+                                        ,'" & Quantity.Trim() & "'
+                                        ,'" & Count.Trim() & "'
+                                        ,'" & TotalOrderCount.Trim() & "'
+                                        ,'" & Description.Trim() & "' 
+                                        ,'" & Completed.Trim() & "'
+                                        ,GETDATE());"
                 Using cmd As New SqlCommand(query, Conn)
                     Dim rows = cmd.ExecuteNonQuery()
                     If rows > 0 Then
                         Return True
                     End If
                 End Using
-
             End If
         Catch ex As Exception
             Conn?.Close()
@@ -216,6 +237,8 @@ Public Class frmWorkOrderMaster
         End Try
     End Function
 
+
+
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
 
         Dim wo = DataGridView1.CurrentRow.Cells("Work Order").Value.ToString
@@ -225,14 +248,15 @@ Public Class frmWorkOrderMaster
             MessageBox.Show($"This Work Order Has Reached Shipping Stage{vbCrLf}And is not Possible to Delete{vbCrLf}{vbCrLf}Work Order: {wo}{vbCrLf}SKU: {SKU}",
                             $"Unable to Delete Work Order", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         Else
-            Dim res = MessageBox.Show("Confirm Delete Item?", "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
+            Dim res = MessageBox.Show($"Confirm Delete Work Order?{vbCrLf}{vbCrLf}Work Order: {wo}{vbCrLf}SKU: {SKU}", "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
             If res = DialogResult.Yes Then
-                Dim WrkID = getWorkOrderID()
-                If DeleteWorkOrder(WrkID.ToString().Trim()) Then
+                If DeleteWorkOrder() Then
                     MessageBox.Show($"Successfully Deleted Work Order{vbCrLf}{vbCrLf}Work Order: {wo}{vbCrLf}SKU: {SKU}")
+                    LoadGrid()
                 End If
             End If
         End If
+
 
 
         'Dim res = MessageBox.Show("Confirm Delete Item?", "Confirm Operation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
@@ -273,5 +297,13 @@ Public Class frmWorkOrderMaster
         f1.ShowDialog()
     End Sub
 
-
+    'Show a form of delete Work Orders
+    Private Sub deleteHistory_tsb_Click(sender As Object, e As EventArgs) Handles deleteHistory_tsb.Click
+        Try
+            Dim f1 = New frmDeletedWorkOrderList
+            f1.ShowDialog()
+            LoadGrid()
+        Catch ex As Exception
+        End Try
+    End Sub
 End Class

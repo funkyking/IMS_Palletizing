@@ -201,6 +201,12 @@
     <Compile Include="frmCustomerMaster.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmDeletedWorkOrderList.Designer.vb">
+      <DependentUpon>frmDeletedWorkOrderList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmDeletedWorkOrderList.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmHelp.Designer.vb">
       <DependentUpon>frmHelp.vb</DependentUpon>
     </Compile>
@@ -336,6 +342,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmCustomerMaster.resx">
       <DependentUpon>frmCustomerMaster.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDeletedWorkOrderList.resx">
+      <DependentUpon>frmDeletedWorkOrderList.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmHelp.resx">
       <DependentUpon>frmHelp.vb</DependentUpon>

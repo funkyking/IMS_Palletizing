@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Cricut Pallet Scanning.exe" size="2567680">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Cricut Pallet Scanning.exe" size="2685440">
       <assemblyIdentity name="Cricut Pallet Scanning" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>6ZQXcOR6uBlnH1n+eokOClEe5SyLD+F9XUCbjJcxKwo=</dsig:DigestValue>
+        <dsig:DigestValue>9vb35CYtNVjdG8YoPY3KGLRCdQOyMonwXxc2GYIuYcc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
