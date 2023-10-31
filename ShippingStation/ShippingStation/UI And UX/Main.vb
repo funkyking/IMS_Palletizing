@@ -21,6 +21,7 @@ Imports System.Data.SqlClient
 
 Public Class Main
 
+	Dim Pallet_Split = False
 	Dim WorkOrder As String = ""
 	Dim PoNumber As String = ""
 	Dim SubGroup As String = ""
@@ -190,8 +191,6 @@ Public Class Main
 				'If all goes well Clear textbox
 				masterBarcode_txtbx.Clear()
 				masterBarcode_txtbx.Text = ""
-
-
 			End If
 
 		Catch ex As Exception
@@ -324,20 +323,26 @@ Public Class Main
 					ds.Close()
 				End Using
 
-				'If Pallet is Valid To insert value then proceed
-				Dim insert_query = "INSERT INTO [CRICUT].[CUPID].[WorkOrderStatus]
-										   ([Work Order ID]
-										   ,[Work Order]
-										   ,[Sub Group]
-										   ,[Pallet No]
-										   ,[Shift]
-										   ,[PalletScanCompleted]
-										   ,[PalletizingCompleted]
-										   ,[Modified Date]
-										   ,[Delete])
-									 VALUES
-										   ('" & WorkOrderID.ToString().Trim() & "','" & WorkOrder.Trim() & "','" & SubGroup.Trim() & "','" & PalletNo.Trim() & "'
-										   ,'" & Shift.Trim() & "','1','1',GETDATE(),'0')"
+				'(31/10/2023) added by Paul
+				Dim insert_query As String = "MERGE INTO [CRICUT].[CUPID].[WorkOrderStatus] AS Target
+												USING (VALUES (
+													'" & WorkOrderID.ToString().Trim() & "',
+													'" & WorkOrder.Trim() & "',
+													'" & SubGroup.Trim() & "',
+													'" & PalletNo.Trim() & "',
+													'" & Shift.Trim() & "',
+													'1',
+													'1',
+													GETDATE(),
+													'0'
+												)) AS Source ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [PalletizingCompleted], [Modified Date], [Delete])
+												ON Target.[Work Order ID] = Source.[Work Order ID] AND Target.[Pallet No] = Source.[Pallet No]
+												WHEN MATCHED THEN
+													UPDATE SET [PalletScanCompleted] = '1', [PalletizingCompleted] = '1', [Modified Date] = GETDATE()
+												WHEN NOT MATCHED THEN
+													INSERT ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [PalletizingCompleted], [Modified Date], [Delete])
+													VALUES (Source.[Work Order ID], Source.[Work Order], Source.[Sub Group], Source.[Pallet No], Source.[Shift], Source.[PalletScanCompleted], Source.[PalletizingCompleted], Source.[Modified Date], Source.[Delete]);"
+
 				Using Insert_cmd As New SqlCommand(insert_query, conn)
 					Dim status = Insert_cmd.ExecuteNonQuery()
 					If status > 0 Then
@@ -375,18 +380,26 @@ Public Class Main
 			conn.Open()
 			Try
 				If conn.State = ConnectionState.Open Then
-					Dim query = "SELECT [Work Order ID],[Work Order],
+					Dim query = "SELECT [Master Container Name],[Work Order ID],[Work Order],
 								  [Sub Group],[Pallet No],[Shift]
 								  FROM [CRICUT].[CUPID].[ContainerShipping]
 								  WHERE [Work Order ID] = '" & WorkOrderID.ToString() & "' AND [Work Order] = '" & WorkOrder & "'
 								  AND [Sub Group] = '" & SubGroup & "' AND [Pallet No] = '" & PalletNo & "' AND [Shift] = '" & Shift & "'"
 					Using sqlcmd As New SqlCommand(query, conn)
-						If sqlcmd.ExecuteScalar() IsNot Nothing Then
-							ListBox1.Items.Clear()
-							ListBox1.Items.Add("Master Barcode Already Used in a Container")
-							Return True
+						Dim ds = sqlcmd.ExecuteReader()
+						If ds.HasRows Then
+							While ds.Read
+								Dim cname = ""
+								Try
+									cname = ds.Item("Master Container Name")
+								Catch ex As Exception
+								End Try
+								ListBox1.Items.Clear()
+								ListBox1.Items.Add("Master Barcode Already Used in :")
+								ListBox1.Items.Add($"Container : {cname}")
+								Return True
+							End While
 						End If
-
 					End Using
 				End If
 			Catch ex As Exception
@@ -468,7 +481,7 @@ Public Class Main
 	End Function
 
 
-	Private Function UpdateMasterContainerStatus(ByVal NewEntry As Boolean, ByVal CompleteStatus As Boolean)
+	Public Function UpdateMasterContainerStatus(ByVal NewEntry As Boolean, ByVal CompleteStatus As Boolean)
 		Dim conn As New SqlConnection(connstr)
 		Try
 			conn.Open()
@@ -605,19 +618,19 @@ Public Class Main
 							Dim sqlcmd As New SqlCommand()
 							sqlcmd.Connection = conn
 							sqlcmd.CommandText = "DELETE FROM [CRICUT].[CUPID].[ContainerShipping]
-								   WHERE [Work Order] = @WorkOrder
-								   AND [Sub Group] = @SubGroup
-								   AND [Pallet No] = @PalletNo
-								   AND [Shift] = @Shift"
-
-							' Add parameters to the SQL command to prevent SQL injection
-							sqlcmd.Parameters.AddWithValue("@WorkOrder", WorkOrder)
-							sqlcmd.Parameters.AddWithValue("@SubGroup", SubGroup)
-							sqlcmd.Parameters.AddWithValue("@PalletNo", PalletNo)
-							sqlcmd.Parameters.AddWithValue("@Shift", Shift)
-
+												   WHERE [Master Container ID] = '" & GlobalVariables.MasterContainerID.ToString().Trim() & "'
+												   AND [Work Order] = '" & WorkOrder & "'
+												   AND [Sub Group] = '" & SubGroup & "'
+												   AND [Pallet No] = '" & PalletNo & "'
+												   AND [Shift] = '" & Shift & "';
+													
+													DELETE FROM [CRICUT].[CUPID].[ContainerSplit]
+													WHERE [Master Container ID] = '" & GlobalVariables.MasterContainerID.ToString().Trim() & "'
+													AND [Work Order] = '" & WorkOrder & "'
+													AND [Sub Group] = '" & SubGroup & "'
+													AND [Pallet No] = '" & PalletNo & "'
+													AND [Shift] = '" & Shift & "';"
 							Dim rowsAffected As Integer = sqlcmd.ExecuteNonQuery()
-
 							If rowsAffected > 0 Then
 								Return True ' Rows deleted successfully
 							Else
@@ -867,12 +880,14 @@ Public Class Main
 											,cs.[Sub Group]
 											,cs.[Pallet No]
 											,cs.[Shift]
+											,cs.[Split]
 										FROM [CRICUT].[CUPID].[ContainerShipping] cs
 										INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] wom ON cs.[Work Order ID] = wom.[Work Order ID]
 										WHERE cs.[Master Container Name] = '" & GlobalVariables.ContainerName.Trim() & "'
 										AND cs.[Master Container ID] = '" & GlobalVariables.MasterContainerID.ToString() & "'"
 
 				Dim reader As SqlDataReader = sqlcmd.ExecuteReader()
+
 
 				While reader.Read()
 
@@ -881,6 +896,13 @@ Public Class Main
 					Else
 						PoNumber = reader.GetValue(reader.GetOrdinal("Po Number"))
 					End If
+
+					If reader.IsDBNull(reader.GetOrdinal("Split")) Then
+						Pallet_Split = False
+					Else
+						Pallet_Split = reader.GetValue(reader.GetOrdinal("Split"))
+					End If
+
 
 					WorkOrder = reader("Work Order").ToString().Trim()
 					SubGroup = reader("Sub Group").ToString().Trim()
@@ -896,6 +918,7 @@ Public Class Main
 
 					' Create instances of your custom classes and populate them with data from the database
 					Dim listitem As New ListItem()
+					listitem.isSplit = Pallet_Split
 					listitem.itemid = barcodeItem.BarcodeText
 					listitem.BarcodeImage = barcodeItem.BarcodeImage
 					listitem.PalletCount = GlobalVariables.palletcounter
@@ -1091,9 +1114,7 @@ Public Class Main
 			If State Then
 				newMasterItem()
 				UpdateMasterContainerStatus(True, False)
-				If FlowLayoutPanel1.Controls.Count < 2 Then
-					addContainerNo_btn_Click(sender, Nothing)
-				End If
+				'addContainerNo_btn_Click(sender, Nothing)
 			Else
 				ListBox1.Items.Clear()
 				ListBox1.Items.Add(">>> Error Found <<<")
@@ -1458,4 +1479,14 @@ Public Class Main
 		Catch ex As Exception
 		End Try
 	End Sub
+
+	'Refresh the main form after updating new values from splitPallet
+	Public Function refreshMain()
+		Try
+			addContainerNo_btn_Click(Nothing, Nothing)
+		Catch ex As Exception
+		End Try
+	End Function
+
+
 End Class

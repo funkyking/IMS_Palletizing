@@ -12,8 +12,12 @@ but the datagrid it loaded with, so if item was removed it will give issue.
 -auto Insert Pallets to [WorkOrderStatus] if they are completed or total ordercount reached Max
 update 
 - allow more smooth operation loading [Work Order] by option to filter display completed [Work Order] 
+-Auto Trigger for Loose Pallet After Maximum Quantity Reached
 
-[frmAddWorkOrder]
+[frmAdddworOrder]
+-After Delete will trigger loadgrid()
+-change loadGrid() from distinct to select all
+-added new database table and form for deleted Work Order Item
 -Allow user to change [WorkOrder] if it has not reached Shipping
 
 
@@ -21,3 +25,17 @@ update
 Remember to Change SHIPPING DATABASE [Word Order ID] to [Work Order ID]
 -Allow user to input two pallets as long as its a different container
 -New Container has to handle split container
+
+
+
+
+-Shipping
+-Display Item if already used in another container with container name in listbox
+
+SHIPPING SPLIT WORK FLOW
+
+Click Split
+Enter the MasterBarcode
+-Check if it already has more than 2 entries, max is only 2 for one split
+-once done populating values, it will create a new entry in Container Split and Container Shipping
+-loads back main form with refreshed to view the split entry

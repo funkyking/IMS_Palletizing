@@ -1,6 +1,8 @@
 ﻿Public Class ListItem
 
+    Public isSplit As Boolean
     Private tempid As String
+
     Public Property itemid As String
         Get
             Return tempid
@@ -54,6 +56,11 @@
 
     Private Sub ListItem_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
+
+            If isSplit = True Then
+                Panel1.BackColor = Color.GreenYellow
+            End If
+
             EnableEditing()
         Catch ex As Exception
         End Try

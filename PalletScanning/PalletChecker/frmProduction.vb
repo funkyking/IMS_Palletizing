@@ -736,6 +736,9 @@ here:
 		End If
 	End Function
 	Private Function InsertStatusSQL()
+
+		Dim r1 As ReportData
+		r1 = GetReportData()
 		Dim Conn = New SqlConnection(connstr)
 		Conn.Open()
 		Dim SQLcmd = New SqlCommand
@@ -744,17 +747,14 @@ here:
 			SQLcmd.CommandText = "MERGE INTO [CRICUT].[CUPID].[WorkOrderStatus] AS target
 									USING (
 										SELECT 
-											[Work Order ID] = '" & WID.ToString & "',
-											[Work Order] = '" & cmbWorkOrderBox.SelectedItem.ToString & "',
-											[Sub Group] = '" & cmbSubGroup.SelectedItem.ToString & "',
-											[Pallet No] = '" & PalletBox.SelectedItem.ToString & "',
-											[Shift] = '" & Shift.SelectedItem.ToString & "'
+											[Work Order ID] = '" & r1.WID.ToString() & "',
+											[Work Order] = '" & r1.WorkOrder.Trim() & "',
+											[Sub Group] = '" & r1.SubGroup.Trim() & "',
+											[Pallet No] = '" & PalletBox.SelectedItem.ToString() & "',
+											[Shift] = '" & Shift.SelectedItem.ToString() & "'
 									) AS source
 									ON target.[Work Order ID] = source.[Work Order ID]
-										AND target.[Work Order] = source.[Work Order]
-										AND target.[Sub Group] = source.[Sub Group]
 										AND target.[Pallet No] = source.[Pallet No]
-										AND target.[Shift] = source.[Shift]
 									WHEN MATCHED THEN
 										UPDATE SET 
 											target.[PalletScanCompleted] = 'True',
@@ -778,24 +778,6 @@ here:
 											'True', 
 											GETDATE()
 										);"
-			'SQLcmd.CommandText = "INSERT INTO [CRICUT].[CUPID].[WorkOrderStatus]
-			'  ([Work Order ID],
-			'[Work Order]
-			'  ,[Sub Group]
-			'  ,[Pallet No]
-			'  ,[Shift]
-			'  ,[PalletScanCompleted]
-			'  ,[PalletizingCompleted]
-			'  ,[Modified Date])
-			'VALUES
-			'  ('" & WID.ToString & "'
-			','" & cmbWorkOrderBox.SelectedItem.ToString & "'
-			','" & cmbSubGroup.SelectedItem.ToString & "'
-			','" & PalletBox.SelectedItem.ToString & "'
-			','" & Shift.SelectedItem.ToString & "'
-			','True'
-			','False'
-			','" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "')"
 			Dim cmd = New SqlCommand(SQLcmd.CommandText, Conn)
 			cmd.ExecuteNonQuery()
 
@@ -6146,6 +6128,7 @@ here:
 
 
 						' Check if exist (Exit for if exist, insert if dont)
+						'if exist but pallet scan completed is false or null then insert
 						Dim WOS_Query = "SELECT [Work Order ID]
 										  ,[Work Order]
 										  ,[Sub Group]
@@ -6159,7 +6142,19 @@ here:
 						Using WOS_cmd As New SqlCommand(WOS_Query, conn)
 							Dim ds = WOS_cmd.ExecuteReader()
 							If ds.HasRows Then
-								Update = False
+								While ds.Read
+									If Not ds.IsDBNull(ds.GetOrdinal("PalletScanCompleted")) Then
+										WOS_PS_Flag = ds.Item("PalletScanCompleted").ToString()
+									Else
+										WOS_PS_Flag = False
+									End If
+								End While
+								ds.Close()
+								If WOS_PS_Flag = False Then
+									Update = True
+								Else
+									Update = False
+								End If
 							Else
 								Update = True
 							End If
@@ -6184,19 +6179,19 @@ here:
 
 
 
-							'if dont exist continue to get row count for the pallet work order
-							Dim Palletizing_query = "SELECT COUNT (DISTINCT [Serial No])
-											FROM [CRICUT].[CUPID].[WorkOrder]
-											WHERE [Work Order ID] = '" & r1.WID.ToString().Trim() & "'
-											AND [Pallet No] = '" & palletNo.ToString().Trim() & "'"
-							Using Palletzing_cmd As New SqlCommand(Palletizing_query, conn)
-								Palletzing_Rows = Convert.ToInt16(Palletzing_cmd.ExecuteScalar())
-								If Palletzing_Rows > 0 Then
-									If Palletzing_Rows >= r1.qty Or r1.Count >= r1.totalcarton Then
-										Wo_Palletzing_Flag = True
-									End If
-								End If
-							End Using
+							''if dont exist continue to get row count for the pallet work order
+							'Dim Palletizing_query = "SELECT COUNT (DISTINCT [Serial No])
+							'				FROM [CRICUT].[CUPID].[WorkOrderPalletizing]
+							'				WHERE [Work Order ID] = '" & r1.WID.ToString().Trim() & "'
+							'				AND [Pallet No] = '" & palletNo.ToString().Trim() & "'"
+							'Using Palletzing_cmd As New SqlCommand(Palletizing_query, conn)
+							'	Palletzing_Rows = Convert.ToInt16(Palletzing_cmd.ExecuteScalar())
+							'	If Palletzing_Rows > 0 Then
+							'		If Palletzing_Rows >= r1.qty Or r1.Count >= r1.totalcarton Then
+							'			Wo_Palletzing_Flag = True
+							'		End If
+							'	End If
+							'End Using
 
 
 							If WO_Flag = True Then
@@ -6209,11 +6204,10 @@ here:
 													'" & palletNo.ToString().Trim() & "',
 													'" & r1.Shift.Trim() & "',
 													'" & WOS_PS_Flag & "',
-													'" & Wo_Palletzing_Flag & "',
 													GETDATE(),
 													'0'
 												)
-											) AS Source ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [PalletizingCompleted], [Modified Date], [Delete])
+											) AS Source ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [Modified Date], [Delete])
 											ON Target.[Work Order ID] = Source.[Work Order ID] AND Target.[Pallet No] = Source.[Pallet No]
 											WHEN MATCHED THEN
 												UPDATE SET
@@ -6222,13 +6216,12 @@ here:
 													Target.[Shift] = Source.[Shift],
 													Target.[Modified Date] = Source.[Modified Date],
 													Target.[PalletScanCompleted] = Source.[PalletScanCompleted],
-													Target.[PalletizingCompleted] = Source.[PalletizingCompleted],
 													Target.[Delete] = Source.[Delete]
 											WHEN NOT MATCHED THEN
-												INSERT ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [PalletizingCompleted] ,[Modified Date], [Delete])
+												INSERT ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [Modified Date], [Delete])
 												VALUES (
 													Source.[Work Order ID], Source.[Work Order], Source.[Sub Group], Source.[Pallet No],
-													Source.[Shift], Source.[PalletScanCompleted], source.[PalletizingCompleted], Source.[Modified Date], Source.[Delete]
+													Source.[Shift], Source.[PalletScanCompleted], Source.[Modified Date], Source.[Delete]
 												);"
 								Using WOScmd As New SqlCommand(WOS_Merge, conn)
 									WOScmd.ExecuteNonQuery()

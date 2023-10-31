@@ -315,6 +315,9 @@ skippallet:
 
 	Private Sub ScanBtn_Click(sender As Object, e As EventArgs) Handles ScanBtn.Click
 		CheckComplete()
+		If statuslbl.Text.Contains("Pallet Incomplete") Then
+			Exit Sub
+		End If
 
 		' Added by Paul (21/10/2023)
 		'If Integer.Parse(count.Text) >= Integer.Parse(qty.Text) Then
@@ -385,6 +388,7 @@ here:
 	Private Sub PalletBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PalletBox.SelectedIndexChanged
 		EnableScanPrint()
 		CheckPalletCount(PalletBox.SelectedItem)
+		CheckPalletScanComplete()
 	End Sub
 
 
