@@ -5416,7 +5416,11 @@ here:
 			sourceWorkSheet.Range("B3").Value = r1.PartNo
 			sourceWorkSheet.Range("B4").Value = r1.WorkOrder
 			sourceWorkSheet.Range("B5").Value = r1.PONumber
-			sourceWorkSheet.Range("B6").Value = r1.ProdDate.ToString("dd/MM/yyyy")
+
+			'Format Date to dd/mm/yyyy
+			sourceWorkSheet.Range("B6").NumberFormat = "dd/MM/yyyy"
+			sourceWorkSheet.Range("B6").Value = DateTime.Now 'r1.ProdDate.ToString("dd/MM/yyyy")
+
 			sourceWorkSheet.Range("B7").Value = r1.Shift
 			sourceWorkSheet.Range("B8").Value = r1.Model
 			sourceWorkSheet.Range("B9").Value = r1.totalcarton 'r1.qty
@@ -5681,14 +5685,14 @@ here:
 			conn.Open()
 			If conn.State = ConnectionState.Open Then
 				Dim query = "WITH CTE AS (
-                                SELECT [Index], [Work Order ID], [Line], [Serial No], [Carton],
-                                       ROW_NUMBER() OVER (PARTITION BY [Work Order ID] ORDER BY [Production Date]) AS RowNum
-                                FROM [CRICUT].[CUPID].[WorkOrder]
-                                WHERE [Work Order ID] = '" & workID.Trim() & "'
-                            )
+								SELECT [Index], [Work Order ID], [Line], [Serial No], [Carton],
+									   ROW_NUMBER() OVER (PARTITION BY [Work Order ID] ORDER BY [Production Date]) AS RowNum
+								FROM [CRICUT].[CUPID].[WorkOrder]
+								WHERE [Work Order ID] = '" & workID.Trim() & "'
+							)
 
-                            UPDATE CTE
-                            SET [Carton] = RIGHT('0000' + CAST(RowNum AS NVARCHAR(4)), 4);"
+							UPDATE CTE
+							SET [Carton] = RIGHT('0000' + CAST(RowNum AS NVARCHAR(4)), 4);"
 				Using sqlcmd As New SqlCommand(query, conn)
 					sqlcmd.ExecuteNonQuery()
 				End Using
@@ -5754,7 +5758,11 @@ here:
 			sourceWorkSheet.Range("B3").Value = r1.PartNo
 			sourceWorkSheet.Range("B4").Value = r1.WorkOrder
 			sourceWorkSheet.Range("B5").Value = r1.PONumber
-			sourceWorkSheet.Range("B6").Value = r1.ProdDate.ToString("dd/MM/yyyy")
+
+			'Format Date to dd/mm/yyyy
+			sourceWorkSheet.Range("B6").NumberFormat = "dd/MM/yyyy"
+			sourceWorkSheet.Range("B6").Value = DateTime.Now 'r1.ProdDate.ToString("dd/MM/yyyy")
+
 			sourceWorkSheet.Range("B7").Value = r1.Shift
 			sourceWorkSheet.Range("B8").Value = r1.Model
 			sourceWorkSheet.Range("B9").Value = r1.totalcarton
@@ -6211,12 +6219,8 @@ here:
 											ON Target.[Work Order ID] = Source.[Work Order ID] AND Target.[Pallet No] = Source.[Pallet No]
 											WHEN MATCHED THEN
 												UPDATE SET
-													Target.[Work Order] = Source.[Work Order],
-													Target.[Sub Group] = Source.[Sub Group],
-													Target.[Shift] = Source.[Shift],
 													Target.[Modified Date] = Source.[Modified Date],
-													Target.[PalletScanCompleted] = Source.[PalletScanCompleted],
-													Target.[Delete] = Source.[Delete]
+													Target.[PalletScanCompleted] = Source.[PalletScanCompleted]
 											WHEN NOT MATCHED THEN
 												INSERT ([Work Order ID], [Work Order], [Sub Group], [Pallet No], [Shift], [PalletScanCompleted], [Modified Date], [Delete])
 												VALUES (
@@ -6240,6 +6244,5 @@ here:
 			conn?.Close()
 		End Try
 	End Function
-
 
 End Class

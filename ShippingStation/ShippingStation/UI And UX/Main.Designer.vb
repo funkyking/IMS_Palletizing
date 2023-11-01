@@ -68,9 +68,9 @@ Partial Class Main
         Me.Save_Btn = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.bottom_pnl = New System.Windows.Forms.Panel()
-        Me.Label6 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.left_pnl.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -175,6 +175,7 @@ Partial Class Main
         Me.splitPallet_btn.TabIndex = 17
         Me.splitPallet_btn.Text = "Split Pallet"
         Me.splitPallet_btn.UseVisualStyleBackColor = False
+        Me.splitPallet_btn.Visible = False
         '
         'Label8
         '
@@ -379,7 +380,7 @@ Partial Class Main
         Me.ItemCounter_lbl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ItemCounter_lbl.AutoSize = True
         Me.ItemCounter_lbl.ForeColor = System.Drawing.Color.Transparent
-        Me.ItemCounter_lbl.Location = New System.Drawing.Point(501, 8)
+        Me.ItemCounter_lbl.Location = New System.Drawing.Point(448, 8)
         Me.ItemCounter_lbl.Name = "ItemCounter_lbl"
         Me.ItemCounter_lbl.Size = New System.Drawing.Size(18, 23)
         Me.ItemCounter_lbl.TabIndex = 9
@@ -598,6 +599,7 @@ Partial Class Main
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(26, 17)
         Me.Panel1.TabIndex = 5
+        Me.Panel1.Visible = False
         '
         'bottom_pnl
         '
@@ -621,6 +623,29 @@ Partial Class Main
         Me.bottom_pnl.Size = New System.Drawing.Size(1363, 91)
         Me.bottom_pnl.TabIndex = 7
         '
+        'Label9
+        '
+        Me.Label9.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.ForeColor = System.Drawing.Color.Black
+        Me.Label9.Location = New System.Drawing.Point(1140, 7)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(70, 16)
+        Me.Label9.TabIndex = 14
+        Me.Label9.Text = "Split Container"
+        Me.Label9.Visible = False
+        '
+        'Panel2
+        '
+        Me.Panel2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel2.BackColor = System.Drawing.Color.GreenYellow
+        Me.Panel2.Location = New System.Drawing.Point(1108, 6)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(26, 17)
+        Me.Panel2.TabIndex = 13
+        Me.Panel2.Visible = False
+        '
         'Label6
         '
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -632,27 +657,7 @@ Partial Class Main
         Me.Label6.Size = New System.Drawing.Size(66, 16)
         Me.Label6.TabIndex = 12
         Me.Label6.Text = "Normal Pallet"
-        '
-        'Label9
-        '
-        Me.Label9.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Bahnschrift SemiLight Condensed", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.ForeColor = System.Drawing.Color.Black
-        Me.Label9.Location = New System.Drawing.Point(1121, 7)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(70, 16)
-        Me.Label9.TabIndex = 14
-        Me.Label9.Text = "Split Container"
-        '
-        'Panel2
-        '
-        Me.Panel2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel2.BackColor = System.Drawing.Color.GreenYellow
-        Me.Panel2.Location = New System.Drawing.Point(1089, 6)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(26, 17)
-        Me.Panel2.TabIndex = 13
+        Me.Label6.Visible = False
         '
         'Main
         '

@@ -18,6 +18,10 @@ Imports MessageBox = System.Windows.MessageBox
 Imports FlowDirection = System.Windows.Forms.FlowDirection
 Imports Application = System.Windows.Forms.Application
 Imports System.Data.SqlClient
+Imports System.Runtime.Remoting.Metadata
+Imports System.Security.Cryptography
+Imports System.Windows.Controls
+Imports Control = System.Windows.Forms.Control
 
 Public Class Main
 
@@ -300,28 +304,71 @@ Public Class Main
 
 	Private Function AddWoPallettoDbWoStatus()
 		Dim conn As New SqlConnection(connstr)
+		Dim qty = 0 'Quantity
+		Dim TOC = 0 'Total Order Count]
+		Dim co = 0
+		Dim CP = 0 'Carton Palletizing
+		Dim palletizing_row = 0
+
+
+
 		Try
 			conn.Open()
 			If conn.State = ConnectionState.Open Then
 				Dim check_query = "SELECT DISTINCT 
-										  wo.[Work Order ID]
-										  ,wom.[Work Order]
-										  ,wom.[Sub Group]
-										  ,wop.[Pallet No]
-										  ,wo.[Shift]
-									  FROM [CRICUT].[CUPID].[WorkOrder] wo
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrderPalletizing] wop ON wo.[Work Order ID] = wop.[Work Order ID]
-									  INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] wom ON wo.[Work Order ID] = wom.[Work Order ID]
-									  WHERE wom.[Work Order] = '" & WorkOrder.Trim() & "'
-									  AND wom.[Sub Group] = '" & SubGroup.Trim() & "'
-									  AND wop.[Pallet No] = '" & PalletNo.Trim() & "'"
+									wo.[Work Order ID]
+									,wom.[Work Order]
+									,wom.[Sub Group]
+									,wop.[Pallet No]
+									,wo.[Shift]
+									,wom.[Quantity]
+									,wom.[Count]
+									,wom.[Total Order Count]
+									,wom.[CountPalletizing]
+									FROM [CRICUT].[CUPID].[WorkOrder] wo
+									INNER JOIN [CRICUT].[CUPID].[WorkOrderPalletizing] wop ON wo.[Work Order ID] = wop.[Work Order ID]
+									INNER JOIN [CRICUT].[CUPID].[WorkOrderMaster] wom ON wo.[Work Order ID] = wom.[Work Order ID]
+									WHERE wom.[Work Order] = '" & WorkOrder.Trim() & "'
+									AND wom.[Sub Group] = '" & SubGroup.Trim() & "'
+									AND wop.[Pallet No] = '" & PalletNo.Trim() & "'"
 				Using check_cmd As New SqlCommand(check_query, conn)
 					Dim ds = check_cmd.ExecuteReader()
-					If Not ds.HasRows Then
+					If ds.HasRows Then
+						While ds.Read
+							WorkOrderID = ds.Item("Work Order ID")
+							co = ds.Item("Count")
+							qty = ds.Item("Quantity")
+							TOC = ds.Item("Total Order Count")
+
+							If Not ds.IsDBNull(ds.GetOrdinal("CountPalletizing")) Then
+								CP = ds.Item("CountPalletizing")
+							Else
+								ds.Close()
+								Return False
+							End If
+						End While
+					Else
+						ds.Close()
 						Return False
 					End If
 					ds.Close()
 				End Using
+
+				Dim check_Count As String = "SELECT COUNT(*) 
+							FROM [CRICUT].[CUPID].[WorkOrderPalletizing]
+							WHERE [Work Order ID] = '" & WorkOrderID.ToString().Trim() & "' AND [Pallet No] = '" & PalletNo.Trim() & "'"
+				Using count_cmd As New SqlCommand(check_Count, conn)
+					palletizing_row = CInt(count_cmd.ExecuteScalar())
+				End Using
+
+				If Not palletizing_row >= qty Then
+					If Not co >= TOC Then
+						Return False
+					End If
+				End If
+
+
+
 
 				'(31/10/2023) added by Paul
 				Dim insert_query As String = "MERGE INTO [CRICUT].[CUPID].[WorkOrderStatus] AS Target
@@ -359,7 +406,7 @@ Public Class Main
 		Finally
 			conn?.Close()
 		End Try
-    End Function
+	End Function
 
 
 	'Check If there is a duplicate Existence
@@ -736,7 +783,9 @@ Public Class Main
 			Dim headerXPosition As Double = (pdfWidth - headerSize.Width) / 2
 			Dim HeaderYPosition As Double = 35
 
-			Dim headerImage As Image = My.Resources.cricutlogo_3
+			'Dim headerImage As Image = My.Resources.cricutlogo_3
+			Dim headerImage As Bitmap = My.Resources.cricutlogo_3
+
 			Dim headerImageXPosition As Double = headerXPosition - (headerImage.Width + 10) ' Adjust the spacing as needed
 			' Draw the header image
 
@@ -769,7 +818,7 @@ Public Class Main
 
 			For Each item As BarcodeItem In GlobalVariables.MasterList
 				' Create a QR code image
-				Dim qrCodeImage As Image = createQrImage(item.BarcodeText)
+				Dim qrCodeImage As Bitmap = createQrImage(item.BarcodeText)
 				Dim qrCodeStream As New MemoryStream()
 				qrCodeImage.Save(qrCodeStream, System.Drawing.Imaging.ImageFormat.Png)
 				Dim qrCodeXImage As XImage = XImage.FromStream(qrCodeStream)
@@ -887,68 +936,72 @@ Public Class Main
 										AND cs.[Master Container ID] = '" & GlobalVariables.MasterContainerID.ToString() & "'"
 
 				Dim reader As SqlDataReader = sqlcmd.ExecuteReader()
+				If reader.HasRows Then
+					While reader.Read()
+
+						If reader.IsDBNull(reader.GetOrdinal("Po Number")) Then
+							PoNumber = "NULL"
+						Else
+							PoNumber = reader.GetValue(reader.GetOrdinal("Po Number"))
+						End If
+
+						If reader.IsDBNull(reader.GetOrdinal("Split")) Then
+							Pallet_Split = False
+						Else
+							Pallet_Split = reader.GetValue(reader.GetOrdinal("Split"))
+						End If
 
 
-				While reader.Read()
-
-					If reader.IsDBNull(reader.GetOrdinal("Po Number")) Then
-						PoNumber = "NULL"
-					Else
-						PoNumber = reader.GetValue(reader.GetOrdinal("Po Number"))
-					End If
-
-					If reader.IsDBNull(reader.GetOrdinal("Split")) Then
-						Pallet_Split = False
-					Else
-						Pallet_Split = reader.GetValue(reader.GetOrdinal("Split"))
-					End If
+						WorkOrder = reader("Work Order").ToString().Trim()
+						SubGroup = reader("Sub Group").ToString().Trim()
+						PalletNo = reader("Pallet No").ToString().Trim()
+						Shift = reader("Shift").ToString().Trim()
+						Dim SerialNumber = $"{WorkOrder},{PoNumber},{SubGroup},{PalletNo},{Shift}"
 
 
-					WorkOrder = reader("Work Order").ToString().Trim()
-					SubGroup = reader("Sub Group").ToString().Trim()
-					PalletNo = reader("Pallet No").ToString().Trim()
-					Shift = reader("Shift").ToString().Trim()
-					Dim SerialNumber = $"{WorkOrder},{PoNumber},{SubGroup},{PalletNo},{Shift}"
-
-					Dim barcodeItem = New BarcodeItem()
-					barcodeItem.BarcodeImage = createBarcodeImage(SerialNumber)
-					barcodeItem.BarcodeText = SerialNumber
-					barcodeItem.PalletNo = GlobalVariables.palletcounter
+						Dim barcodeItem = New BarcodeItem()
+						barcodeItem.BarcodeImage = createBarcodeImage(SerialNumber)
+						barcodeItem.BarcodeText = SerialNumber
+						barcodeItem.PalletNo = GlobalVariables.palletcounter
 
 
-					' Create instances of your custom classes and populate them with data from the database
-					Dim listitem As New ListItem()
-					listitem.isSplit = Pallet_Split
-					listitem.itemid = barcodeItem.BarcodeText
-					listitem.BarcodeImage = barcodeItem.BarcodeImage
-					listitem.PalletCount = GlobalVariables.palletcounter
+						' Create instances of your custom classes and populate them with data from the database
+						Dim listitem As New ListItem()
+						listitem.isSplit = Pallet_Split
+						listitem.itemid = barcodeItem.BarcodeText
+						listitem.BarcodeImage = barcodeItem.BarcodeImage
+						listitem.PalletCount = GlobalVariables.palletcounter
 
-					Dim masterItem As New MasterBarcodeItem()
-					masterItem.WorkOrderID = reader("Work Order ID")
-					masterItem.WorkOrder = WorkOrder
-					masterItem.PoNumber = PoNumber
-					masterItem.SubGroup = SubGroup
-					masterItem.PalletNo = PalletNo
-					masterItem.Shift = Shift
+						Dim masterItem As New MasterBarcodeItem()
+						masterItem.WorkOrderID = reader.Item("Work Order ID")
+						masterItem.WorkOrder = WorkOrder
+						masterItem.PoNumber = PoNumber
+						masterItem.SubGroup = SubGroup
+						masterItem.PalletNo = PalletNo
+						masterItem.Shift = Shift
 
-					' Add item to Datagridview
-					DataGridView1.Rows.Add(barcodeItem.PalletNo, barcodeItem.BarcodeText)
+						' Add item to Datagridview
+						DataGridView1.Rows.Add(barcodeItem.PalletNo, barcodeItem.BarcodeText)
 
-					' Add the UserControl to the FlowLayoutPanel
-					FlowLayoutPanel1.Controls.Add(listitem)
+						' Add the UserControl to the FlowLayoutPanel
+						FlowLayoutPanel1.Controls.Add(listitem)
 
-					' Add the item to the barcode list and MasterBarcodeItemList
-					GlobalVariables.MasterList.Add(barcodeItem)
-					GlobalVariables.MasterBarcodeItemList.Add(masterItem)
+						' Add the item to the barcode list and MasterBarcodeItemList
+						GlobalVariables.MasterList.Add(barcodeItem)
+						GlobalVariables.MasterBarcodeItemList.Add(masterItem)
 
-					'Add Pallet Counter by 1 once adding the item
-					GlobalVariables.palletcounter += 1
-					ItemCounter_lbl.Text = $"Items: {GlobalVariables.palletcounter - 1}"
-				End While
-				reader.Close()
+						'Add Pallet Counter by 1 once adding the item
+						GlobalVariables.palletcounter += 1
+						ItemCounter_lbl.Text = $"Items: {GlobalVariables.palletcounter - 1}"
+					End While
+					reader.Close()
+				End If
+			Else
+				MessageBox.Show("No rows")
 			End If
 		Catch ex As Exception
 			' Handle exceptions
+			MessageBox.Show(ex.Message)
 		Finally
 			conn?.Close()
 		End Try
@@ -1487,6 +1540,8 @@ Public Class Main
 		Catch ex As Exception
 		End Try
 	End Function
+
+
 
 
 End Class

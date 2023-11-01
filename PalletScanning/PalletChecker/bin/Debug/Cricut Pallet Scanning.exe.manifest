@@ -43,26 +43,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Cricut Pallet Scanning.exe" size="2684928">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Cricut Pallet Scanning.exe" size="2681856">
       <assemblyIdentity name="Cricut Pallet Scanning" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>p5tnBns6Gc/BKFpEcAqshz7VqMfRFiEoSmyovapGIyM=</dsig:DigestValue>
+        <dsig:DigestValue>mowsEtLywRIahj9eBfELU6alyg0VINnobhXM6X3ComU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.SqlServer.Types.dll" size="392896">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.SqlServer.Types.dll" size="401088">
       <assemblyIdentity name="Microsoft.SqlServer.Types" version="12.0.0.0" publicKeyToken="89845DCD8080CC91" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>g0uPPSp1+4yyv5ZCerojXZO6R0+rDi1fljO+PXSESY4=</dsig:DigestValue>
+        <dsig:DigestValue>Spa33/c8SWwmZeZJKyxAit3ThRaaSplk1aNsetdveQk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

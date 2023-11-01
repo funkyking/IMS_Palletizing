@@ -315,9 +315,9 @@ skippallet:
 
 	Private Sub ScanBtn_Click(sender As Object, e As EventArgs) Handles ScanBtn.Click
 		CheckComplete()
-		If statuslbl.Text.Contains("Pallet Incomplete") Then
-			Exit Sub
-		End If
+		'If statuslbl.Text.Contains("Pallet Incomplete") Then
+		'	Exit Sub
+		'End If
 
 		' Added by Paul (21/10/2023)
 		'If Integer.Parse(count.Text) >= Integer.Parse(qty.Text) Then
@@ -344,10 +344,10 @@ skippallet:
 			Exit Sub
 		End If
 here:
-		PalletBox.SelectedItem = 1
+		'PalletBox.SelectedItem = 1
 		Timer1.Start()
 		'added here
-		PalletBox.SelectedItem = maxpalletno
+		'PalletBox.SelectedItem = maxpalletno
 		CheckPalletMax()
 
 
@@ -446,7 +446,7 @@ here:
 			If tempcnt >= Integer.Parse(qty.Text) And count.Text >= qty.Text Then
 				maxpalletno += 1
 				PalletBox.Items.Add(maxpalletno)
-				PalletBox.SelectedItem = maxpalletno
+				'PalletBox.SelectedItem = maxpalletno
 				count.Text = 0
 				'reset all
 
@@ -537,6 +537,8 @@ here:
 		Dim Conn = New SqlConnection(connstr)
 		Conn.Open()
 		If Conn.State = ConnectionState.Open Then
+
+
 			Dim SQLcmd = New SqlCommand
 			SQLcmd.Connection = Conn
 			'SQLcmd.CommandText = "SELECT *
@@ -556,11 +558,27 @@ here:
 				'statuslbl.Text = (" Serial No : " & (ds.Item("Serial No")))
 				statuslbl.Text = "Duplicate Serial No Found..." & vbCr & "PO No : " & ds.Item("Work Order") & vbCr & "MR No. : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Carton No : " & ds.Item("Carton")
 				'statuslbl.Text = "Duplicate Carton"
+				ds.Close()
 			Else
 				res = True
 				statuslbl.Text = ""
 				lblError.Text = ""
 			End If
+
+			Dim searchValue As String = SerialNo
+			For Each row As DataGridViewRow In DataGridView1.Rows
+				If Not row.IsNewRow Then
+					For Each cell As DataGridViewCell In row.Cells
+						If cell.Value IsNot Nothing AndAlso cell.Value.ToString() = searchValue Then
+							statuslbl.Text = "Serial No, Not in This Pallet"
+							res = False
+							Exit For
+						End If
+					Next
+				End If
+			Next
+
+
 		End If
 		Conn.Close()
 		Return res
@@ -721,31 +739,63 @@ here:
 	Private Function InsertDataSQL(serial As String, carton As String)
 		Dim Conn = New SqlConnection(connstr)
 		Conn.Open()
-		Dim SQLcmd = New SqlCommand
+
 		If Conn.State = ConnectionState.Open Then
-			SQLcmd.Connection = Conn
-			SQLcmd.CommandText = "INSERT INTO [CRICUT].[CUPID].[WorkOrderPalletizing]
-											   ([Work Order ID],
-												[Line]
-											   ,[Serial No]
-											   ,[Carton]
-											   ,[Pallet No]
-											   ,[Production Date]
-											   ,[Shift]
-											   ,[QCout]
-											   ,[QCin])
-											 VALUES
-											   ('" & WID.ToString & "'
-												,'" & lblLine.Text & "'
-												,'" & serial & "'
-												,'" & carton & "'
-												,'" & PalletBox.SelectedItem & "'
-												,'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
-												,'" & Shift.SelectedItem & "'
-												,'False'
-												,'False')"
-			Dim cmd = New SqlCommand(SQLcmd.CommandText, Conn)
-			cmd.ExecuteNonQuery()
+			'Dim SQLcmd = New SqlCommand
+			'SQLcmd.Connection = Conn
+			'SQLcmd.CommandText = "INSERT INTO [CRICUT].[CUPID].[WorkOrderPalletizing]
+			'								   ([Work Order ID],
+			'									[Line]
+			'								   ,[Serial No]
+			'								   ,[Carton]
+			'								   ,[Pallet No]
+			'								   ,[Production Date]
+			'								   ,[Shift]
+			'								   ,[QCout]
+			'								   ,[QCin])
+			'								 VALUES
+			'								   ('" & WID.ToString & "'
+			'									,'" & lblLine.Text & "'
+			'									,'" & serial & "'
+			'									,'" & carton & "'
+			'									,'" & PalletBox.SelectedItem & "'
+			'									,'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
+			'									,'" & Shift.SelectedItem & "'
+			'									,'False'
+			'									,'False')"
+			'Dim cmd = New SqlCommand(SQLcmd.CommandText, Conn)
+			'cmd.ExecuteNonQuery()
+
+
+
+			Dim mergeQuery As String = "MERGE INTO [CRICUT].[CUPID].[WorkOrderPalletizing] AS Target
+										USING (VALUES (
+											'" & WID.ToString & "',
+											'" & lblLine.Text & "',
+											'" & serial & "',
+											'" & carton & "',
+											'" & PalletBox.SelectedItem & "',
+											'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "',
+											'" & Shift.SelectedItem & "',
+											'False',
+											'False'
+										)) AS Source ([Work Order ID], [Line], [Serial No], [Carton], [Pallet No], 
+													 [Production Date], [Shift], [QCout], [QCin])
+										ON Target.[Work Order ID] = Source.[Work Order ID] 
+										   AND Target.[Pallet No] = Source.[Pallet No]
+										WHEN MATCHED THEN
+											UPDATE SET [Production Date] = Source.[Production Date]
+										WHEN NOT MATCHED THEN
+											INSERT ([Work Order ID], [Line], [Serial No], [Carton], [Pallet No], 
+													[Production Date], [Shift], [QCout], [QCin])
+											VALUES (Source.[Work Order ID], Source.[Line], Source.[Serial No], Source.[Carton], Source.[Pallet No],
+													Source.[Production Date], Source.[Shift], Source.[QCout], Source.[QCin]);"
+			Using sqlcmd As New SqlCommand(mergeQuery, Conn)
+				sqlcmd.ExecuteNonQuery()
+			End Using
+
+
+
 
 			Conn.Close()
 		End If
@@ -3129,96 +3179,7 @@ here:
 	End Sub
 
 
-	Private Sub Serial_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtS1.KeyPress
-		Dim url As String
-		Dim method As String
-		Dim dataSetStr As String
-		Dim para1 As String
-		Dim postData As String
-		Dim check As String
-
-		Dim url2 As String
-		Dim method2 As String
-		Dim dataSetStr2 As String
-		Dim para2 As String
-		Dim postData2 As String
-		Dim check2 As String
-
-
-
-
-		If Timer1.Enabled Then
-			If e.KeyChar = ChrW(Keys.Enter) Then
-
-				If debug_chckbx.CheckState = CheckState.Checked Then
-					statuslbl.Text = ""
-					lblError.Text = ""
-					FinishScan1()
-					Exit Sub
-				End If
-
-				' Checking the TestResult Database to determine if the Pallete is Complete
-				If checkPalletScan(txtS1.Text) = False Then
-					serialStatusLbl.ForeColor = Color.Red
-					serialStatusLbl.Text = "✖-Invalid"
-					Exit Sub
-				Else
-					serialStatusLbl.ForeColor = Color.Black
-					serialStatusLbl.Text = "✓-Valid"
-				End If
-
-				If txtS1.Text = "" Then
-					statuslbl.Text = "Missing serial"
-				Else
-					If Not cmbWorkOrderBox.SelectedItem.ToString().ToLower().Contains("dummy") Then
-						If (txtS1.Text).Substring(0, 1) <> Suffix Or (txtS1.Text).Length > BarcodeLength Then
-							statuslbl.Text = "Barcode Error"
-						End If
-					End If
-				End If
-
-
-				If statuslbl.Text <> "" Then
-					Exit Sub
-				Else
-					If SkipCarton = 0 Then
-
-
-						method = "POST"
-						url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-						dataSetStr = "CHECK_CARTON_STATE"
-						para1 = txtS1.Text
-						postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
-
-						check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
-						If (check = "OK") Then
-							method = "POST"
-							url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-							dataSetStr2 = "GET_PACKAGING_INFO"
-							para2 = txtS1.Text
-
-							postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
-							'Carton.Text = ""
-							Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
-
-
-						Else
-							'MsgBox(check)
-							lblError.Text = check
-
-						End If
-					End If
-					FinishScan1()
-
-					If txtS2.Enabled = True Then
-						txtS2.Select()
-					Else
-						txtS1.Select()
-					End If
-				End If
-
-			End If
-		End If
+	Private Sub Serial_KeyPress(sender As Object, e As KeyPressEventArgs)
 
 	End Sub
 
@@ -3442,6 +3403,7 @@ here:
 					End If
 
 					txtS1.Select()
+
 				Else
 					txtC2.Select()
 				End If
@@ -3474,7 +3436,7 @@ here:
 
 		lblError.Text = ""
 		If CheckDuplicateSerial(txtS2.Text) = False Or txtS2.Text = txtS1.Text Then
-			If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+			'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
 		Else
 			statuslbl.Text = ""
 			lblError.Text = ""
@@ -3612,7 +3574,7 @@ here:
 
 		lblError.Text = ""
 		If CheckDuplicateSerial(txtS3.Text) = False Or txtS3.Text = txtS2.Text Or txtS3.Text = txtS1.Text Then
-			If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+			'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
 		Else
 			statuslbl.Text = ""
 			lblError.Text = ""
@@ -3812,7 +3774,7 @@ here:
 
 		lblError.Text = ""
 		If CheckDuplicateSerial(txtS4.Text) = False Or txtS4.Text = txtS3.Text Or txtS4.Text = txtS2.Text Or txtS4.Text = txtS1.Text Then
-			If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+			'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
 		Else
 			statuslbl.Text = ""
 			lblError.Text = ""
@@ -4026,7 +3988,7 @@ here:
 
 		lblError.Text = ""
 		If CheckDuplicateSerial(txtS5.Text) = False Or txtS5.Text = txtS4.Text Or txtS5.Text = txtS3.Text Or txtS5.Text = txtS2.Text Or txtS5.Text = txtS1.Text Then
-			If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+			'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
 		Else
 			statuslbl.Text = ""
 			lblError.Text = ""
@@ -4267,7 +4229,7 @@ here:
 		Conn.Close()
 
 		If Carton.Text.Length < 1 OrElse Carton.Text.Length > 4 And Carton.Text <> "" Then
-			statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+			'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
 		End If
 
 	End Sub
@@ -4334,7 +4296,7 @@ here:
 
 	End Sub
 
-	Private Sub txtC5_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtC5.KeyPress
+	Private Sub txtC5_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtS1.KeyPress, txtC5.KeyPress
 		Dim tmp As Integer
 		Dim totaltmp As Integer
 		If Timer1.Enabled Then
@@ -4431,10 +4393,10 @@ here:
 		Conn.Close()
 
 		If txtC2.Text.Length < 1 OrElse txtC2.Text.Length > 4 And txtC2.Text <> "" Then
-			statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+			'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
 		Else
 			If txtC2.Text = Carton.Text And Not txtC2.Text = "" Then
-				statuslbl.Text = "Duplicate Carton Scanned..."
+				'statuslbl.Text = "Duplicate Carton Scanned..."
 			End If
 		End If
 
@@ -4544,10 +4506,10 @@ here:
 		Conn.Close()
 
 		If txtC3.Text.Length < 1 OrElse txtC3.Text.Length > 4 And txtC3.Text <> "" Then
-			statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+			'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
 		Else
 			If (txtC3.Text = Carton.Text Or txtC3.Text = txtC2.Text) And Not txtC3.Text = "" Then
-				statuslbl.Text = "Duplicate Carton Scanned..."
+				'statuslbl.Text = "Duplicate Carton Scanned..."
 			End If
 
 		End If
@@ -4596,10 +4558,10 @@ here:
 		Conn.Close()
 
 		If txtC4.Text.Length < 1 OrElse txtC4.Text.Length > 4 And txtC4.Text <> "" Then
-			statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+			'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
 		Else
 			If (txtC4.Text = Carton.Text Or txtC4.Text = txtC2.Text Or txtC4.Text = txtC3.Text) And Not txtC4.Text = "" Then
-				statuslbl.Text = "Duplicate Carton Scanned..."
+				'statuslbl.Text = "Duplicate Carton Scanned..."
 			End If
 		End If
 
@@ -4647,10 +4609,10 @@ here:
 		Conn.Close()
 
 		If txtC5.Text.Length < 1 OrElse txtC5.Text.Length > 4 And txtC5.Text <> "" Then
-			statuslbl.Text = "Carton Number Must Be 1-4 Digit "
+			'statuslbl.Text = "Carton Number Must Be 1-4 Digit "
 		Else
 			If (txtC5.Text = Carton.Text Or txtC5.Text = txtC2.Text Or txtC5.Text = txtC3.Text Or txtC5.Text = txtC4.Text) And Not txtC5.Text = "" Then
-				statuslbl.Text = "Duplicate Carton Scanned..."
+				'statuslbl.Text = "Duplicate Carton Scanned..."
 			End If
 		End If
 
@@ -4844,22 +4806,13 @@ here:
 
 			If Integer.Parse(count.Text) >= Integer.Parse(qty.Text) Then
 				UpdateCompletePalletizing()
-				CancelBtn_Click(sender, Nothing)
+				'CancelBtn_Click(sender, Nothing)
 			End If
 			If Integer.Parse(totalordercount.Text) >= Integer.Parse(Order.Text) Then
 				'PrintReportAndStoreExcel()
 				UpdateCompletePalletizing()
 				Await Task.Delay(500)
 				UpdateCompleteSQL()
-				'Dim res = MessageBox.Show("Do you want to print order and report for pallet " & PalletBox.SelectedItem & " for this work order?", "Print Order", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
-				'If res = DialogResult.Yes Then
-				'	Label13.Visible = False
-				'	scanstatuslbl.Text = "Populating Data and Printing Report.."
-				'	CancelBtn.Visible = False
-				'	PrintOrder()
-				'	PrintReport()
-
-				'End If
 				MessageBox.Show("Work Order Complete", "Complete Operation", MessageBoxButtons.OK, MessageBoxIcon.Information)
 				scanstatuslbl.Visible = False
 				ScanBtn.Visible = True
@@ -4980,17 +4933,6 @@ here:
 
 		Conn.Close()
 	End Function
-
-	Private Sub txtSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtSearch.KeyPress
-		If e.KeyChar = ChrW(Keys.Enter) Then
-			If txtSearch.Text = "" Then
-				LoadGrid()
-			Else
-				search()
-				SearchGrid()
-			End If
-		End If
-	End Sub
 
 	Private Sub SubGroup_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSubGroup.SelectedIndexChanged
 		LoadInfo()
@@ -6108,11 +6050,14 @@ here:
 			If txtMasterScan.Text.Contains(",") Then
 				'masterbarcode
 				Dim strSplit() As String = txtMasterScan.Text.Split(",")
-				If strSplit.Length >= 4 Then
+				If strSplit.Length >= 5 Then
 					cmbWorkOrderBox.Text = strSplit(0)
-					cmbSubGroup.Text = strSplit(1)
-					PalletBox.Text = strSplit(2)
-					Shift.Text = strSplit(3)
+					System.Threading.Thread.Sleep(300)
+					cmbSubGroup.Text = strSplit(2)
+					System.Threading.Thread.Sleep(300)
+					PalletBox.Text = strSplit(3)
+					System.Threading.Thread.Sleep(300)
+					Shift.Text = strSplit(4)
 					'Return True
 				Else
 					'Return False
@@ -6356,5 +6301,9 @@ here:
 			End If
 		Catch ex As Exception
 		End Try
+	End Sub
+
+	Private Sub txtSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtSearch.KeyPress
+
 	End Sub
 End Class

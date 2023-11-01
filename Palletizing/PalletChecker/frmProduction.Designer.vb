@@ -23,8 +23,8 @@ Partial Class frmProduction
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -75,14 +75,16 @@ Partial Class frmProduction
         Me.btnQCcheck = New System.Windows.Forms.Button()
         Me.btnQCout = New System.Windows.Forms.Button()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.LoosePallet_btn = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.debug_chckbx = New System.Windows.Forms.CheckBox()
+        Me.PrintOrderBtn = New System.Windows.Forms.Button()
+        Me.PrintReportBtn = New System.Windows.Forms.Button()
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.btnSearch = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.lblError = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.LoosePallet_btn = New System.Windows.Forms.Button()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.txtPO = New System.Windows.Forms.TextBox()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -95,8 +97,6 @@ Partial Class frmProduction
         Me.Shift = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.PalletBox = New System.Windows.Forms.ComboBox()
-        Me.PrintReportBtn = New System.Windows.Forms.Button()
-        Me.PrintOrderBtn = New System.Windows.Forms.Button()
         Me.CancelBtn = New System.Windows.Forms.Button()
         Me.ScanBtn = New System.Windows.Forms.Button()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -202,24 +202,24 @@ Partial Class frmProduction
         Me.DataGridView1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.ContextMenuStrip = Me.ContextMenuStrip1
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridView1.Location = New System.Drawing.Point(758, 129)
         Me.DataGridView1.Margin = New System.Windows.Forms.Padding(2)
         Me.DataGridView1.Name = "DataGridView1"
@@ -235,12 +235,12 @@ Partial Class frmProduction
         Me.ContextMenuStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeleteToolStripMenuItem})
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(181, 48)
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(108, 26)
         '
         'DeleteToolStripMenuItem
         '
         Me.DeleteToolStripMenuItem.Name = "DeleteToolStripMenuItem"
-        Me.DeleteToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DeleteToolStripMenuItem.Size = New System.Drawing.Size(107, 22)
         Me.DeleteToolStripMenuItem.Text = "Delete"
         Me.DeleteToolStripMenuItem.Visible = False
         '
@@ -645,6 +645,22 @@ Partial Class frmProduction
         Me.GroupBox4.Text = "Admin Debug"
         Me.GroupBox4.Visible = False
         '
+        'LoosePallet_btn
+        '
+        Me.LoosePallet_btn.AutoSize = True
+        Me.LoosePallet_btn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LoosePallet_btn.Image = Global.CartonPalletizing.My.Resources.Resources.print_28
+        Me.LoosePallet_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LoosePallet_btn.Location = New System.Drawing.Point(13, 163)
+        Me.LoosePallet_btn.Margin = New System.Windows.Forms.Padding(2)
+        Me.LoosePallet_btn.Name = "LoosePallet_btn"
+        Me.LoosePallet_btn.Size = New System.Drawing.Size(69, 36)
+        Me.LoosePallet_btn.TabIndex = 32
+        Me.LoosePallet_btn.Text = "PR"
+        Me.LoosePallet_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.LoosePallet_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.LoosePallet_btn.UseVisualStyleBackColor = True
+        '
         'Button1
         '
         Me.Button1.Location = New System.Drawing.Point(96, 165)
@@ -663,6 +679,39 @@ Partial Class frmProduction
         Me.debug_chckbx.TabIndex = 69
         Me.debug_chckbx.Text = "Debugging"
         Me.debug_chckbx.UseVisualStyleBackColor = True
+        '
+        'PrintOrderBtn
+        '
+        Me.PrintOrderBtn.AutoSize = True
+        Me.PrintOrderBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PrintOrderBtn.Image = Global.CartonPalletizing.My.Resources.Resources.print_28
+        Me.PrintOrderBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.PrintOrderBtn.Location = New System.Drawing.Point(11, 124)
+        Me.PrintOrderBtn.Margin = New System.Windows.Forms.Padding(2)
+        Me.PrintOrderBtn.Name = "PrintOrderBtn"
+        Me.PrintOrderBtn.Size = New System.Drawing.Size(74, 36)
+        Me.PrintOrderBtn.TabIndex = 4
+        Me.PrintOrderBtn.Text = "PO"
+        Me.PrintOrderBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.PrintOrderBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.PrintOrderBtn.UseCompatibleTextRendering = True
+        Me.PrintOrderBtn.UseVisualStyleBackColor = True
+        '
+        'PrintReportBtn
+        '
+        Me.PrintReportBtn.AutoSize = True
+        Me.PrintReportBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PrintReportBtn.Image = Global.CartonPalletizing.My.Resources.Resources.excel_28
+        Me.PrintReportBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.PrintReportBtn.Location = New System.Drawing.Point(96, 124)
+        Me.PrintReportBtn.Margin = New System.Windows.Forms.Padding(2)
+        Me.PrintReportBtn.Name = "PrintReportBtn"
+        Me.PrintReportBtn.Size = New System.Drawing.Size(98, 36)
+        Me.PrintReportBtn.TabIndex = 5
+        Me.PrintReportBtn.Text = "FR"
+        Me.PrintReportBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.PrintReportBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.PrintReportBtn.UseVisualStyleBackColor = True
         '
         'txtSearch
         '
@@ -723,22 +772,6 @@ Partial Class frmProduction
         Me.GroupBox2.TabIndex = 69
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Work Order"
-        '
-        'LoosePallet_btn
-        '
-        Me.LoosePallet_btn.AutoSize = True
-        Me.LoosePallet_btn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LoosePallet_btn.Image = Global.CartonPalletizing.My.Resources.Resources.print_28
-        Me.LoosePallet_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.LoosePallet_btn.Location = New System.Drawing.Point(13, 163)
-        Me.LoosePallet_btn.Margin = New System.Windows.Forms.Padding(2)
-        Me.LoosePallet_btn.Name = "LoosePallet_btn"
-        Me.LoosePallet_btn.Size = New System.Drawing.Size(69, 36)
-        Me.LoosePallet_btn.TabIndex = 32
-        Me.LoosePallet_btn.Text = "PR"
-        Me.LoosePallet_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.LoosePallet_btn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.LoosePallet_btn.UseVisualStyleBackColor = True
         '
         'Label18
         '
@@ -872,39 +905,6 @@ Partial Class frmProduction
         Me.PalletBox.Name = "PalletBox"
         Me.PalletBox.Size = New System.Drawing.Size(267, 28)
         Me.PalletBox.TabIndex = 2
-        '
-        'PrintReportBtn
-        '
-        Me.PrintReportBtn.AutoSize = True
-        Me.PrintReportBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PrintReportBtn.Image = Global.CartonPalletizing.My.Resources.Resources.excel_28
-        Me.PrintReportBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.PrintReportBtn.Location = New System.Drawing.Point(96, 124)
-        Me.PrintReportBtn.Margin = New System.Windows.Forms.Padding(2)
-        Me.PrintReportBtn.Name = "PrintReportBtn"
-        Me.PrintReportBtn.Size = New System.Drawing.Size(98, 36)
-        Me.PrintReportBtn.TabIndex = 5
-        Me.PrintReportBtn.Text = "FR"
-        Me.PrintReportBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.PrintReportBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.PrintReportBtn.UseVisualStyleBackColor = True
-        '
-        'PrintOrderBtn
-        '
-        Me.PrintOrderBtn.AutoSize = True
-        Me.PrintOrderBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.PrintOrderBtn.Image = Global.CartonPalletizing.My.Resources.Resources.print_28
-        Me.PrintOrderBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.PrintOrderBtn.Location = New System.Drawing.Point(11, 124)
-        Me.PrintOrderBtn.Margin = New System.Windows.Forms.Padding(2)
-        Me.PrintOrderBtn.Name = "PrintOrderBtn"
-        Me.PrintOrderBtn.Size = New System.Drawing.Size(74, 36)
-        Me.PrintOrderBtn.TabIndex = 4
-        Me.PrintOrderBtn.Text = "PO"
-        Me.PrintOrderBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.PrintOrderBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.PrintOrderBtn.UseCompatibleTextRendering = True
-        Me.PrintOrderBtn.UseVisualStyleBackColor = True
         '
         'CancelBtn
         '

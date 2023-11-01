@@ -36,11 +36,16 @@ Partial Class splitPallet_Form
         Me.SerialAdd_btn = New System.Windows.Forms.Button()
         Me.clear_btn = New System.Windows.Forms.Button()
         Me.left_pnl = New System.Windows.Forms.Panel()
+        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.MasterBarcode_Clr_Btn = New System.Windows.Forms.Button()
         Me.MasterBarcode_btn = New System.Windows.Forms.Button()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.finish_btn = New System.Windows.Forms.Button()
         Me.status_lbl = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.count_lbl = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.totalCount_lbl = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.left_pnl.SuspendLayout()
@@ -164,6 +169,17 @@ Partial Class splitPallet_Form
         Me.left_pnl.Size = New System.Drawing.Size(404, 555)
         Me.left_pnl.TabIndex = 16
         '
+        'ListBox1
+        '
+        Me.ListBox1.BackColor = System.Drawing.SystemColors.InactiveCaptionText
+        Me.ListBox1.ForeColor = System.Drawing.Color.Lime
+        Me.ListBox1.FormattingEnabled = True
+        Me.ListBox1.ItemHeight = 19
+        Me.ListBox1.Location = New System.Drawing.Point(13, 52)
+        Me.ListBox1.Name = "ListBox1"
+        Me.ListBox1.Size = New System.Drawing.Size(366, 270)
+        Me.ListBox1.TabIndex = 19
+        '
         'MasterBarcode_Clr_Btn
         '
         Me.MasterBarcode_Clr_Btn.AutoSize = True
@@ -194,17 +210,6 @@ Partial Class splitPallet_Form
         Me.MasterBarcode_btn.Text = "Insert"
         Me.MasterBarcode_btn.UseVisualStyleBackColor = False
         '
-        'ListBox1
-        '
-        Me.ListBox1.BackColor = System.Drawing.SystemColors.InactiveCaptionText
-        Me.ListBox1.ForeColor = System.Drawing.Color.Lime
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.ItemHeight = 19
-        Me.ListBox1.Location = New System.Drawing.Point(13, 52)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(366, 270)
-        Me.ListBox1.TabIndex = 19
-        '
         'finish_btn
         '
         Me.finish_btn.Location = New System.Drawing.Point(428, 484)
@@ -224,11 +229,61 @@ Partial Class splitPallet_Form
         Me.status_lbl.Size = New System.Drawing.Size(0, 19)
         Me.status_lbl.TabIndex = 18
         '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(0, 0)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(44, 19)
+        Me.Label3.TabIndex = 19
+        Me.Label3.Text = "Label3"
+        '
+        'count_lbl
+        '
+        Me.count_lbl.AutoSize = True
+        Me.count_lbl.Location = New System.Drawing.Point(705, 25)
+        Me.count_lbl.Name = "count_lbl"
+        Me.count_lbl.Size = New System.Drawing.Size(37, 19)
+        Me.count_lbl.TabIndex = 20
+        Me.count_lbl.Text = "0000"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(748, 25)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(13, 19)
+        Me.Label5.TabIndex = 21
+        Me.Label5.Text = "/"
+        '
+        'totalCount_lbl
+        '
+        Me.totalCount_lbl.AutoSize = True
+        Me.totalCount_lbl.Location = New System.Drawing.Point(767, 25)
+        Me.totalCount_lbl.Name = "totalCount_lbl"
+        Me.totalCount_lbl.Size = New System.Drawing.Size(37, 19)
+        Me.totalCount_lbl.TabIndex = 22
+        Me.totalCount_lbl.Text = "0000"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(584, 23)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(110, 19)
+        Me.Label7.TabIndex = 23
+        Me.Label7.Text = "Available Cartons :"
+        '
         'splitPallet_Form
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(837, 555)
+        Me.Controls.Add(Me.Label7)
+        Me.Controls.Add(Me.totalCount_lbl)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.count_lbl)
+        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.status_lbl)
         Me.Controls.Add(Me.finish_btn)
         Me.Controls.Add(Me.DataGridView1)
@@ -268,4 +323,9 @@ Partial Class splitPallet_Form
     Friend WithEvents ListBox1 As ListBox
     Friend WithEvents finish_btn As Button
     Friend WithEvents status_lbl As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents count_lbl As Label
+    Friend WithEvents Label5 As Label
+    Friend WithEvents totalCount_lbl As Label
+    Friend WithEvents Label7 As Label
 End Class
