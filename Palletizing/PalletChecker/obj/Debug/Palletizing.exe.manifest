@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.SqlServer.Types.dll" size="401088">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.SqlServer.Types.dll" size="392896">
       <assemblyIdentity name="Microsoft.SqlServer.Types" version="12.0.0.0" publicKeyToken="89845DCD8080CC91" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Spa33/c8SWwmZeZJKyxAit3ThRaaSplk1aNsetdveQk=</dsig:DigestValue>
+        <dsig:DigestValue>g0uPPSp1+4yyv5ZCerojXZO6R0+rDi1fljO+PXSESY4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -175,14 +175,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Palletizing.exe" size="2560000">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Palletizing.exe" size="2549760">
       <assemblyIdentity name="Palletizing" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>+5vuBlldRXBbWkl6nGFsdFcFlmN7qKdik3ltl7OsH7w=</dsig:DigestValue>
+        <dsig:DigestValue>q3Gy/vA+nQngDHpfErDZjdAkX1epEdhlLwhOHx7Jw90=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

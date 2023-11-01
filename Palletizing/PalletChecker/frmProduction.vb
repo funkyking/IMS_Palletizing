@@ -291,7 +291,7 @@ skippallet:
 			testdata = PalletBox.SelectedItem
 		Catch ex As Exception
 			Conn?.Close()
-			MessageBox.Show(ex.Message)
+			'MessageBox.Show(ex.Message)
 		Finally
 			Conn?.Close()
 		End Try
@@ -344,13 +344,24 @@ skippallet:
 			Exit Sub
 		End If
 here:
-		'PalletBox.SelectedItem = 1
+		If SkipPallet_chkbx.CheckState = CheckState.Unchecked Then
+			PalletBox.SelectedItem = 1
+		End If
 		Timer1.Start()
 		'added here
-		'PalletBox.SelectedItem = maxpalletno
+		If SkipPallet_chkbx.CheckState = CheckState.Unchecked Then
+			PalletBox.SelectedItem = maxpalletno
+		End If
+
+
+
+
+
 		CheckPalletMax()
 
 
+		txtPO.Enabled = False
+		txtMasterScan.Enabled = False
 		cmbWorkOrderBox.Enabled = False
 		PalletBox.Enabled = False
 		Shift.Enabled = False
@@ -396,7 +407,11 @@ here:
 		If query = 0 Then
 			maxpalletno = 1
 			PalletBox.Items.Add(maxpalletno)
-			PalletBox.SelectedItem = maxpalletno
+
+			If SkipPallet_chkbx.CheckState = CheckState.Unchecked Then
+				PalletBox.SelectedItem = maxpalletno
+			End If
+
 			Exit Function
 		End If
 		Dim tempcnt As Integer
@@ -417,7 +432,9 @@ here:
 				End While
 			End If
 		End If
-		PalletBox.SelectedItem = query
+		If SkipPallet_chkbx.CheckState = CheckState.Unchecked Then
+			PalletBox.SelectedItem = query
+		End If
 		count.Text = tempcnt
 		'NextPallet()
 	End Function
@@ -434,30 +451,30 @@ here:
 									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
 									  INNER JOIN [CRICUT].[CUPID].[WorkOrderPalletizing] w
 									  ON wm.[Work Order ID]=w.[Work Order ID]
-										WHERE wm.[Work Order]='" & cmbWorkOrderBox.SelectedItem & "' AND wm.[Sub Group]='" & cmbSubGroup.SelectedItem & "' AND w.[Pallet No]='" & PalletBox.Text & "' AND wm.[Delete]='False'"
+										WHERE wm.[Work Order]='" & cmbWorkOrderBox.SelectedItem & "' AND wm.[Sub Group]='" & cmbSubGroup.SelectedItem & "' 
+										AND w.[Pallet No]='" & PalletBox.Text & "' AND wm.[Delete]='False'"
 				Dim ds = SQLcmd.ExecuteReader
 				If ds.HasRows Then
 					While ds.Read
 						tempcnt = ds.Item("cnt")
-
 					End While
 				End If
 			End If
 			If tempcnt >= Integer.Parse(qty.Text) And count.Text >= qty.Text Then
 				maxpalletno += 1
 				PalletBox.Items.Add(maxpalletno)
-				'PalletBox.SelectedItem = maxpalletno
+				If SkipPallet_chkbx.CheckState = CheckState.Unchecked Then
+					PalletBox.SelectedItem = maxpalletno
+				End If
 				count.Text = 0
 				'reset all
-
-
 			End If
-
 		End If
-
 	End Function
 
 	Private Sub CancelBtn_Click(sender As Object, e As EventArgs) Handles CancelBtn.Click
+		txtPO.Enabled = True
+		txtMasterScan.Enabled = False
 		cmbWorkOrderBox.Enabled = True
 		PalletBox.Enabled = True
 		Shift.Enabled = True
@@ -565,18 +582,18 @@ here:
 				lblError.Text = ""
 			End If
 
-			Dim searchValue As String = SerialNo
-			For Each row As DataGridViewRow In DataGridView1.Rows
-				If Not row.IsNewRow Then
-					For Each cell As DataGridViewCell In row.Cells
-						If cell.Value IsNot Nothing AndAlso cell.Value.ToString() = searchValue Then
-							statuslbl.Text = "Serial No, Not in This Pallet"
-							res = False
-							Exit For
-						End If
-					Next
-				End If
-			Next
+			'Dim searchValue As String = SerialNo
+			'For Each row As DataGridViewRow In DataGridView1.Rows
+			'	If Not row.IsNewRow Then
+			'		For Each cell As DataGridViewCell In row.Cells
+			'			If cell.Value IsNot Nothing AndAlso cell.Value.ToString().Trim() = searchValue Then
+			'				statuslbl.Text = "Serial No, Not in This Pallet"
+			'				res = False
+			'				Exit For
+			'			End If
+			'		Next
+			'	End If
+			'Next
 
 
 		End If
@@ -738,67 +755,75 @@ here:
 
 	Private Function InsertDataSQL(serial As String, carton As String)
 		Dim Conn = New SqlConnection(connstr)
-		Conn.Open()
-
-		If Conn.State = ConnectionState.Open Then
-			'Dim SQLcmd = New SqlCommand
-			'SQLcmd.Connection = Conn
-			'SQLcmd.CommandText = "INSERT INTO [CRICUT].[CUPID].[WorkOrderPalletizing]
-			'								   ([Work Order ID],
-			'									[Line]
-			'								   ,[Serial No]
-			'								   ,[Carton]
-			'								   ,[Pallet No]
-			'								   ,[Production Date]
-			'								   ,[Shift]
-			'								   ,[QCout]
-			'								   ,[QCin])
-			'								 VALUES
-			'								   ('" & WID.ToString & "'
-			'									,'" & lblLine.Text & "'
-			'									,'" & serial & "'
-			'									,'" & carton & "'
-			'									,'" & PalletBox.SelectedItem & "'
-			'									,'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
-			'									,'" & Shift.SelectedItem & "'
-			'									,'False'
-			'									,'False')"
-			'Dim cmd = New SqlCommand(SQLcmd.CommandText, Conn)
-			'cmd.ExecuteNonQuery()
-
-
-
-			Dim mergeQuery As String = "MERGE INTO [CRICUT].[CUPID].[WorkOrderPalletizing] AS Target
-										USING (VALUES (
-											'" & WID.ToString & "',
-											'" & lblLine.Text & "',
-											'" & serial & "',
-											'" & carton & "',
-											'" & PalletBox.SelectedItem & "',
-											'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "',
-											'" & Shift.SelectedItem & "',
-											'False',
-											'False'
-										)) AS Source ([Work Order ID], [Line], [Serial No], [Carton], [Pallet No], 
-													 [Production Date], [Shift], [QCout], [QCin])
-										ON Target.[Work Order ID] = Source.[Work Order ID] 
-										   AND Target.[Pallet No] = Source.[Pallet No]
-										WHEN MATCHED THEN
-											UPDATE SET [Production Date] = Source.[Production Date]
-										WHEN NOT MATCHED THEN
-											INSERT ([Work Order ID], [Line], [Serial No], [Carton], [Pallet No], 
-													[Production Date], [Shift], [QCout], [QCin])
-											VALUES (Source.[Work Order ID], Source.[Line], Source.[Serial No], Source.[Carton], Source.[Pallet No],
-													Source.[Production Date], Source.[Shift], Source.[QCout], Source.[QCin]);"
-			Using sqlcmd As New SqlCommand(mergeQuery, Conn)
-				sqlcmd.ExecuteNonQuery()
-			End Using
+		Try
+			Conn.Open()
+			If Conn.State = ConnectionState.Open Then
+				Dim SQLcmd = New SqlCommand
+				SQLcmd.Connection = Conn
+				SQLcmd.CommandText = "INSERT INTO [CRICUT].[CUPID].[WorkOrderPalletizing]
+												   ([Work Order ID],
+													[Line]
+												   ,[Serial No]
+												   ,[Carton]
+												   ,[Pallet No]
+												   ,[Production Date]
+												   ,[Shift]
+												   ,[QCout]
+												   ,[QCin])
+												 VALUES
+												   ('" & WID.ToString & "'
+													,'" & lblLine.Text & "'
+													,'" & serial & "'
+													,'" & carton & "'
+													,'" & PalletBox.SelectedItem & "'
+													,'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "'
+													,'" & Shift.SelectedItem & "'
+													,'False'
+													,'False')"
+				Dim cmd = New SqlCommand(SQLcmd.CommandText, Conn)
+				cmd.ExecuteNonQuery()
 
 
 
+				'Dim mergeQuery As String = "MERGE INTO [CRICUT].[CUPID].[WorkOrderPalletizing] AS Target
+				'						USING (VALUES (
+				'							'" & WID.ToString & "',
+				'							'" & lblLine.Text & "',
+				'							'" & serial & "',
+				'							'" & carton & "',
+				'							'" & PalletBox.SelectedItem & "',
+				'							'" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "',
+				'							'" & Shift.SelectedItem & "',
+				'							'False',
+				'							'False'
+				'						)) AS Source ([Work Order ID], [Line], [Serial No], [Carton], [Pallet No], 
+				'									 [Production Date], [Shift], [QCout], [QCin])
+				'						ON Target.[Work Order ID] = Source.[Work Order ID] 
+				'						   AND Target.[Pallet No] = Source.[Pallet No]
+				'						WHEN MATCHED THEN
+				'							UPDATE SET [Production Date] = Source.[Production Date]
+				'						WHEN NOT MATCHED THEN
+				'							INSERT ([Work Order ID], [Line], [Serial No], [Carton], [Pallet No], 
+				'									[Production Date], [Shift], [QCout], [QCin])
+				'							VALUES (Source.[Work Order ID], Source.[Line], Source.[Serial No], Source.[Carton], Source.[Pallet No],
+				'									Source.[Production Date], Source.[Shift], Source.[QCout], Source.[QCin]);"
+				'Using sqlcmd As New SqlCommand(mergeQuery, Conn)
+				'	sqlcmd.ExecuteNonQuery()
+				'End Using
 
+
+
+
+				Conn.Close()
+			End If
+		Catch ex As Exception
+			'MessageBox.Show(ex.Message)
 			Conn.Close()
-		End If
+		Finally
+			Conn.Close()
+		End Try
+
+
 	End Function
 
 	Private Function UpdateCountSQL()
@@ -856,7 +881,7 @@ here:
 				Conn.Close()
 			End If
 		Catch ex As Exception
-			MessageBox.Show(ex.Message)
+			'MessageBox.Show(ex.Message)
 		End Try
 	End Function
 
@@ -3103,21 +3128,34 @@ here:
 			Dim Conn = New SqlConnection(connstr)
 			Conn.Open() 'Open the Connection
 			If Conn.State = ConnectionState.Open Then
-				Dim SQLcmd = New SqlCommand
 
-				SQLcmd.Connection = Conn
-				SQLcmd.CommandText = "SELECT TOP 1000 ProductUnit.ID, TestResult.StationName
+				Dim rowsreturned As Integer
+				Dim firstQuery = "SELECT TOP 1000 ProductUnit.ID, TestResult.StationName
 										  FROM (([Cricut_MES].[dbo].[ProductUnit]
 										  INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON ProductUnit.ID = TestResult.ProductUnitID))
 										  WHERE UnitSerialNumber ='" & serialnumber & "' and TestResult.StationName LIKE '%PRINTING3%'"
-				'Dim ds = SQLcmd.ExecuteNonQuery()
-				Dim rowsreturned As Integer
-				rowsreturned = SQLcmd.ExecuteScalar()
-				If rowsreturned = 0 Then
-					Return False
-				Else
-					Return True
-				End If
+				Dim secondQuery = "SELECT TOP 1000 SubSerialNumber.ID, TestResult.StationName
+									FROM (([Cricut_MES].[dbo].[SubSerialNumber]
+									INNER JOIN  [Cricut_MES].[dbo].[TestResult] ON SubSerialNumber.ProductUnitID = TestResult.ProductUnitID))
+									WHERE SubSerialNumber ='" & serialnumber & "' and TestResult.StationName LIKE '%PRINTING3%'"
+
+
+				Using cmd_1 As New SqlCommand(firstQuery, Conn)
+					rowsreturned = cmd_1.ExecuteScalar()
+					If rowsreturned > 0 Then
+						Return True
+					End If
+				End Using
+
+				Using cmd_2 As New SqlCommand(secondQuery, Conn)
+					rowsreturned = cmd_2.ExecuteScalar()
+					If rowsreturned > 0 Then
+						Return True
+					Else
+						Return False
+					End If
+				End Using
+
 			End If
 		Catch ex As Exception
 			Return False
@@ -3163,11 +3201,11 @@ here:
 
 		'' Checking the TestResult Database to determine if the Pallete is Complete
 		'If checkPalleteStatus(txtS1.Text) = False Then
-		'    serialStatusLbl.ForeColor = Color.Red
-		'    serialStatusLbl.Text = "✖-Incomplete"
+		'	serialStatusLbl.ForeColor = Color.Red
+		'	serialStatusLbl.Text = "✖-Incomplete"
 		'Else
-		'    serialStatusLbl.ForeColor = Color.Black
-		'    serialStatusLbl.Text = "✓-Complete"
+		'	serialStatusLbl.ForeColor = Color.Black
+		'	serialStatusLbl.Text = "✓-Complete"
 		'End If
 
 		If CheckDuplicateSerial(txtS1.Text) = False Then
@@ -3179,68 +3217,106 @@ here:
 	End Sub
 
 
-	Private Sub Serial_KeyPress(sender As Object, e As KeyPressEventArgs)
+	Private Sub Serial_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtS1.KeyPress
 
-	End Sub
-
-	Private Function FinishScan2()
-		Dim tmp As Integer
-		Dim totaltmp As Integer
 		If Timer1.Enabled Then
+			If e.KeyChar = ChrW(Keys.Enter) Then
 
-			If txtC2.Text = "" Or Carton.Text = "" Then
-				statuslbl.Text = "Missing carton"
-			End If
+				' Checking the TestResult Database to determine if the Pallete is Complete
+				'If checkPalleteStatus(txtS1.Text) = False Then
+				'	'serialStatusLbl.ForeColor = Color.Red
+				'	'serialStatusLbl.Text = "✖-Incomplete"
+				'Else
+				'	'serialStatusLbl.ForeColor = Color.Black
+				'	'serialStatusLbl.Text = "✓-Complete"
+				'End If
 
-			If statuslbl.Text <> "" Then
-				Exit Function
-
-			Else
-				If lblOption.Text = "2" Then
-
-					If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Then
-						statuslbl.Text = "Duplicated Serial"
-						Exit Function
-					End If
-					If (CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False) And SkipCarton = 0 Then
-						statuslbl.Text = "Duplicate Carton"
-						Exit Function
-					End If
-					tmp = Integer.Parse(count.Text)
-					totaltmp = Integer.Parse(totalordercount.Text)
-					totaltmp += lblOption.Text
-					tmp += lblOption.Text
-					count.Text = tmp
-					totalordercount.Text = totaltmp
-					InsertDataSQL(txtS1.Text, Carton.Text)
-					InsertDataSQL(txtS2.Text, txtC2.Text)
-					UpdateCountSQL()
-					LoadGrid()
-
-					For Each item In txtBoxes
-						item.Text = ""
-					Next
-
-					If SkipCarton = 1 Then
-						Carton.Text = 0
-						Carton.Enabled = False
-						txtC2.Text = 0
-						txtC2.Enabled = False
-						txtC3.Text = 0
-						txtC3.Enabled = False
-						txtC4.Text = 0
-						txtC4.Enabled = False
-						txtC5.Text = 0
-						txtC5.Enabled = False
-					End If
-
-					txtS1.Select()
+				If txtS1.Text = "" Then
+					statuslbl.Text = "Missing serial"
 				Else
-					txtC3.Select()
+					If (txtS1.Text).Substring(0, 1) <> Suffix Or (txtS1.Text).Length > BarcodeLength Then
+						statuslbl.Text = "Barcode Error"
+					End If
+				End If
+
+
+				If statuslbl.Text <> "" Then
+					Exit Sub
+				Else
+					If SkipCarton = 0 Then
+
+					End If
+					FinishScan1()
+
+					If txtS2.Enabled = True Then
+						txtS2.Select()
+					Else
+						txtS1.Select()
+					End If
 				End If
 
 			End If
 		End If
+	End Sub
+
+	Private Function FinishScan2()
+		'Dim tmp As Integer
+		'Dim totaltmp As Integer
+		'If Timer1.Enabled Then
+
+		'	If txtC2.Text = "" Or Carton.Text = "" Then
+		'		statuslbl.Text = "Missing carton"
+		'	End If
+
+		'	If statuslbl.Text <> "" Then
+		'		Exit Function
+
+		'	Else
+		'		If lblOption.Text = "2" Then
+
+		'			If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Then
+		'				statuslbl.Text = "Duplicated Serial"
+		'				Exit Function
+		'			End If
+		'			If (CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False) And SkipCarton = 0 Then
+		'				statuslbl.Text = "Duplicate Carton"
+		'				Exit Function
+		'			End If
+		'			tmp = Integer.Parse(count.Text)
+		'			totaltmp = Integer.Parse(totalordercount.Text)
+		'			totaltmp += lblOption.Text
+		'			tmp += lblOption.Text
+		'			count.Text = tmp
+		'			totalordercount.Text = totaltmp
+		'			InsertDataSQL(txtS1.Text, Carton.Text)
+		'			InsertDataSQL(txtS2.Text, txtC2.Text)
+		'			UpdateCountSQL()
+		'			LoadGrid()
+
+		'			For Each item In txtBoxes
+		'				item.Text = ""
+		'			Next
+
+		'			If SkipCarton = 1 Then
+		'				Carton.Text = 0
+		'				Carton.Enabled = False
+		'				txtC2.Text = 0
+		'				txtC2.Enabled = False
+		'				txtC3.Text = 0
+		'				txtC3.Enabled = False
+		'				txtC4.Text = 0
+		'				txtC4.Enabled = False
+		'				txtC5.Text = 0
+		'				txtC5.Enabled = False
+		'			End If
+
+		'			txtS1.Select()
+		'		Else
+		'			txtC3.Select()
+		'		End If
+
+		'	End If
+		'End If
 	End Function
 	Public Class MyCarton
 		Public Property UnitState As String
@@ -3370,8 +3446,8 @@ here:
 						Exit Function
 					End If
 					If CheckDuplicateCarton(Carton.Text) = False And SkipCarton = 0 Then
-						statuslbl.Text = "Duplicate Carton"
-						Exit Function
+						'statuslbl.Text = "Duplicate Carton"
+						'Exit Function
 					End If
 
 					tmp = Integer.Parse(count.Text)
@@ -3414,776 +3490,776 @@ here:
 	End Function
 	Private Sub txtS2_TextChanged(sender As Object, e As EventArgs) Handles txtS2.TextChanged
 
-		If SkipCarton = 1 Then
-			If CheckDuplicateSerial(txtS2.Text) = False Then
-				statuslbl.Text = "Duplicated Serial No"
-			Else
-				statuslbl.Text = ""
-				lblError.Text = ""
-			End If
-			Exit Sub
-		End If
+		'If SkipCarton = 1 Then
+		'	If CheckDuplicateSerial(txtS2.Text) = False Then
+		'		statuslbl.Text = "Duplicated Serial No"
+		'	Else
+		'		statuslbl.Text = ""
+		'		lblError.Text = ""
+		'	End If
+		'	Exit Sub
+		'End If
 
 
-		' Checking the TestResult Database to determine if the Pallete is Complete
-		If checkPalleteStatus(txtS2.Text) = False Then
-			serialStatusLbl.ForeColor = Color.Red
-			serialStatusLbl.Text = "✖-Incomplete"
-		Else
-			serialStatusLbl.ForeColor = Color.Black
-			serialStatusLbl.Text = "✓-Complete"
-		End If
+		'' Checking the TestResult Database to determine if the Pallete is Complete
+		'If checkPalleteStatus(txtS2.Text) = False Then
+		'	serialStatusLbl.ForeColor = Color.Red
+		'	serialStatusLbl.Text = "✖-Incomplete"
+		'Else
+		'	serialStatusLbl.ForeColor = Color.Black
+		'	serialStatusLbl.Text = "✓-Complete"
+		'End If
 
-		lblError.Text = ""
-		If CheckDuplicateSerial(txtS2.Text) = False Or txtS2.Text = txtS1.Text Then
-			'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
-		Else
-			statuslbl.Text = ""
-			lblError.Text = ""
-		End If
+		'lblError.Text = ""
+		'If CheckDuplicateSerial(txtS2.Text) = False Or txtS2.Text = txtS1.Text Then
+		'	'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+		'Else
+		'	statuslbl.Text = ""
+		'	lblError.Text = ""
+		'End If
 	End Sub
 
 	Private Sub txtS2_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtS2.KeyPress
-		Dim url As String
-		Dim method As String
-		Dim dataSetStr As String
-		Dim para1 As String
-		Dim postData As String
-		Dim check As String
+		'Dim url As String
+		'Dim method As String
+		'Dim dataSetStr As String
+		'Dim para1 As String
+		'Dim postData As String
+		'Dim check As String
 
-		Dim url2 As String
-		Dim method2 As String
-		Dim dataSetStr2 As String
-		Dim para2 As String
-		Dim postData2 As String
-		Dim check2 As String
-		If Timer1.Enabled Then
-			If e.KeyChar = ChrW(Keys.Enter) Then
-				If txtS2.Text = "" Then
-					statuslbl.Text = "Missing serial"
-				End If
-				If statuslbl.Text <> "" Then
-					Exit Sub
-				Else
+		'Dim url2 As String
+		'Dim method2 As String
+		'Dim dataSetStr2 As String
+		'Dim para2 As String
+		'Dim postData2 As String
+		'Dim check2 As String
+		'If Timer1.Enabled Then
+		'	If e.KeyChar = ChrW(Keys.Enter) Then
+		'		If txtS2.Text = "" Then
+		'			statuslbl.Text = "Missing serial"
+		'		End If
+		'		If statuslbl.Text <> "" Then
+		'			Exit Sub
+		'		Else
 
-					If SkipCarton = 0 Then
+		'			If SkipCarton = 0 Then
 
-						method = "POST"
-						url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-						dataSetStr = "CHECK_CARTON_STATE"
-						para1 = txtS2.Text
-						para2 = txtS1.Text
-						postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
-						postData2 = "dataSetStr=" & dataSetStr & "&para1=" & para2
-					End If
-					If lblOption.Text = "2" Then
+		'				method = "POST"
+		'				url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'				dataSetStr = "CHECK_CARTON_STATE"
+		'				para1 = txtS2.Text
+		'				para2 = txtS1.Text
+		'				postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
+		'				postData2 = "dataSetStr=" & dataSetStr & "&para1=" & para2
+		'			End If
+		'			If lblOption.Text = "2" Then
 
-						If SkipCarton = 0 Then
+		'				If SkipCarton = 0 Then
 
-							check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
-							check2 = WebrequestWithPost(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'					check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
+		'					check2 = WebrequestWithPost(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							If (check = "OK") Then
+		'					If (check = "OK") Then
 
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS2.Text
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS2.Text
 
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
+		'					Else
 
-								lblError.Text = check
-							End If
+		'						lblError.Text = check
+		'					End If
 
-							If (check2 = "OK") Then
+		'					If (check2 = "OK") Then
 
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS1.Text
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS1.Text
 
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
+		'					Else
 
-								lblError.Text = check
-							End If
-						End If
-						FinishScan2()
-					Else
+		'						lblError.Text = check
+		'					End If
+		'				End If
+		'				FinishScan2()
+		'			Else
 
-						If SkipCarton = 0 Then
+		'				If SkipCarton = 0 Then
 
-							check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
-							If (check = "OK") Then
-								method = "POST"
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS2.Text
+		'					check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
+		'					If (check = "OK") Then
+		'						method = "POST"
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS2.Text
 
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check
-							End If
-						End If
+		'					Else
+		'						lblError.Text = check
+		'					End If
+		'				End If
 
-						FinishScan2()
-					End If
+		'				FinishScan2()
+		'			End If
 
 
-					If txtS3.Enabled = True Then
+		'			If txtS3.Enabled = True Then
 
-						txtS3.Select()
-					Else
-						txtS1.Select()
-					End If
-				End If
-			End If
-		End If
+		'				txtS3.Select()
+		'			Else
+		'				txtS1.Select()
+		'			End If
+		'		End If
+		'	End If
+		'End If
 	End Sub
 
 	Private Sub txtS3_TextChanged(sender As Object, e As EventArgs) Handles txtS3.TextChanged
 
-		If SkipCarton = 1 Then
-			If CheckDuplicateSerial(txtS3.Text) = False Then
-				statuslbl.Text = "Duplicated Serial No"
-			Else
-				statuslbl.Text = ""
-				lblError.Text = ""
-			End If
-			Exit Sub
-		End If
+		'If SkipCarton = 1 Then
+		'	If CheckDuplicateSerial(txtS3.Text) = False Then
+		'		statuslbl.Text = "Duplicated Serial No"
+		'	Else
+		'		statuslbl.Text = ""
+		'		lblError.Text = ""
+		'	End If
+		'	Exit Sub
+		'End If
 
 
 
-		' Checking the TestResult Database to determine if the Pallete is Complete
-		If checkPalleteStatus(txtS3.Text) = False Then
-			serialStatusLbl.ForeColor = Color.Red
-			serialStatusLbl.Text = "✖-Incomplete"
-		Else
-			serialStatusLbl.ForeColor = Color.Black
-			serialStatusLbl.Text = "✓-Complete"
-		End If
+		'' Checking the TestResult Database to determine if the Pallete is Complete
+		'If checkPalleteStatus(txtS3.Text) = False Then
+		'	serialStatusLbl.ForeColor = Color.Red
+		'	serialStatusLbl.Text = "✖-Incomplete"
+		'Else
+		'	serialStatusLbl.ForeColor = Color.Black
+		'	serialStatusLbl.Text = "✓-Complete"
+		'End If
 
-		lblError.Text = ""
-		If CheckDuplicateSerial(txtS3.Text) = False Or txtS3.Text = txtS2.Text Or txtS3.Text = txtS1.Text Then
-			'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
-		Else
-			statuslbl.Text = ""
-			lblError.Text = ""
-		End If
+		'lblError.Text = ""
+		'If CheckDuplicateSerial(txtS3.Text) = False Or txtS3.Text = txtS2.Text Or txtS3.Text = txtS1.Text Then
+		'	'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+		'Else
+		'	statuslbl.Text = ""
+		'	lblError.Text = ""
+		'End If
 	End Sub
 
 	Private Sub txtS3_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtS3.KeyPress
-		Dim url As String
-		Dim method As String
-		Dim dataSetStr As String
-		Dim para1 As String
-		Dim postData, postdata3 As String
-		Dim check As String
+		'Dim url As String
+		'Dim method As String
+		'Dim dataSetStr As String
+		'Dim para1 As String
+		'Dim postData, postdata3 As String
+		'Dim check As String
 
-		Dim url2 As String
-		Dim method2 As String
-		Dim dataSetStr2 As String
-		Dim para2, para3 As String
-		Dim postData2 As String
-		Dim check2, check3 As String
-		If Timer1.Enabled Then
-			If e.KeyChar = ChrW(Keys.Enter) Then
-				If txtS3.Text = "" Then
-					statuslbl.Text = "Missing serial"
-				End If
-				If statuslbl.Text <> "" Then
-					Exit Sub
-				Else
+		'Dim url2 As String
+		'Dim method2 As String
+		'Dim dataSetStr2 As String
+		'Dim para2, para3 As String
+		'Dim postData2 As String
+		'Dim check2, check3 As String
+		'If Timer1.Enabled Then
+		'	If e.KeyChar = ChrW(Keys.Enter) Then
+		'		If txtS3.Text = "" Then
+		'			statuslbl.Text = "Missing serial"
+		'		End If
+		'		If statuslbl.Text <> "" Then
+		'			Exit Sub
+		'		Else
 
-					If SkipCarton = 0 Then
+		'			If SkipCarton = 0 Then
 
-						method = "POST"
-						url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-						dataSetStr = "CHECK_CARTON_STATE"
-						para1 = txtS1.Text
-						para2 = txtS2.Text
-						para3 = txtS3.Text
-						postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
-						postData2 = "dataSetStr=" & dataSetStr & "&para1=" & para2
-						postdata3 = "dataSetStr=" & dataSetStr & "&para1=" & para3
-					End If
-					If lblOption.Text = "3" Then
+		'				method = "POST"
+		'				url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'				dataSetStr = "CHECK_CARTON_STATE"
+		'				para1 = txtS1.Text
+		'				para2 = txtS2.Text
+		'				para3 = txtS3.Text
+		'				postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
+		'				postData2 = "dataSetStr=" & dataSetStr & "&para1=" & para2
+		'				postdata3 = "dataSetStr=" & dataSetStr & "&para1=" & para3
+		'			End If
+		'			If lblOption.Text = "3" Then
 
-						If SkipCarton = 0 Then
+		'				If SkipCarton = 0 Then
 
-							check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
-							check2 = WebrequestWithPost(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
-							check3 = WebrequestWithPost(url, Encoding.UTF8, postdata3, "application/x-www-form-urlencoded")
+		'					check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
+		'					check2 = WebrequestWithPost(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'					check3 = WebrequestWithPost(url, Encoding.UTF8, postdata3, "application/x-www-form-urlencoded")
 
-							If (check = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS1.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
-								Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'					If (check = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS1.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check
-							End If
-							If (check2 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS2.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check
+		'					End If
+		'					If (check2 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS2.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check2
-							End If
-							If (check3 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS3.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check2
+		'					End If
+		'					If (check3 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS3.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC3.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC3.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check3
-							End If
-						End If
-						FinishScan3()
-					Else
+		'					Else
+		'						lblError.Text = check3
+		'					End If
+		'				End If
+		'				FinishScan3()
+		'			Else
 
-						If SkipCarton = 0 Then
+		'				If SkipCarton = 0 Then
 
-							check3 = WebrequestWithPost(url, Encoding.UTF8, postdata3, "application/x-www-form-urlencoded")
-							If (check3 = "OK") Then
-								method = "POST"
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS3.Text
+		'					check3 = WebrequestWithPost(url, Encoding.UTF8, postdata3, "application/x-www-form-urlencoded")
+		'					If (check3 = "OK") Then
+		'						method = "POST"
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS3.Text
 
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC3.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC3.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check3
-							End If
-						End If
+		'					Else
+		'						lblError.Text = check3
+		'					End If
+		'				End If
 
-						FinishScan3()
-					End If
+		'				FinishScan3()
+		'			End If
 
-					If txtS4.Enabled = True Then
+		'			If txtS4.Enabled = True Then
 
-						txtS4.Select()
-					Else
-						txtS1.Select()
-					End If
-				End If
-			End If
-		End If
+		'				txtS4.Select()
+		'			Else
+		'				txtS1.Select()
+		'			End If
+		'		End If
+		'	End If
+		'End If
 	End Sub
 
 	Private Function FinishScan3()
-		Dim tmp As Integer
-		Dim totaltmp As Integer
-		If Timer1.Enabled Then
+		'Dim tmp As Integer
+		'Dim totaltmp As Integer
+		'If Timer1.Enabled Then
 
-			If txtC3.Text = "" Or txtC2.Text = "" Or Carton.Text = "" Then
-				statuslbl.Text = "Missing carton"
-			End If
-			If statuslbl.Text <> "" Then
-				Exit Function
+		'	If txtC3.Text = "" Or txtC2.Text = "" Or Carton.Text = "" Then
+		'		statuslbl.Text = "Missing carton"
+		'	End If
+		'	If statuslbl.Text <> "" Then
+		'		Exit Function
 
-			Else
-				If lblOption.Text = "3" Then
-					If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Then
-						statuslbl.Text = "Duplicated Serial"
-						Exit Function
-					End If
-					If (CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False) And SkipCarton = 0 Then
-						statuslbl.Text = "Duplicate Carton"
-						Exit Function
-					End If
-					tmp = Integer.Parse(count.Text)
-					totaltmp = Integer.Parse(totalordercount.Text)
-					totaltmp += lblOption.Text
-					tmp += lblOption.Text
-					count.Text = tmp
-					totalordercount.Text = totaltmp
-					InsertDataSQL(txtS1.Text, Carton.Text)
-					InsertDataSQL(txtS2.Text, txtC2.Text)
-					InsertDataSQL(txtS3.Text, txtC3.Text)
-					UpdateCountSQL()
-					LoadGrid()
+		'	Else
+		'		If lblOption.Text = "3" Then
+		'			If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Then
+		'				statuslbl.Text = "Duplicated Serial"
+		'				Exit Function
+		'			End If
+		'			If (CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False) And SkipCarton = 0 Then
+		'				statuslbl.Text = "Duplicate Carton"
+		'				Exit Function
+		'			End If
+		'			tmp = Integer.Parse(count.Text)
+		'			totaltmp = Integer.Parse(totalordercount.Text)
+		'			totaltmp += lblOption.Text
+		'			tmp += lblOption.Text
+		'			count.Text = tmp
+		'			totalordercount.Text = totaltmp
+		'			InsertDataSQL(txtS1.Text, Carton.Text)
+		'			InsertDataSQL(txtS2.Text, txtC2.Text)
+		'			InsertDataSQL(txtS3.Text, txtC3.Text)
+		'			UpdateCountSQL()
+		'			LoadGrid()
 
-					For Each item In txtBoxes
-						item.Text = ""
-					Next
+		'			For Each item In txtBoxes
+		'				item.Text = ""
+		'			Next
 
-					If SkipCarton = 1 Then
-						Carton.Text = 0
-						Carton.Enabled = False
-						txtC2.Text = 0
-						txtC2.Enabled = False
-						txtC3.Text = 0
-						txtC3.Enabled = False
-						txtC4.Text = 0
-						txtC4.Enabled = False
-						txtC5.Text = 0
-						txtC5.Enabled = False
-					End If
+		'			If SkipCarton = 1 Then
+		'				Carton.Text = 0
+		'				Carton.Enabled = False
+		'				txtC2.Text = 0
+		'				txtC2.Enabled = False
+		'				txtC3.Text = 0
+		'				txtC3.Enabled = False
+		'				txtC4.Text = 0
+		'				txtC4.Enabled = False
+		'				txtC5.Text = 0
+		'				txtC5.Enabled = False
+		'			End If
 
-					txtS1.Select()
-				Else
-					txtC4.Select()
-				End If
+		'			txtS1.Select()
+		'		Else
+		'			txtC4.Select()
+		'		End If
 
-			End If
-		End If
+		'	End If
+		'End If
 	End Function
 	Private Sub txtS4_TextChanged(sender As Object, e As EventArgs) Handles txtS4.TextChanged
 
-		If SkipCarton = 1 Then
-			If CheckDuplicateSerial(txtS4.Text) = False Then
-				statuslbl.Text = "Duplicated Serial No"
-			Else
-				statuslbl.Text = ""
-				lblError.Text = ""
-			End If
-			Exit Sub
-		End If
+		'If SkipCarton = 1 Then
+		'	If CheckDuplicateSerial(txtS4.Text) = False Then
+		'		statuslbl.Text = "Duplicated Serial No"
+		'	Else
+		'		statuslbl.Text = ""
+		'		lblError.Text = ""
+		'	End If
+		'	Exit Sub
+		'End If
 
 
-		' Checking the TestResult Database to determine if the Pallete is Complete
-		If checkPalleteStatus(txtS4.Text) = False Then
-			serialStatusLbl.ForeColor = Color.Red
-			serialStatusLbl.Text = "✖-Incomplete"
-		Else
-			serialStatusLbl.ForeColor = Color.Black
-			serialStatusLbl.Text = "✓-Complete"
-		End If
+		'' Checking the TestResult Database to determine if the Pallete is Complete
+		'If checkPalleteStatus(txtS4.Text) = False Then
+		'	serialStatusLbl.ForeColor = Color.Red
+		'	serialStatusLbl.Text = "✖-Incomplete"
+		'Else
+		'	serialStatusLbl.ForeColor = Color.Black
+		'	serialStatusLbl.Text = "✓-Complete"
+		'End If
 
-		lblError.Text = ""
-		If CheckDuplicateSerial(txtS4.Text) = False Or txtS4.Text = txtS3.Text Or txtS4.Text = txtS2.Text Or txtS4.Text = txtS1.Text Then
-			'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
-		Else
-			statuslbl.Text = ""
-			lblError.Text = ""
-		End If
+		'lblError.Text = ""
+		'If CheckDuplicateSerial(txtS4.Text) = False Or txtS4.Text = txtS3.Text Or txtS4.Text = txtS2.Text Or txtS4.Text = txtS1.Text Then
+		'	'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+		'Else
+		'	statuslbl.Text = ""
+		'	lblError.Text = ""
+		'End If
 	End Sub
 
 	Private Sub txtS4_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtS4.KeyPress
-		Dim url As String
-		Dim method As String
-		Dim dataSetStr As String
-		Dim para1, para3, para4 As String
-		Dim postData As String
-		Dim check As String
+		'Dim url As String
+		'Dim method As String
+		'Dim dataSetStr As String
+		'Dim para1, para3, para4 As String
+		'Dim postData As String
+		'Dim check As String
 
-		Dim url2 As String
-		Dim method2 As String
-		Dim dataSetStr2 As String
-		Dim para2 As String
-		Dim postData2, postData3, postData4 As String
-		Dim check2, check3, check4 As String
+		'Dim url2 As String
+		'Dim method2 As String
+		'Dim dataSetStr2 As String
+		'Dim para2 As String
+		'Dim postData2, postData3, postData4 As String
+		'Dim check2, check3, check4 As String
 
-		If Timer1.Enabled Then
-			If e.KeyChar = ChrW(Keys.Enter) Then
-				If txtS4.Text = "" Then
-					statuslbl.Text = "Missing serial"
-				End If
-				If statuslbl.Text <> "" Then
-					Exit Sub
-				Else
+		'If Timer1.Enabled Then
+		'	If e.KeyChar = ChrW(Keys.Enter) Then
+		'		If txtS4.Text = "" Then
+		'			statuslbl.Text = "Missing serial"
+		'		End If
+		'		If statuslbl.Text <> "" Then
+		'			Exit Sub
+		'		Else
 
-					If SkipCarton = 0 Then
+		'			If SkipCarton = 0 Then
 
-						method = "POST"
-						url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-						dataSetStr = "CHECK_CARTON_STATE"
-						para1 = txtS1.Text
-						para2 = txtS2.Text
-						para3 = txtS3.Text
-						para4 = txtS4.Text
-						postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
-						postData2 = "dataSetStr=" & dataSetStr & "&para1=" & para2
-						postData3 = "dataSetStr=" & dataSetStr & "&para1=" & para3
-						postData4 = "dataSetStr=" & dataSetStr & "&para1=" & para4
-					End If
+		'				method = "POST"
+		'				url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'				dataSetStr = "CHECK_CARTON_STATE"
+		'				para1 = txtS1.Text
+		'				para2 = txtS2.Text
+		'				para3 = txtS3.Text
+		'				para4 = txtS4.Text
+		'				postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
+		'				postData2 = "dataSetStr=" & dataSetStr & "&para1=" & para2
+		'				postData3 = "dataSetStr=" & dataSetStr & "&para1=" & para3
+		'				postData4 = "dataSetStr=" & dataSetStr & "&para1=" & para4
+		'			End If
 
-					If lblOption.Text = "4" Then
-						If SkipCarton = 0 Then
-							check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
-							check2 = WebrequestWithPost(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
-							check3 = WebrequestWithPost(url, Encoding.UTF8, postData3, "application/x-www-form-urlencoded")
-							check4 = WebrequestWithPost(url, Encoding.UTF8, postData4, "application/x-www-form-urlencoded")
+		'			If lblOption.Text = "4" Then
+		'				If SkipCarton = 0 Then
+		'					check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
+		'					check2 = WebrequestWithPost(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'					check3 = WebrequestWithPost(url, Encoding.UTF8, postData3, "application/x-www-form-urlencoded")
+		'					check4 = WebrequestWithPost(url, Encoding.UTF8, postData4, "application/x-www-form-urlencoded")
 
-							If (check = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS1.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
-								Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'					If (check = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS1.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check
-							End If
-							If (check2 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS2.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check
+		'					End If
+		'					If (check2 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS2.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check2
-							End If
-							If (check3 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS3.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check2
+		'					End If
+		'					If (check3 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS3.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC3.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC3.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check3
-							End If
-							If (check4 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS4.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check3
+		'					End If
+		'					If (check4 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS4.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC4.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC4.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check4
-							End If
+		'					Else
+		'						lblError.Text = check4
+		'					End If
 
-						End If
-						FinishScan4()
-					Else
-						If SkipCarton = 0 Then
-							check4 = WebrequestWithPost(url, Encoding.UTF8, postData4, "application/x-www-form-urlencoded")
-							If (check4 = "OK") Then
-								method = "POST"
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS4.Text
+		'				End If
+		'				FinishScan4()
+		'			Else
+		'				If SkipCarton = 0 Then
+		'					check4 = WebrequestWithPost(url, Encoding.UTF8, postData4, "application/x-www-form-urlencoded")
+		'					If (check4 = "OK") Then
+		'						method = "POST"
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS4.Text
 
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC4.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC4.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check4
-							End If
-						End If
+		'					Else
+		'						lblError.Text = check4
+		'					End If
+		'				End If
 
-						FinishScan4()
-					End If
+		'				FinishScan4()
+		'			End If
 
 
-					If txtS5.Enabled = True Then
+		'			If txtS5.Enabled = True Then
 
-						txtS5.Select()
-					Else
-						txtS1.Select()
-					End If
-				End If
-			End If
-		End If
+		'				txtS5.Select()
+		'			Else
+		'				txtS1.Select()
+		'			End If
+		'		End If
+		'	End If
+		'End If
 	End Sub
 	Private Function FinishScan4()
-		Dim tmp As Integer
-		Dim totaltmp As Integer
-		If Timer1.Enabled Then
-			If txtC4.Text = "" Or txtC2.Text = "" Or txtC3.Text = "" Or Carton.Text = "" Then
-				statuslbl.Text = "Missing carton"
-			End If
-			If statuslbl.Text <> "" Then
-				Exit Function
+		'Dim tmp As Integer
+		'Dim totaltmp As Integer
+		'If Timer1.Enabled Then
+		'	If txtC4.Text = "" Or txtC2.Text = "" Or txtC3.Text = "" Or Carton.Text = "" Then
+		'		statuslbl.Text = "Missing carton"
+		'	End If
+		'	If statuslbl.Text <> "" Then
+		'		Exit Function
 
-			Else
-				If lblOption.Text = "4" Then
-					If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Or CheckDuplicateSerial(txtS4.Text) = False Then
-						statuslbl.Text = "Duplicated Serial"
-						Exit Function
-					End If
-					If (CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False Or CheckDuplicateCarton(txtC4.Text) = False) And SkipCarton = 0 Then
-						statuslbl.Text = "Duplicate Carton"
-						Exit Function
-					End If
-					tmp = Integer.Parse(count.Text)
-					totaltmp = Integer.Parse(totalordercount.Text)
-					totaltmp += lblOption.Text
-					tmp += lblOption.Text
-					count.Text = tmp
-					totalordercount.Text = totaltmp
-					InsertDataSQL(txtS1.Text, Carton.Text)
-					InsertDataSQL(txtS2.Text, txtC2.Text)
-					InsertDataSQL(txtS3.Text, txtC3.Text)
-					InsertDataSQL(txtS4.Text, txtC4.Text)
-					UpdateCountSQL()
-					LoadGrid()
+		'	Else
+		'		If lblOption.Text = "4" Then
+		'			If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Or CheckDuplicateSerial(txtS4.Text) = False Then
+		'				statuslbl.Text = "Duplicated Serial"
+		'				Exit Function
+		'			End If
+		'			If (CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False Or CheckDuplicateCarton(txtC4.Text) = False) And SkipCarton = 0 Then
+		'				statuslbl.Text = "Duplicate Carton"
+		'				Exit Function
+		'			End If
+		'			tmp = Integer.Parse(count.Text)
+		'			totaltmp = Integer.Parse(totalordercount.Text)
+		'			totaltmp += lblOption.Text
+		'			tmp += lblOption.Text
+		'			count.Text = tmp
+		'			totalordercount.Text = totaltmp
+		'			InsertDataSQL(txtS1.Text, Carton.Text)
+		'			InsertDataSQL(txtS2.Text, txtC2.Text)
+		'			InsertDataSQL(txtS3.Text, txtC3.Text)
+		'			InsertDataSQL(txtS4.Text, txtC4.Text)
+		'			UpdateCountSQL()
+		'			LoadGrid()
 
-					For Each item In txtBoxes
-						item.Text = ""
-					Next
+		'			For Each item In txtBoxes
+		'				item.Text = ""
+		'			Next
 
-					If SkipCarton = 1 Then
-						Carton.Text = 0
-						Carton.Enabled = False
-						txtC2.Text = 0
-						txtC2.Enabled = False
-						txtC3.Text = 0
-						txtC3.Enabled = False
-						txtC4.Text = 0
-						txtC4.Enabled = False
-						txtC5.Text = 0
-						txtC5.Enabled = False
-					End If
+		'			If SkipCarton = 1 Then
+		'				Carton.Text = 0
+		'				Carton.Enabled = False
+		'				txtC2.Text = 0
+		'				txtC2.Enabled = False
+		'				txtC3.Text = 0
+		'				txtC3.Enabled = False
+		'				txtC4.Text = 0
+		'				txtC4.Enabled = False
+		'				txtC5.Text = 0
+		'				txtC5.Enabled = False
+		'			End If
 
-					txtS1.Select()
-				Else
-					txtC5.Select()
-				End If
+		'			txtS1.Select()
+		'		Else
+		'			txtC5.Select()
+		'		End If
 
-			End If
+		'	End If
 
-		End If
+		'End If
 	End Function
 	Private Sub txtS5_TextChanged(sender As Object, e As EventArgs) Handles txtS5.TextChanged
 
-		If SkipCarton = 1 Then
-			If CheckDuplicateSerial(txtS5.Text) = False Then
-				statuslbl.Text = "Duplicated Serial No"
-			Else
-				statuslbl.Text = ""
-				lblError.Text = ""
-			End If
-			Exit Sub
-		End If
+		'If SkipCarton = 1 Then
+		'	If CheckDuplicateSerial(txtS5.Text) = False Then
+		'		statuslbl.Text = "Duplicated Serial No"
+		'	Else
+		'		statuslbl.Text = ""
+		'		lblError.Text = ""
+		'	End If
+		'	Exit Sub
+		'End If
 
 
-		' Checking the TestResult Database to determine if the Pallete is Complete
-		If checkPalleteStatus(txtS5.Text) = False Then
-			serialStatusLbl.ForeColor = Color.Red
-			serialStatusLbl.Text = "✖-Incomplete"
-		Else
-			serialStatusLbl.ForeColor = Color.Black
-			serialStatusLbl.Text = "✓-Complete"
-		End If
+		'' Checking the TestResult Database to determine if the Pallete is Complete
+		'If checkPalleteStatus(txtS5.Text) = False Then
+		'	serialStatusLbl.ForeColor = Color.Red
+		'	serialStatusLbl.Text = "✖-Incomplete"
+		'Else
+		'	serialStatusLbl.ForeColor = Color.Black
+		'	serialStatusLbl.Text = "✓-Complete"
+		'End If
 
-		lblError.Text = ""
-		If CheckDuplicateSerial(txtS5.Text) = False Or txtS5.Text = txtS4.Text Or txtS5.Text = txtS3.Text Or txtS5.Text = txtS2.Text Or txtS5.Text = txtS1.Text Then
-			'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
-		Else
-			statuslbl.Text = ""
-			lblError.Text = ""
-		End If
+		'lblError.Text = ""
+		'If CheckDuplicateSerial(txtS5.Text) = False Or txtS5.Text = txtS4.Text Or txtS5.Text = txtS3.Text Or txtS5.Text = txtS2.Text Or txtS5.Text = txtS1.Text Then
+		'	'If statuslbl.Text = "" Then statuslbl.Text = "Duplicate Carton Scanned..."
+		'Else
+		'	statuslbl.Text = ""
+		'	lblError.Text = ""
+		'End If
 	End Sub
 
 	Private Sub txtS5_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtS5.KeyPress
-		Dim url As String
-		Dim method As String
-		Dim dataSetStr As String
-		Dim para1 As String
-		Dim postData As String
-		Dim check As String
+		'Dim url As String
+		'Dim method As String
+		'Dim dataSetStr As String
+		'Dim para1 As String
+		'Dim postData As String
+		'Dim check As String
 
-		Dim url2 As String
-		Dim method2 As String
-		Dim dataSetStr2 As String
-		Dim para2, para3, para4, para5 As String
-		Dim postData2, postData3, postData4, postData5 As String
-		Dim check2, check3, check4, check5 As String
+		'Dim url2 As String
+		'Dim method2 As String
+		'Dim dataSetStr2 As String
+		'Dim para2, para3, para4, para5 As String
+		'Dim postData2, postData3, postData4, postData5 As String
+		'Dim check2, check3, check4, check5 As String
 
-		If Timer1.Enabled Then
-			If e.KeyChar = ChrW(Keys.Enter) Then
-				If txtS5.Text = "" Then
-					statuslbl.Text = "Missing serial"
-				End If
-				If statuslbl.Text <> "" Then
-					Exit Sub
-				Else
+		'If Timer1.Enabled Then
+		'	If e.KeyChar = ChrW(Keys.Enter) Then
+		'		If txtS5.Text = "" Then
+		'			statuslbl.Text = "Missing serial"
+		'		End If
+		'		If statuslbl.Text <> "" Then
+		'			Exit Sub
+		'		Else
 
-					If SkipCarton = 0 Then
-						method = "POST"
-						url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-						dataSetStr = "CHECK_CARTON_STATE"
-						para1 = txtS1.Text
-						para2 = txtS2.Text
-						para3 = txtS3.Text
-						para4 = txtS4.Text
-						para5 = txtS5.Text
-						postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
-						postData2 = "dataSetStr=" & dataSetStr & "&para1=" & para2
-						postData3 = "dataSetStr=" & dataSetStr & "&para1=" & para3
-						postData4 = "dataSetStr=" & dataSetStr & "&para1=" & para4
-						postData5 = "dataSetStr=" & dataSetStr & "&para1=" & para5
-					End If
-					If lblOption.Text = "5" Then
+		'			If SkipCarton = 0 Then
+		'				method = "POST"
+		'				url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'				dataSetStr = "CHECK_CARTON_STATE"
+		'				para1 = txtS1.Text
+		'				para2 = txtS2.Text
+		'				para3 = txtS3.Text
+		'				para4 = txtS4.Text
+		'				para5 = txtS5.Text
+		'				postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
+		'				postData2 = "dataSetStr=" & dataSetStr & "&para1=" & para2
+		'				postData3 = "dataSetStr=" & dataSetStr & "&para1=" & para3
+		'				postData4 = "dataSetStr=" & dataSetStr & "&para1=" & para4
+		'				postData5 = "dataSetStr=" & dataSetStr & "&para1=" & para5
+		'			End If
+		'			If lblOption.Text = "5" Then
 
-						If SkipCarton = 0 Then
+		'				If SkipCarton = 0 Then
 
-							check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
-							check2 = WebrequestWithPost(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
-							check3 = WebrequestWithPost(url, Encoding.UTF8, postData3, "application/x-www-form-urlencoded")
-							check4 = WebrequestWithPost(url, Encoding.UTF8, postData4, "application/x-www-form-urlencoded")
-							check5 = WebrequestWithPost(url, Encoding.UTF8, postData5, "application/x-www-form-urlencoded")
+		'					check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
+		'					check2 = WebrequestWithPost(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'					check3 = WebrequestWithPost(url, Encoding.UTF8, postData3, "application/x-www-form-urlencoded")
+		'					check4 = WebrequestWithPost(url, Encoding.UTF8, postData4, "application/x-www-form-urlencoded")
+		'					check5 = WebrequestWithPost(url, Encoding.UTF8, postData5, "application/x-www-form-urlencoded")
 
-							If (check = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS1.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
-								Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'					If (check = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS1.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check
-							End If
-							If (check2 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS2.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check
+		'					End If
+		'					If (check2 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS2.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC2.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check2
-							End If
-							If (check3 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS3.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check2
+		'					End If
+		'					If (check3 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS3.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC3.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC3.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check3
-							End If
-							If (check4 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS4.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check3
+		'					End If
+		'					If (check4 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS4.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC4.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC4.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check4
-							End If
-							If (check5 = "OK") Then
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS5.Text
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'					Else
+		'						lblError.Text = check4
+		'					End If
+		'					If (check5 = "OK") Then
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS5.Text
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC5.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC5.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check5
-							End If
-						End If
-						FinishScan5()
-					Else
-						If SkipCarton = 0 Then
-							check5 = WebrequestWithPost(url, Encoding.UTF8, postData5, "application/x-www-form-urlencoded")
-							If (check5 = "OK") Then
-								method = "POST"
-								url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-								dataSetStr2 = "GET_PACKAGING_INFO"
-								para2 = txtS5.Text
+		'					Else
+		'						lblError.Text = check5
+		'					End If
+		'				End If
+		'				FinishScan5()
+		'			Else
+		'				If SkipCarton = 0 Then
+		'					check5 = WebrequestWithPost(url, Encoding.UTF8, postData5, "application/x-www-form-urlencoded")
+		'					If (check5 = "OK") Then
+		'						method = "POST"
+		'						url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
+		'						dataSetStr2 = "GET_PACKAGING_INFO"
+		'						para2 = txtS5.Text
 
-								postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
+		'						postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
 
-								txtC5.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
+		'						txtC5.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
 
-							Else
-								lblError.Text = check5
-							End If
-						End If
-						FinishScan5()
+		'					Else
+		'						lblError.Text = check5
+		'					End If
+		'				End If
+		'				FinishScan5()
 
-						txtS1.Select()
-					End If
+		'				txtS1.Select()
+		'			End If
 
 
 
-				End If
-			End If
-		End If
+		'		End If
+		'	End If
+		'End If
 	End Sub
 
 	Private Function FinishScan5()
-		Dim tmp As Integer
-		Dim totaltmp As Integer
-		If Timer1.Enabled Then
+		'Dim tmp As Integer
+		'Dim totaltmp As Integer
+		'If Timer1.Enabled Then
 
-			If txtC5.Text = "" Or txtC2.Text = "" Or txtC3.Text = "" Or txtC4.Text = "" Or Carton.Text = "" Then
-				statuslbl.Text = "Missing carton"
-			End If
-			If statuslbl.Text <> "" Then
-				Exit Function
+		'	If txtC5.Text = "" Or txtC2.Text = "" Or txtC3.Text = "" Or txtC4.Text = "" Or Carton.Text = "" Then
+		'		statuslbl.Text = "Missing carton"
+		'	End If
+		'	If statuslbl.Text <> "" Then
+		'		Exit Function
 
-			Else
-				If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Or CheckDuplicateSerial(txtS4.Text) = False Or CheckDuplicateSerial(txtS5.Text) = False Then
-					statuslbl.Text = "Duplicated Serial"
-					Exit Function
-				End If
-				If (CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False Or CheckDuplicateCarton(txtC4.Text) = False Or CheckDuplicateCarton(txtC5.Text) = False) And SkipCarton = 0 Then
-					statuslbl.Text = "Duplicate Carton"
-					Exit Function
-				End If
-				tmp = Integer.Parse(count.Text)
-				totaltmp = Integer.Parse(totalordercount.Text)
-				totaltmp += lblOption.Text
-				tmp += lblOption.Text
-				count.Text = tmp
-				totalordercount.Text = totaltmp
-				InsertDataSQL(txtS5.Text, txtC5.Text)
-				InsertDataSQL(txtS4.Text, txtC4.Text)
-				InsertDataSQL(txtS3.Text, txtC3.Text)
-				InsertDataSQL(txtS2.Text, txtC2.Text)
-				InsertDataSQL(txtS1.Text, Carton.Text)
-				UpdateCountSQL()
-				LoadGrid()
+		'	Else
+		'		If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Or CheckDuplicateSerial(txtS4.Text) = False Or CheckDuplicateSerial(txtS5.Text) = False Then
+		'			statuslbl.Text = "Duplicated Serial"
+		'			Exit Function
+		'		End If
+		'		If (CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False Or CheckDuplicateCarton(txtC4.Text) = False Or CheckDuplicateCarton(txtC5.Text) = False) And SkipCarton = 0 Then
+		'			statuslbl.Text = "Duplicate Carton"
+		'			Exit Function
+		'		End If
+		'		tmp = Integer.Parse(count.Text)
+		'		totaltmp = Integer.Parse(totalordercount.Text)
+		'		totaltmp += lblOption.Text
+		'		tmp += lblOption.Text
+		'		count.Text = tmp
+		'		totalordercount.Text = totaltmp
+		'		InsertDataSQL(txtS5.Text, txtC5.Text)
+		'		InsertDataSQL(txtS4.Text, txtC4.Text)
+		'		InsertDataSQL(txtS3.Text, txtC3.Text)
+		'		InsertDataSQL(txtS2.Text, txtC2.Text)
+		'		InsertDataSQL(txtS1.Text, Carton.Text)
+		'		UpdateCountSQL()
+		'		LoadGrid()
 
-				For Each item In txtBoxes
-					item.Text = ""
-				Next
+		'		For Each item In txtBoxes
+		'			item.Text = ""
+		'		Next
 
-				If SkipCarton = 1 Then
-					Carton.Text = 0
-					Carton.Enabled = False
-					txtC2.Text = 0
-					txtC2.Enabled = False
-					txtC3.Text = 0
-					txtC3.Enabled = False
-					txtC4.Text = 0
-					txtC4.Enabled = False
-					txtC5.Text = 0
-					txtC5.Enabled = False
-				End If
+		'		If SkipCarton = 1 Then
+		'			Carton.Text = 0
+		'			Carton.Enabled = False
+		'			txtC2.Text = 0
+		'			txtC2.Enabled = False
+		'			txtC3.Text = 0
+		'			txtC3.Enabled = False
+		'			txtC4.Text = 0
+		'			txtC4.Enabled = False
+		'			txtC5.Text = 0
+		'			txtC5.Enabled = False
+		'		End If
 
-				txtS1.Select()
-			End If
+		'		txtS1.Select()
+		'	End If
 
-		End If
+		'End If
 	End Function
 
 
@@ -4296,7 +4372,7 @@ here:
 
 	End Sub
 
-	Private Sub txtC5_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtS1.KeyPress, txtC5.KeyPress
+	Private Sub txtC5_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtC5.KeyPress
 		Dim tmp As Integer
 		Dim totaltmp As Integer
 		If Timer1.Enabled Then
@@ -4307,13 +4383,13 @@ here:
 				If statuslbl.Text <> "" Then
 					Exit Sub
 				Else
-					If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Or CheckDuplicateSerial(txtS4.Text) = False Or CheckDuplicateSerial(txtS5.Text) = False Then
+					If CheckDuplicateSerial(txtS1.Text) = False Then 'Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Or CheckDuplicateSerial(txtS4.Text) = False Or CheckDuplicateSerial(txtS5.Text) = False
 						statuslbl.Text = "Duplicated Serial"
 						Exit Sub
 					End If
-					If CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False Or CheckDuplicateCarton(txtC4.Text) = False Or CheckDuplicateCarton(txtC5.Text) = False Then
-						statuslbl.Text = "Duplicate Carton"
-						Exit Sub
+					If CheckDuplicateCarton(Carton.Text) = False Then 'Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False Or CheckDuplicateCarton(txtC4.Text) = False Or CheckDuplicateCarton(txtC5.Text) = False
+						'statuslbl.Text = "Duplicate Carton"
+						'Exit Sub
 					End If
 					tmp = Integer.Parse(count.Text)
 					totaltmp = Integer.Parse(totalordercount.Text)
@@ -4321,13 +4397,14 @@ here:
 					tmp += lblOption.Text
 					count.Text = tmp
 					totalordercount.Text = totaltmp
-					InsertDataSQL(txtS5.Text, txtC5.Text)
-					InsertDataSQL(txtS4.Text, txtC4.Text)
-					InsertDataSQL(txtS3.Text, txtC3.Text)
-					InsertDataSQL(txtS2.Text, txtC2.Text)
+					'InsertDataSQL(txtS5.Text, txtC5.Text)
+					'InsertDataSQL(txtS4.Text, txtC4.Text)
+					'InsertDataSQL(txtS3.Text, txtC3.Text)
+					'InsertDataSQL(txtS2.Text, txtC2.Text)
 					InsertDataSQL(txtS1.Text, Carton.Text)
 					UpdateCountSQL()
 					LoadGrid()
+					CheckSerialNumber()
 
 					For Each item In txtBoxes
 						item.Text = ""
@@ -4366,7 +4443,7 @@ here:
 		'        End If
 		'    End If
 		'End If
-		If SkipCarton = 1 Then Exit Sub
+		'If SkipCarton = 1 Then Exit Sub
 
 		Dim Conn = New SqlConnection(connstr)
 		Conn.Open()
@@ -4374,7 +4451,7 @@ here:
 			Dim SQLcmd = New SqlCommand
 			SQLcmd.Connection = Conn
 			SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
+
 									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
 									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
 									  ON wm.[Work Order ID]=w.[Work Order ID]
@@ -4384,7 +4461,7 @@ here:
 			If ds.Read Then
 				'statuslbl.Text = (" Carton: " & (ds.GetValue("2").ToString))
 				'statuslbl.Text = "Duplicate Carton Found..." & vbCr & "PO No : " & ds.Item("Work Order") & vbCr & "Sub Group:" & ds.Item("Sub Group") & vbCr & "Pallet No:" & ds.Item("Pallet No") & vbCr & "Serial No:" & ds.Item("Serial No")
-				statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
+				'statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
 			Else
 				statuslbl.Text = ""
 				lblError.Text = ""
@@ -4409,7 +4486,7 @@ here:
 		If Timer1.Enabled Then
 			If e.KeyChar = ChrW(Keys.Enter) Then
 				If txtC2.Text = "" Then
-					statuslbl.Text = "Missing carton"
+					'statuslbl.Text = "Missing carton"
 				End If
 
 				If statuslbl.Text <> "" Then
@@ -4417,11 +4494,11 @@ here:
 				Else
 					If lblOption.Text = "2" Then
 						If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Then
-							statuslbl.Text = "Duplicated Serial"
+							'statuslbl.Text = "Duplicated Serial"
 							Exit Sub
 						End If
 						If CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Then
-							statuslbl.Text = "Duplicate Carton"
+							'statuslbl.Text = "Duplicate Carton"
 							Exit Sub
 						End If
 						tmp = Integer.Parse(count.Text)
@@ -4487,7 +4564,7 @@ here:
 			Dim SQLcmd = New SqlCommand
 			SQLcmd.Connection = Conn
 			SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
+
 									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
 									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
 									  ON wm.[Work Order ID]=w.[Work Order ID]
@@ -4497,7 +4574,7 @@ here:
 			If ds.Read Then
 				'statuslbl.Text = (" Carton: " & (ds.GetValue("2").ToString))
 				'statuslbl.Text = "Duplicate Carton:" & vbCr & "Work Order:" & ds.Item("Work Order") & vbCr & "Sub Group:" & ds.Item("Sub Group") & vbCr & "Pallet No:" & ds.Item("Pallet No") & vbCr & "Serial No:" & ds.Item("Serial No")
-				statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
+				'statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
 			Else
 				statuslbl.Text = ""
 				lblError.Text = ""
@@ -4539,7 +4616,7 @@ here:
 			Dim SQLcmd = New SqlCommand
 			SQLcmd.Connection = Conn
 			SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
+
 									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
 									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
 									  ON wm.[Work Order ID]=w.[Work Order ID]
@@ -4549,7 +4626,7 @@ here:
 			If ds.Read Then
 				'statuslbl.Text = (" Carton: " & (ds.GetValue("2").ToString))
 				'statuslbl.Text = "Duplicate Carton:" & vbCr & "Work Order:" & ds.Item("Work Order") & vbCr & "Sub Group:" & ds.Item("Sub Group") & vbCr & "Pallet No:" & ds.Item("Pallet No") & vbCr & "Serial No:" & ds.Item("Serial No")
-				statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
+				'statuslbl.Text = "Duplicate Carton No Found..." & vbCr & "PO No. : " & ds.Item("Work Order") & vbCr & "MR No : " & ds.Item("Sub Group") & vbCr & "Pallet No : " & ds.Item("Pallet No") & vbCr & "Serial No : " & ds.Item("Serial No")
 			Else
 				statuslbl.Text = ""
 				lblError.Text = ""
@@ -4590,7 +4667,7 @@ here:
 			Dim SQLcmd = New SqlCommand
 			SQLcmd.Connection = Conn
 			SQLcmd.CommandText = "SELECT w.[Pallet No],w.[Carton],w.[Serial No],wm.[Work Order],wm.[Sub Group]
-						
+
 									  FROM [CRICUT].[CUPID].[WorkOrderMaster] wm
 									  INNER JOIN [CRICUT].[CUPID].[WorkOrder] w
 									  ON wm.[Work Order ID]=w.[Work Order ID]
@@ -4632,11 +4709,11 @@ here:
 				Else
 					If lblOption.Text = "3" Then
 						If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Then
-							statuslbl.Text = "Duplicated Serial"
+							'statuslbl.Text = "Duplicated Serial"
 							Exit Sub
 						End If
 						If CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False Then
-							statuslbl.Text = "Duplicate Carton"
+							'statuslbl.Text = "Duplicate Carton"
 							Exit Sub
 						End If
 						tmp = Integer.Parse(count.Text)
@@ -4685,18 +4762,18 @@ here:
 		If Timer1.Enabled Then
 			If e.KeyChar = ChrW(Keys.Enter) Then
 				If txtC4.Text = "" Then
-					statuslbl.Text = "Missing carton"
+					'statuslbl.Text = "Missing carton"
 				End If
 				If statuslbl.Text <> "" Then
 					Exit Sub
 				Else
 					If lblOption.Text = "4" Then
 						If CheckDuplicateSerial(txtS1.Text) = False Or CheckDuplicateSerial(txtS2.Text) = False Or CheckDuplicateSerial(txtS3.Text) = False Or CheckDuplicateSerial(txtS4.Text) = False Then
-							statuslbl.Text = "Duplicated Serial"
+							'statuslbl.Text = "Duplicated Serial"
 							Exit Sub
 						End If
 						If CheckDuplicateCarton(Carton.Text) = False Or CheckDuplicateCarton(txtC2.Text) = False Or CheckDuplicateCarton(txtC3.Text) = False Or CheckDuplicateCarton(txtC4.Text) = False Then
-							statuslbl.Text = "Duplicate Carton"
+							'statuslbl.Text = "Duplicate Carton"
 							Exit Sub
 						End If
 						tmp = Integer.Parse(count.Text)
@@ -4806,7 +4883,7 @@ here:
 
 			If Integer.Parse(count.Text) >= Integer.Parse(qty.Text) Then
 				UpdateCompletePalletizing()
-				'CancelBtn_Click(sender, Nothing)
+				CancelBtn_Click(sender, Nothing)
 			End If
 			If Integer.Parse(totalordercount.Text) >= Integer.Parse(Order.Text) Then
 				'PrintReportAndStoreExcel()
@@ -6304,6 +6381,14 @@ here:
 	End Sub
 
 	Private Sub txtSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtSearch.KeyPress
+
+	End Sub
+
+	Private Sub PalletBox_TextChanged(sender As Object, e As EventArgs) Handles PalletBox.TextChanged
+
+	End Sub
+
+	Private Sub txtMasterScan_TextChanged(sender As Object, e As EventArgs) Handles txtMasterScan.TextChanged
 
 	End Sub
 End Class

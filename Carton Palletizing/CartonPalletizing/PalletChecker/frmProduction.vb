@@ -2871,14 +2871,14 @@ here:
     Private Sub Serial_TextChanged(sender As Object, e As EventArgs) Handles txtS1.TextChanged
         lblError.Text = ""
 
-        '' Checking the TestResult Database to determine if the Pallete is Complete
-        'If checkPalleteStatus(txtS1.Text) = False Then
-        '    serialStatusLbl.ForeColor = Color.Red
-        '    serialStatusLbl.Text = "✖-Incomplete"
-        'Else
-        '    serialStatusLbl.ForeColor = Color.Black
-        '    serialStatusLbl.Text = "✓-Complete"
-        'End If
+        ' Checking the TestResult Database to determine if the Pallete is Complete
+        If checkPalleteStatus(txtS1.Text) = False Then
+            serialStatusLbl.ForeColor = Color.Red
+            serialStatusLbl.Text = "✖-Incomplete"
+        Else
+            serialStatusLbl.ForeColor = Color.Black
+            serialStatusLbl.Text = "✓-Complete"
+        End If
 
         If CheckDuplicateSerial(txtS1.Text) = False Then
             'statuslbl.Text = "Duplicated Serial No"
@@ -2907,14 +2907,14 @@ here:
         If Timer1.Enabled Then
             If e.KeyChar = ChrW(Keys.Enter) Then
 
-                '' Checking the TestResult Database to determine if the Pallete is Complete
-                'If checkPalleteStatus(txtS1.Text) = False Then
-                '    serialStatusLbl.ForeColor = Color.Red
-                '    serialStatusLbl.Text = "✖-Incomplete"
-                'Else
-                '    serialStatusLbl.ForeColor = Color.Black
-                '    serialStatusLbl.Text = "✓-Complete"
-                'End If
+                ' Checking the TestResult Database to determine if the Pallete is Complete
+                If checkPalleteStatus(txtS1.Text) = False Then
+                    serialStatusLbl.ForeColor = Color.Red
+                    serialStatusLbl.Text = "✖-Incomplete"
+                Else
+                    serialStatusLbl.ForeColor = Color.Black
+                    serialStatusLbl.Text = "✓-Complete"
+                End If
 
                 If txtS1.Text = "" Then
                     statuslbl.Text = "Missing serial"
@@ -2930,30 +2930,6 @@ here:
                 Else
                     If SkipCarton = 0 Then
 
-
-                        method = "POST"
-                        url = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-                        dataSetStr = "CHECK_CARTON_STATE"
-                        para1 = txtS1.Text
-                        postData = "dataSetStr=" & dataSetStr & "&para1=" & para1
-
-                        check = WebrequestWithPost(url, Encoding.UTF8, postData, "application/x-www-form-urlencoded")
-                        If (check = "OK") Then
-                            method = "POST"
-                            url2 = "http://192.168.96.202:3000/api/DMS/postFullLoadDataListJson"
-                            dataSetStr2 = "GET_PACKAGING_INFO"
-                            para2 = txtS1.Text
-
-                            postData2 = "dataSetStr=" & dataSetStr2 & "&para1=" & para2
-                            'Carton.Text = ""
-                            Carton.Text = WebrequestWithPost2(url, Encoding.UTF8, postData2, "application/x-www-form-urlencoded")
-
-
-                        Else
-                            'MsgBox(check)
-                            lblError.Text = check
-
-                        End If
                     End If
                     FinishScan1()
 

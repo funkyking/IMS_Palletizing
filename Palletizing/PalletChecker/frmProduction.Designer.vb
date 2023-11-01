@@ -23,8 +23,8 @@ Partial Class frmProduction
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -99,6 +99,7 @@ Partial Class frmProduction
         Me.PalletBox = New System.Windows.Forms.ComboBox()
         Me.CancelBtn = New System.Windows.Forms.Button()
         Me.ScanBtn = New System.Windows.Forms.Button()
+        Me.SkipPallet_chkbx = New System.Windows.Forms.CheckBox()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -145,7 +146,7 @@ Partial Class frmProduction
         '
         Me.scanstatuslbl.AutoSize = True
         Me.scanstatuslbl.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.scanstatuslbl.Location = New System.Drawing.Point(170, 351)
+        Me.scanstatuslbl.Location = New System.Drawing.Point(170, 361)
         Me.scanstatuslbl.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.scanstatuslbl.Name = "scanstatuslbl"
         Me.scanstatuslbl.Size = New System.Drawing.Size(258, 26)
@@ -202,24 +203,24 @@ Partial Class frmProduction
         Me.DataGridView1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.ContextMenuStrip = Me.ContextMenuStrip1
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridView1.Location = New System.Drawing.Point(758, 129)
         Me.DataGridView1.Margin = New System.Windows.Forms.Padding(2)
         Me.DataGridView1.Name = "DataGridView1"
@@ -325,7 +326,7 @@ Partial Class frmProduction
         '
         Me.statuslbl.AutoSize = True
         Me.statuslbl.ForeColor = System.Drawing.Color.Red
-        Me.statuslbl.Location = New System.Drawing.Point(492, 335)
+        Me.statuslbl.Location = New System.Drawing.Point(492, 345)
         Me.statuslbl.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.statuslbl.Name = "statuslbl"
         Me.statuslbl.Size = New System.Drawing.Size(145, 13)
@@ -396,7 +397,7 @@ Partial Class frmProduction
         '
         Me.AddBtn.AutoSize = True
         Me.AddBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.AddBtn.Location = New System.Drawing.Point(662, 490)
+        Me.AddBtn.Location = New System.Drawing.Point(662, 500)
         Me.AddBtn.Margin = New System.Windows.Forms.Padding(2)
         Me.AddBtn.Name = "AddBtn"
         Me.AddBtn.Size = New System.Drawing.Size(48, 30)
@@ -453,7 +454,7 @@ Partial Class frmProduction
         Me.GroupBox1.Controls.Add(Me.totalordercount)
         Me.GroupBox1.Location = New System.Drawing.Point(448, 76)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(290, 236)
+        Me.GroupBox1.Size = New System.Drawing.Size(290, 246)
         Me.GroupBox1.TabIndex = 55
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Lots Info"
@@ -484,7 +485,7 @@ Partial Class frmProduction
         '
         Me.lblOption.AutoSize = True
         Me.lblOption.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblOption.Location = New System.Drawing.Point(615, 330)
+        Me.lblOption.Location = New System.Drawing.Point(615, 340)
         Me.lblOption.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblOption.Name = "lblOption"
         Me.lblOption.Size = New System.Drawing.Size(56, 20)
@@ -578,7 +579,7 @@ Partial Class frmProduction
         Me.GroupBox3.Controls.Add(Me.txtS2)
         Me.GroupBox3.Controls.Add(Me.txtS3)
         Me.GroupBox3.Controls.Add(Me.txtC2)
-        Me.GroupBox3.Location = New System.Drawing.Point(16, 426)
+        Me.GroupBox3.Location = New System.Drawing.Point(16, 436)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(511, 175)
         Me.GroupBox3.TabIndex = 65
@@ -637,7 +638,7 @@ Partial Class frmProduction
         Me.GroupBox4.Controls.Add(Me.btnQCin)
         Me.GroupBox4.Controls.Add(Me.PrintOrderBtn)
         Me.GroupBox4.Controls.Add(Me.PrintReportBtn)
-        Me.GroupBox4.Location = New System.Drawing.Point(538, 426)
+        Me.GroupBox4.Location = New System.Drawing.Point(538, 436)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(200, 215)
         Me.GroupBox4.TabIndex = 26
@@ -735,7 +736,7 @@ Partial Class frmProduction
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(267, 325)
+        Me.Label13.Location = New System.Drawing.Point(267, 335)
         Me.Label13.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(105, 26)
@@ -745,7 +746,7 @@ Partial Class frmProduction
         'lblError
         '
         Me.lblError.ForeColor = System.Drawing.Color.Red
-        Me.lblError.Location = New System.Drawing.Point(492, 392)
+        Me.lblError.Location = New System.Drawing.Point(492, 402)
         Me.lblError.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lblError.Name = "lblError"
         Me.lblError.Size = New System.Drawing.Size(246, 29)
@@ -754,6 +755,7 @@ Partial Class frmProduction
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.SkipPallet_chkbx)
         Me.GroupBox2.Controls.Add(Me.Label18)
         Me.GroupBox2.Controls.Add(Me.txtPO)
         Me.GroupBox2.Controls.Add(Me.Label17)
@@ -768,7 +770,7 @@ Partial Class frmProduction
         Me.GroupBox2.Controls.Add(Me.PalletBox)
         Me.GroupBox2.Location = New System.Drawing.Point(16, 75)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(405, 237)
+        Me.GroupBox2.Size = New System.Drawing.Size(405, 247)
         Me.GroupBox2.TabIndex = 69
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Work Order"
@@ -911,7 +913,7 @@ Partial Class frmProduction
         Me.CancelBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CancelBtn.Image = Global.CartonPalletizing.My.Resources.Resources.cancel
         Me.CancelBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.CancelBtn.Location = New System.Drawing.Point(272, 379)
+        Me.CancelBtn.Location = New System.Drawing.Point(272, 389)
         Me.CancelBtn.Margin = New System.Windows.Forms.Padding(2)
         Me.CancelBtn.Name = "CancelBtn"
         Me.CancelBtn.Size = New System.Drawing.Size(116, 42)
@@ -924,7 +926,7 @@ Partial Class frmProduction
         '
         Me.ScanBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ScanBtn.Image = Global.CartonPalletizing.My.Resources.Resources.scan1
-        Me.ScanBtn.Location = New System.Drawing.Point(237, 339)
+        Me.ScanBtn.Location = New System.Drawing.Point(237, 349)
         Me.ScanBtn.Margin = New System.Windows.Forms.Padding(2)
         Me.ScanBtn.Name = "ScanBtn"
         Me.ScanBtn.Size = New System.Drawing.Size(184, 50)
@@ -932,6 +934,16 @@ Partial Class frmProduction
         Me.ScanBtn.Text = "Start Scanning"
         Me.ScanBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.ScanBtn.UseVisualStyleBackColor = True
+        '
+        'SkipPallet_chkbx
+        '
+        Me.SkipPallet_chkbx.AutoSize = True
+        Me.SkipPallet_chkbx.Location = New System.Drawing.Point(303, 220)
+        Me.SkipPallet_chkbx.Name = "SkipPallet_chkbx"
+        Me.SkipPallet_chkbx.Size = New System.Drawing.Size(76, 17)
+        Me.SkipPallet_chkbx.TabIndex = 32
+        Me.SkipPallet_chkbx.Text = "Skip Pallet"
+        Me.SkipPallet_chkbx.UseVisualStyleBackColor = True
         '
         'frmProduction
         '
@@ -1048,4 +1060,5 @@ Partial Class frmProduction
     Friend WithEvents debug_chckbx As CheckBox
     Friend WithEvents adminDebug_btn As ToolStripButton
     Friend WithEvents Button1 As Button
+    Friend WithEvents SkipPallet_chkbx As CheckBox
 End Class
