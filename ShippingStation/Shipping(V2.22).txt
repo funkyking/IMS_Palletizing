@@ -4,3 +4,6 @@ Container Shipping Application
 - Allow User To Delete Container
 - Fix Duplicate container Name in db
 - Display List of Containers in listbox
+
+List Item Will Show a button when its a split pallet
+the button will prompt a list of serialnumbers in that pallet

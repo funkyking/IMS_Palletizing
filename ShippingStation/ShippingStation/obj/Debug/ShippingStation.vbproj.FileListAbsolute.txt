@@ -428,3 +428,4 @@ C:\Users\Paul\Desktop\Work\Infinite Solutions\IMS_Palletizing\ShippingStation\Sh
 C:\Users\Paul\Desktop\Work\Infinite Solutions\IMS_Palletizing\ShippingStation\ShippingStation\obj\Debug\ShippingStation.exe
 C:\Users\Paul\Desktop\Work\Infinite Solutions\IMS_Palletizing\ShippingStation\ShippingStation\obj\Debug\ShippingStation.xml
 C:\Users\Paul\Desktop\Work\Infinite Solutions\IMS_Palletizing\ShippingStation\ShippingStation\obj\Debug\ShippingStation.pdb
+C:\Users\Paul\Desktop\Work\Infinite Solutions\IMS_Palletizing\ShippingStation\ShippingStation\obj\Debug\ShippingStation.listItem_SerialList.resources

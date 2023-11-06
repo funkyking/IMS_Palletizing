@@ -175,7 +175,6 @@ Partial Class Main
         Me.splitPallet_btn.TabIndex = 17
         Me.splitPallet_btn.Text = "Split Pallet"
         Me.splitPallet_btn.UseVisualStyleBackColor = False
-        Me.splitPallet_btn.Visible = False
         '
         'Label8
         '
@@ -599,7 +598,6 @@ Partial Class Main
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(26, 17)
         Me.Panel1.TabIndex = 5
-        Me.Panel1.Visible = False
         '
         'bottom_pnl
         '
@@ -634,7 +632,6 @@ Partial Class Main
         Me.Label9.Size = New System.Drawing.Size(70, 16)
         Me.Label9.TabIndex = 14
         Me.Label9.Text = "Split Container"
-        Me.Label9.Visible = False
         '
         'Panel2
         '
@@ -644,7 +641,6 @@ Partial Class Main
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(26, 17)
         Me.Panel2.TabIndex = 13
-        Me.Panel2.Visible = False
         '
         'Label6
         '
@@ -657,7 +653,6 @@ Partial Class Main
         Me.Label6.Size = New System.Drawing.Size(66, 16)
         Me.Label6.TabIndex = 12
         Me.Label6.Text = "Normal Pallet"
-        Me.Label6.Visible = False
         '
         'Main
         '

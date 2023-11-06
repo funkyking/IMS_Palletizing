@@ -59,9 +59,20 @@
 
             If isSplit = True Then
                 Panel1.BackColor = Color.GreenYellow
+                serialList_btn.Visible = True
             End If
 
             EnableEditing()
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub serialList_btn_Click(sender As Object, e As EventArgs) Handles serialList_btn.Click
+        Try
+            Dim lss As New listItem_SerialList
+            lss.incomingBarcode = tempid
+            lss.ShowDialog()
+
         Catch ex As Exception
         End Try
     End Sub

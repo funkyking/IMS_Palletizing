@@ -128,6 +128,12 @@
     <Compile Include="UI And UX\adminAccessPrompt.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="UI And UX\listItem_SerialList.Designer.vb">
+      <DependentUpon>listItem_SerialList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UI And UX\listItem_SerialList.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UI And UX\LoginForm.Designer.vb">
       <DependentUpon>LoginForm.vb</DependentUpon>
     </Compile>
@@ -179,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI And UX\ListItem.resx">
       <DependentUpon>ListItem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI And UX\listItem_SerialList.resx">
+      <DependentUpon>listItem_SerialList.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI And UX\LoginForm.resx">
       <DependentUpon>LoginForm.vb</DependentUpon>
@@ -275,6 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cricutlogo.ico" />
+    <None Include="Resources\list_28.png" />
     <None Include="Resources\edit_32_gif.gif" />
     <None Include="Resources\edit_gif.gif" />
     <None Include="Resources\Shipping_321.png" />

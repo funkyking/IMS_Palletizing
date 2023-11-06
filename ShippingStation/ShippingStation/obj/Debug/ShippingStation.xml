@@ -107,6 +107,11 @@ ShippingStation
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:ShippingStation.My.Resources.Resources.list_28">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:ShippingStation.My.Resources.Resources.packing_32">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
